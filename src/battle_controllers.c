@@ -2631,13 +2631,18 @@ void BtlController_HandleFaintAnimation(u32 battler)
             // The player's sprite is removed in Controller_FaintPlayerMon. Controller_FaintOpponentMon only removes the healthbox once the sprite is removed by SpriteCB_FaintOpponentMon.
         }
     }
+    
     if (GetBattlerSide(battler) == B_SIDE_PLAYER)
     {
-        LaunchAnimationTaskForFrontSprite(&gSprites[gBattlerSpriteIds[BATTLE_OPPOSITE(battler)]], gSpeciesInfo[gBattleMons[BATTLE_OPPOSITE(battler)].species].frontAnimId);
-        PlayCry_Normal(gBattleMons[BATTLE_OPPOSITE(battler)].species, CRY_PRIORITY_NORMAL);
-        if (HasTwoFramesAnimation(gBattleMons[BATTLE_OPPOSITE(battler)].species))
-        StartSpriteAnim(&gSprites[gBattlerSpriteIds[BATTLE_OPPOSITE(battler)]], 1);
-        if(gBattleTypeFlags & BATTLE_TYPE_DOUBLE)
+        if (gBattleMons[BATTLE_OPPOSITE(battler)].species != SPECIES_NONE)
+        {
+            LaunchAnimationTaskForFrontSprite(&gSprites[gBattlerSpriteIds[BATTLE_OPPOSITE(battler)]], gSpeciesInfo[gBattleMons[BATTLE_OPPOSITE(battler)].species].frontAnimId);
+            PlayCry_Normal(gBattleMons[BATTLE_OPPOSITE(battler)].species, CRY_PRIORITY_NORMAL);
+            if (HasTwoFramesAnimation(gBattleMons[BATTLE_OPPOSITE(battler)].species))
+                StartSpriteAnim(&gSprites[gBattlerSpriteIds[BATTLE_OPPOSITE(battler)]], 1);
+        }
+
+        if ((gBattleTypeFlags & BATTLE_TYPE_DOUBLE) && gBattleMons[BATTLE_PARTNER(BATTLE_OPPOSITE(battler))].species != SPECIES_NONE)
         {
             LaunchAnimationTaskForFrontSprite(&gSprites[gBattlerSpriteIds[BATTLE_PARTNER(BATTLE_OPPOSITE(battler))]], gSpeciesInfo[gBattleMons[BATTLE_PARTNER(BATTLE_OPPOSITE(battler))].species].frontAnimId);
             PlayCry_Normal(gBattleMons[BATTLE_PARTNER(BATTLE_OPPOSITE(battler))].species, CRY_PRIORITY_NORMAL);
@@ -2647,9 +2652,13 @@ void BtlController_HandleFaintAnimation(u32 battler)
     }
     else if (GetBattlerSide(battler) == B_SIDE_OPPONENT)
     {
-        LaunchAnimationTaskForBackSprite(&gSprites[gBattlerSpriteIds[BATTLE_OPPOSITE(battler)]], GetSpeciesBackAnimSet(gBattleMons[BATTLE_OPPOSITE(battler)].species));
-        PlayCry_Normal(gBattleMons[BATTLE_OPPOSITE(battler)].species, CRY_PRIORITY_NORMAL);
-        if(gBattleTypeFlags & BATTLE_TYPE_DOUBLE)
+        if (gBattleMons[BATTLE_OPPOSITE(battler)].species != SPECIES_NONE)
+        {
+            LaunchAnimationTaskForBackSprite(&gSprites[gBattlerSpriteIds[BATTLE_OPPOSITE(battler)]], GetSpeciesBackAnimSet(gBattleMons[BATTLE_OPPOSITE(battler)].species));
+            PlayCry_Normal(gBattleMons[BATTLE_OPPOSITE(battler)].species, CRY_PRIORITY_NORMAL);
+        }
+
+        if ((gBattleTypeFlags & BATTLE_TYPE_DOUBLE) && gBattleMons[BATTLE_PARTNER(BATTLE_OPPOSITE(battler))].species != SPECIES_NONE)
         {
             LaunchAnimationTaskForBackSprite(&gSprites[gBattlerSpriteIds[BATTLE_PARTNER(BATTLE_OPPOSITE(battler))]], GetSpeciesBackAnimSet(gBattleMons[BATTLE_PARTNER(BATTLE_OPPOSITE(battler))].species));
             PlayCry_Normal(gBattleMons[BATTLE_PARTNER(BATTLE_OPPOSITE(battler))].species, CRY_PRIORITY_NORMAL);

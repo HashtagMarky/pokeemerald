@@ -6870,6 +6870,28 @@ void HealBoxPokemon(struct BoxPokemon *boxMon)
 u16 GetCryIdBySpecies(u16 species)
 {
     species = SanitizeSpeciesId(species);
+    #if (P_CRIES_GENERIC && P_CRIES_ENABLED == FALSE)
+        if (GetBaseStatTotal(species) < BST_TINY)
+        {
+            return CRY_GENERIC_SMALLEST;
+        }
+        else if (GetBaseStatTotal(species) < BST_SMALL)
+        {
+            return CRY_GENERIC_SMALL;
+        }
+        else if (GetBaseStatTotal(species) < BST_MEDIUM)
+        {
+            return CRY_GENERIC_MEDIUM;
+        }
+        else if (GetBaseStatTotal(species) < BST_LARGE)
+        {
+            return CRY_GENERIC_LARGE;
+        }
+        else
+        {
+            return CRY_GENERIC_LARGEST;
+        }
+    #endif //(P_CRIES_GENERIC && P_CRIES_ENABLED == FALSE)
     if (P_CRIES_ENABLED == FALSE || gSpeciesInfo[species].cryId >= CRY_COUNT)
         return CRY_NONE;
     return gSpeciesInfo[species].cryId;
@@ -6942,4 +6964,15 @@ void UpdateDaysPassedSinceFormChange(u16 days)
             }
         }
     }
+}
+
+u16 GetBaseStatTotal(u16 species)
+{
+    species = SanitizeSpeciesId(species);
+    return gSpeciesInfo[species].baseHP
+        + gSpeciesInfo[species].baseAttack
+        + gSpeciesInfo[species].baseDefense
+        + gSpeciesInfo[species].baseSpeed
+        + gSpeciesInfo[species].baseSpAttack
+        + gSpeciesInfo[species].baseSpDefense;
 }

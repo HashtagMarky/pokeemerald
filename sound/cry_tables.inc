@@ -1,5 +1,13 @@
 	.align 2
 gCryTable::
+.if (P_CRIES_GENERIC == TRUE && P_CRIES_ENABLED == FALSE)
+	cry Cry_Generic_Smallest
+	cry Cry_Generic_Small
+	cry Cry_Generic_Medium
+	cry Cry_Generic_Large
+	cry Cry_Generic_Largest
+	cry Cry_RHH_Intro
+.endif @ if (P_CRIES_GENERIC && P_CRIES_ENABLED == FALSE)
 .if P_CRIES_ENABLED == TRUE
 .if P_FAMILY_BULBASAUR == TRUE
 	cry Cry_Bulbasaur
@@ -2428,6 +2436,14 @@ gCryTable::
 
 	.align 2
 gCryTable_Reverse::
+.if (P_CRIES_GENERIC == TRUE && P_CRIES_ENABLED == FALSE)
+	cry_reverse Cry_Generic_Smallest
+	cry_reverse Cry_Generic_Small
+	cry_reverse Cry_Generic_Medium
+	cry_reverse Cry_Generic_Large
+	cry_reverse Cry_Generic_Largest
+	cry_reverse Cry_RHH_Intro
+.endif @ if (P_CRIES_GENERIC && P_CRIES_ENABLED == FALSE)
 .if P_CRIES_ENABLED == TRUE
 .if P_FAMILY_BULBASAUR == TRUE
 	cry_reverse Cry_Bulbasaur

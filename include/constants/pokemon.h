@@ -334,4 +334,9 @@
 
 #define LEGENDARY_PERFECT_IV_COUNT 3
 
+#define BST_TINY    300
+#define BST_SMALL   400
+#define BST_MEDIUM  500
+#define BST_LARGE   600
+
 #endif // GUARD_CONSTANTS_POKEMON_H

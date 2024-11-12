@@ -386,6 +386,32 @@ DirectSoundWaveData_unknown_16::
 DirectSoundWaveData_unknown_17::
 	.incbin "sound/direct_sound_samples/unknown_17.bin"
 
+.if (P_CRIES_GENERIC == TRUE && P_CRIES_ENABLED == FALSE)
+	.align 2
+Cry_Generic_Smallest::
+	.incbin "sound/direct_sound_samples/cries/caterpie.bin"
+
+	.align 2
+Cry_Generic_Small::
+	.incbin "sound/direct_sound_samples/cries/machop.bin"
+
+	.align 2
+Cry_Generic_Medium::
+	.incbin "sound/direct_sound_samples/cries/machoke.bin"
+
+	.align 2
+Cry_Generic_Large::
+	.incbin "sound/direct_sound_samples/cries/machamp.bin"
+
+	.align 2
+Cry_Generic_Largest::
+	.incbin "sound/direct_sound_samples/cries/tyranitar.bin"
+
+	.align 2
+Cry_RHH_Intro::
+	.incbin "sound/direct_sound_samples/cries/porygon.bin"
+.endif @ if (P_CRIES_GENERIC && P_CRIES_ENABLED == FALSE)
+
 .if P_CRIES_ENABLED == TRUE
 .if P_FAMILY_BULBASAUR == TRUE
 	.align 2

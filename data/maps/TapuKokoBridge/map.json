@@ -21,22 +21,22 @@
       "x": 22,
       "y": 32,
       "elevation": 0,
-      "dest_map": "MAP_IKI_TOWN",
-      "dest_warp_id": "6"
+      "dest_map": "MAP_PATH_TO_TAPU_KOKO_SHRINE",
+      "dest_warp_id": "3"
     },
     {
       "x": 20,
       "y": 32,
       "elevation": 0,
-      "dest_map": "MAP_IKI_TOWN",
-      "dest_warp_id": "5"
+      "dest_map": "MAP_PATH_TO_TAPU_KOKO_SHRINE",
+      "dest_warp_id": "2"
     },
     {
       "x": 21,
       "y": 32,
       "elevation": 0,
-      "dest_map": "MAP_IKI_TOWN",
-      "dest_warp_id": "5"
+      "dest_map": "MAP_PATH_TO_TAPU_KOKO_SHRINE",
+      "dest_warp_id": "3"
     },
     {
       "x": 20,

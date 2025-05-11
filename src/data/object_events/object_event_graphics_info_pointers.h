@@ -260,7 +260,7 @@ extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_TeamSkullGr
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Lusamine;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_AetherGruntM;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_AetherGruntF;
-extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Hakuna;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Hala;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Kiawe;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Kukui;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_ElioNormal;
@@ -519,7 +519,7 @@ const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM
     [OBJ_EVENT_GFX_LUSAMINE] =                 &gObjectEventGraphicsInfo_Lusamine,
     [OBJ_EVENT_GFX_AETHER_GRUNT_M] =           &gObjectEventGraphicsInfo_AetherGruntM,
     [OBJ_EVENT_GFX_AETHER_GRUNT_F] =           &gObjectEventGraphicsInfo_AetherGruntF,
-    [OBJ_EVENT_GFX_HAKUNA] =                   &gObjectEventGraphicsInfo_Hakuna,
+    [OBJ_EVENT_GFX_HALA] =                     &gObjectEventGraphicsInfo_Hala,
     [OBJ_EVENT_GFX_KIAWE] =                    &gObjectEventGraphicsInfo_Kiawe,
     [OBJ_EVENT_GFX_KUKUI] =                    &gObjectEventGraphicsInfo_Kukui,
     [OBJ_EVENT_GFX_ELIO_NORMAL] =              &gObjectEventGraphicsInfo_ElioNormal,

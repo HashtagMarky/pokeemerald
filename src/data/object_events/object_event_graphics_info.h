@@ -2850,9 +2850,9 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_AetherGruntF = {
     .affineAnims = gDummySpriteAffineAnimTable,
 };
 
-const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Hakuna = {
+const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Hala = {
     .tileTag = TAG_NONE,
-    .paletteTag = OBJ_EVENT_PAL_TAG_HAKUNA,
+    .paletteTag = OBJ_EVENT_PAL_TAG_HALA,
     .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_BRIDGE_REFLECTION,
     .size = 256,
     .width = 16,
@@ -2865,7 +2865,7 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Hakuna = {
     .oam = &gObjectEventBaseOam_16x32,
     .subspriteTables = sOamTables_16x32,
     .anims = sAnimTable_BrendanMayNormal,
-    .images = sPicTable_Hakuna,
+    .images = sPicTable_Hala,
     .affineAnims = gDummySpriteAffineAnimTable,
 };
 

@@ -252,7 +252,7 @@
 #define OBJ_EVENT_GFX_LUSAMINE                   248
 #define OBJ_EVENT_GFX_AETHER_GRUNT_M             249
 #define OBJ_EVENT_GFX_AETHER_GRUNT_F             250
-#define OBJ_EVENT_GFX_HAKUNA                     251       
+#define OBJ_EVENT_GFX_HALA                       251       
 #define OBJ_EVENT_GFX_KIAWE                      252               
 #define OBJ_EVENT_GFX_KUKUI                      253 
 #define OBJ_EVENT_GFX_LILLIE                     254
@@ -417,7 +417,7 @@
 #define OBJ_EVENT_PAL_TAG_LUSAMINE                0x112A
 #define OBJ_EVENT_PAL_TAG_AETHERGRUNTM            0x112B
 #define OBJ_EVENT_PAL_TAG_AETHERGRUNTF            0x112C
-#define OBJ_EVENT_PAL_TAG_HAKUNA                  0x112D
+#define OBJ_EVENT_PAL_TAG_HALA                    0x112D
 #define OBJ_EVENT_PAL_TAG_KIAWE                   0x112E
 #define OBJ_EVENT_PAL_TAG_KUKUI                   0x112F
 #define OBJ_EVENT_PAL_TAG_LILLIE                  0x1130

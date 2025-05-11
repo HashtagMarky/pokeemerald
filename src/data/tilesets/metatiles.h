@@ -267,3 +267,6 @@ const u16 gMetatileAttributes_ConservatoryPory[] = INCBIN_U16("data/tilesets/sec
 
 const u16 gMetatiles_OrangeIslandsPory[] = INCBIN_U16("data/tilesets/primary/orange_islands_pory/metatiles.bin");
 const u16 gMetatileAttributes_OrangeIslandsPory[] = INCBIN_U16("data/tilesets/primary/orange_islands_pory/metatile_attributes.bin");
+
+const u16 gMetatiles_TapuShrine[] = INCBIN_U16("data/tilesets/secondary/tapu_shrine/metatiles.bin");
+const u16 gMetatileAttributes_TapuShrine[] = INCBIN_U16("data/tilesets/secondary/tapu_shrine/metatile_attributes.bin");

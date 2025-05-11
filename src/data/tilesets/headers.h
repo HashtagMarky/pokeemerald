@@ -1050,3 +1050,14 @@ const struct Tileset gTileset_OrangeIslandsPory =
     .metatileAttributes = gMetatileAttributes_OrangeIslandsPory,
     .callback = NULL,
 };
+
+const struct Tileset gTileset_TapuShrine =
+{
+    .isCompressed = TRUE,
+    .isSecondary = TRUE,
+    .tiles = gTilesetTiles_TapuShrine,
+    .palettes = gTilesetPalettes_TapuShrine,
+    .metatiles = gMetatiles_TapuShrine,
+    .metatileAttributes = gMetatileAttributes_TapuShrine,
+    .callback = NULL,
+};

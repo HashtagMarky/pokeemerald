@@ -4780,6 +4780,36 @@
       "secondary_tileset": "gTileset_PokemonCenter",
       "border_filepath": "data/layouts/HauoliCityPokecenter/border.bin",
       "blockdata_filepath": "data/layouts/HauoliCityPokecenter/map.bin"
+    },
+    {
+      "id": "LAYOUT_PATH_TO_TAPU_KOKO_SHRINE",
+      "name": "PathToTapuKokoShrine_Layout",
+      "width": 40,
+      "height": 40,
+      "primary_tileset": "gTileset_orangeislands",
+      "secondary_tileset": "gTileset_islandtrial",
+      "border_filepath": "data/layouts/PathToTapuKokoShrine/border.bin",
+      "blockdata_filepath": "data/layouts/PathToTapuKokoShrine/map.bin"
+    },
+    {
+      "id": "LAYOUT_TAPU_KOKO_SHRINE_ENTRANCE",
+      "name": "TapuKokoShrineEntrance_Layout",
+      "width": 20,
+      "height": 20,
+      "primary_tileset": "gTileset_orangeislands",
+      "secondary_tileset": "gTileset_TapuShrine",
+      "border_filepath": "data/layouts/TapuKokoShrineEntrance/border.bin",
+      "blockdata_filepath": "data/layouts/TapuKokoShrineEntrance/map.bin"
+    },
+    {
+      "id": "LAYOUT_TAPU_KOKO_BATTLE",
+      "name": "TapuKokoBattle_Layout",
+      "width": 20,
+      "height": 20,
+      "primary_tileset": "gTileset_orangeislands",
+      "secondary_tileset": "gTileset_TapuShrine",
+      "border_filepath": "data/layouts/TapuKokoBattle/border.bin",
+      "blockdata_filepath": "data/layouts/TapuKokoBattle/map.bin"
     }
   ]
 }

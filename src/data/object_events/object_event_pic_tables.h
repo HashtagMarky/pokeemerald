@@ -698,8 +698,8 @@ static const struct SpriteFrameImage sPicTable_AetherGruntF[] = {
     overworld_ascending_frames(gObjectEventPic_AetherGruntF, 2, 4),
 };
 
-static const struct SpriteFrameImage sPicTable_Hakuna[] = {
-    overworld_ascending_frames(gObjectEventPic_Hakuna, 2, 4),
+static const struct SpriteFrameImage sPicTable_Hala[] = {
+    overworld_ascending_frames(gObjectEventPic_Hala, 2, 4),
 };
 
 static const struct SpriteFrameImage sPicTable_Kiawe[] = {

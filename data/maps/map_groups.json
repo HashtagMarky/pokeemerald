@@ -118,7 +118,8 @@
     "MelemeleMeadow",
     "HaouliCemetary",
     "TapuKokoShrine",
-    "AetherConservatory"
+    "AetherConservatory",
+    "PathToTapuKokoShrine"
   ],
   "gMapGrouo_IndoorMelemele": [
     "PlayerHouse",
@@ -127,7 +128,9 @@
     "HaouliPokemonCenter",
     "AlolaLaboratory",
     "Route2Pokecenter",
-    "HauoliCityPokecenter"
+    "HauoliCityPokecenter",
+    "TapuKokoShrineEntrance",
+    "TapuKokoBattle"
   ],
   "gMapGroup_IndoorLittleroot": [
     "LittlerootTown_BrendansHouse_1F",

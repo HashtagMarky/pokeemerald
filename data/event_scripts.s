@@ -1233,3 +1233,9 @@ EventScript_VsSeekerChargingDone::
 	.include "data/maps/Route2Pokecenter/scripts.inc"
 
 	.include "data/maps/HauoliCityPokecenter/scripts.inc"
+
+	.include "data/maps/PathToTapuKokoShrine/scripts.inc"
+
+	.include "data/maps/TapuKokoShrineEntrance/scripts.inc"
+
+	.include "data/maps/TapuKokoBattle/scripts.inc"

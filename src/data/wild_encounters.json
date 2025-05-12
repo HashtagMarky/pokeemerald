@@ -12963,6 +12963,75 @@
               }
             ]
           }
+        },
+        {
+          "map": "MAP_MELEMELE_ISLAND_TRIAL_CAVE",
+          "base_label": "gMelemeleIslandTrialCave0",
+          "land_mons": {
+            "encounter_rate": 10,
+            "mons": [
+              {
+                "min_level": 8,
+                "max_level": 11,
+                "species": "SPECIES_ZUBAT"
+              },
+              {
+                "min_level": 8,
+                "max_level": 11,
+                "species": "SPECIES_NOIBAT"
+              },
+              {
+                "min_level": 8,
+                "max_level": 11,
+                "species": "SPECIES_ZUBAT"
+              },
+              {
+                "min_level": 8,
+                "max_level": 11,
+                "species": "SPECIES_NOIBAT"
+              },
+              {
+                "min_level": 8,
+                "max_level": 11,
+                "species": "SPECIES_DIGLETT_ALOLA"
+              },
+              {
+                "min_level": 8,
+                "max_level": 11,
+                "species": "SPECIES_ZUBAT"
+              },
+              {
+                "min_level": 8,
+                "max_level": 11,
+                "species": "SPECIES_DIGLETT_ALOLA"
+              },
+              {
+                "min_level": 8,
+                "max_level": 11,
+                "species": "SPECIES_DIGLETT_ALOLA"
+              },
+              {
+                "min_level": 8,
+                "max_level": 11,
+                "species": "SPECIES_DIGLETT_ALOLA"
+              },
+              {
+                "min_level": 8,
+                "max_level": 11,
+                "species": "SPECIES_DIGLETT_ALOLA"
+              },
+              {
+                "min_level": 8,
+                "max_level": 11,
+                "species": "SPECIES_DIGLETT_ALOLA"
+              },
+              {
+                "min_level": 8,
+                "max_level": 11,
+                "species": "SPECIES_DIGLETT_ALOLA"
+              }
+            ]
+          }
         }
       ]
     },

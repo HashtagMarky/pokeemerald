@@ -472,7 +472,8 @@
     "SeawardCave",
     "TenCarrotHillCave",
     "OceanCave",
-    "FarthestHallow"
+    "FarthestHallow",
+    "MelemeleIslandTrialCave"
   ],
   "gMapGroup_IndoorDynamic": [
     "SecretBase_RedCave1",

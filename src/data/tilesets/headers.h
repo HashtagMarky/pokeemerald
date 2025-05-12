@@ -1061,3 +1061,14 @@ const struct Tileset gTileset_TapuShrine =
     .metatileAttributes = gMetatileAttributes_TapuShrine,
     .callback = NULL,
 };
+
+const struct Tileset gTileset_IslandTrialCave =
+{
+    .isCompressed = TRUE,
+    .isSecondary = TRUE,
+    .tiles = gTilesetTiles_IslandTrialCave,
+    .palettes = gTilesetPalettes_IslandTrialCave,
+    .metatiles = gMetatiles_IslandTrialCave,
+    .metatileAttributes = gMetatileAttributes_IslandTrialCave,
+    .callback = NULL,
+};

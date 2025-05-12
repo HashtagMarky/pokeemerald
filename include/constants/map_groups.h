@@ -442,6 +442,7 @@
 #define MAP_TEN_CARROT_HILL_CAVE                     (109 | (25 << 8))
 #define MAP_OCEAN_CAVE                               (110 | (25 << 8))
 #define MAP_FARTHEST_HALLOW                          (111 | (25 << 8))
+#define MAP_MELEMELE_ISLAND_TRIAL_CAVE               (112 | (25 << 8))
 
 // gMapGroup_IndoorDynamic
 #define MAP_SECRET_BASE_RED_CAVE1    (0 | (26 << 8))

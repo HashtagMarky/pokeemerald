@@ -1239,3 +1239,5 @@ EventScript_VsSeekerChargingDone::
 	.include "data/maps/TapuKokoShrineEntrance/scripts.inc"
 
 	.include "data/maps/TapuKokoBattle/scripts.inc"
+
+	.include "data/maps/MelemeleIslandTrialCave/scripts.inc"

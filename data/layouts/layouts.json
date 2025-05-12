@@ -4810,6 +4810,16 @@
       "secondary_tileset": "gTileset_TapuShrine",
       "border_filepath": "data/layouts/TapuKokoBattle/border.bin",
       "blockdata_filepath": "data/layouts/TapuKokoBattle/map.bin"
+    },
+    {
+      "id": "LAYOUT_MELEMELE_ISLAND_TRIAL_CAVE",
+      "name": "MelemeleIslandTrialCave_Layout",
+      "width": 40,
+      "height": 60,
+      "primary_tileset": "gTileset_orangeislands",
+      "secondary_tileset": "gTileset_IslandTrialCave",
+      "border_filepath": "data/layouts/MelemeleIslandTrialCave/border.bin",
+      "blockdata_filepath": "data/layouts/MelemeleIslandTrialCave/map.bin"
     }
   ]
 }

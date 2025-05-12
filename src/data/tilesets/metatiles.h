@@ -270,3 +270,6 @@ const u16 gMetatileAttributes_OrangeIslandsPory[] = INCBIN_U16("data/tilesets/pr
 
 const u16 gMetatiles_TapuShrine[] = INCBIN_U16("data/tilesets/secondary/tapu_shrine/metatiles.bin");
 const u16 gMetatileAttributes_TapuShrine[] = INCBIN_U16("data/tilesets/secondary/tapu_shrine/metatile_attributes.bin");
+
+const u16 gMetatiles_IslandTrialCave[] = INCBIN_U16("data/tilesets/secondary/island_trial_cave/metatiles.bin");
+const u16 gMetatileAttributes_IslandTrialCave[] = INCBIN_U16("data/tilesets/secondary/island_trial_cave/metatile_attributes.bin");

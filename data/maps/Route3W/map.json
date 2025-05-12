@@ -37,22 +37,22 @@
       "x": 6,
       "y": 7,
       "elevation": 0,
-      "dest_map": "MAP_ROUTE3W",
+      "dest_map": "MAP_MELEMELE_ISLAND_TRIAL_CAVE",
       "dest_warp_id": "0"
     },
     {
       "x": 5,
       "y": 7,
       "elevation": 0,
-      "dest_map": "MAP_ROUTE3W",
-      "dest_warp_id": "1"
+      "dest_map": "MAP_MELEMELE_ISLAND_TRIAL_CAVE",
+      "dest_warp_id": "0"
     },
     {
       "x": 7,
       "y": 7,
       "elevation": 0,
-      "dest_map": "MAP_ROUTE3W",
-      "dest_warp_id": "2"
+      "dest_map": "MAP_MELEMELE_ISLAND_TRIAL_CAVE",
+      "dest_warp_id": "0"
     }
   ],
   "coord_events": [

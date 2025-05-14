@@ -12,6 +12,7 @@ script MomSaysHi{
     setflag(FLAG_DN_FLAG_SEARCHING)
     setflag(FLAG_DN_FLAG_DEXNAV_GET)
     setflag(FLAG_DN_FLAG_DETECTOR_MODE)
+    setflag(FLAG_ENABLE_STAT_EDITOR)
     fadescreen(FADE_FROM_BLACK)
     msgbox("Take care, honey!")
     release

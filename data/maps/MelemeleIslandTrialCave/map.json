@@ -79,8 +79,8 @@
       "x": 14,
       "y": 9,
       "elevation": 0,
-      "dest_map": "MAP_MELEMELE_ISLAND_TRIAL_CAVE",
-      "dest_warp_id": "1"
+      "dest_map": "MAP_MELEMELE_ISLAND_TRIAL_TOTEM",
+      "dest_warp_id": "0"
     }
   ],
   "coord_events": [

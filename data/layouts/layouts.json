@@ -4820,6 +4820,16 @@
       "secondary_tileset": "gTileset_IslandTrialCave",
       "border_filepath": "data/layouts/MelemeleIslandTrialCave/border.bin",
       "blockdata_filepath": "data/layouts/MelemeleIslandTrialCave/map.bin"
+    },
+    {
+      "id": "LAYOUT_MELEMELE_ISLAND_TRIAL_TOTEM",
+      "name": "MelemeleIslandTrialTotem_Layout",
+      "width": 30,
+      "height": 30,
+      "primary_tileset": "gTileset_orangeislands",
+      "secondary_tileset": "gTileset_islandtrial",
+      "border_filepath": "data/layouts/MelemeleIslandTrialTotem/border.bin",
+      "blockdata_filepath": "data/layouts/MelemeleIslandTrialTotem/map.bin"
     }
   ]
 }

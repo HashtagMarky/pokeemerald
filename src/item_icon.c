@@ -5,14 +5,17 @@
 #include "item.h"
 #include "item_icon.h"
 #include "malloc.h"
+#include "palette.h"
 #include "move.h"
 #include "sprite.h"
+#include "window.h"
 #include "constants/items.h"
 
 // EWRAM vars
 EWRAM_DATA u8 *gItemIconDecompressionBuffer = NULL;
 EWRAM_DATA u8 *gItemIcon4x4Buffer = NULL;
-
+// Add this near the top of your file, or in a relevant header
+u16 gPaletteDecompressionBuffer[16]; // 16 colors for 4bpp palettes
 // const rom data
 #include "data/item_icon_table.h"
 
@@ -123,6 +126,25 @@ u8 AddItemIconSprite(u16 tilesTag, u16 paletteTag, u16 itemId)
     }
 }
 
+u8 BlitItemIconToWindow(u16 itemId, u8 windowId, u16 x, u16 y, void * paletteDest) {
+    if (!AllocItemIconTemporaryBuffers())
+        return 16;
+
+    LZDecompressWram(GetItemIconPic(itemId), gItemIconDecompressionBuffer);
+    CopyItemIconPicTo4x4Buffer(gItemIconDecompressionBuffer, gItemIcon4x4Buffer);
+    BlitBitmapToWindow(windowId, gItemIcon4x4Buffer, x, y, 32, 32);
+
+    // if paletteDest is nonzero, copies the palette directly into it
+    // otherwise, loads the palette into the windowId's BG palette ID
+    if (paletteDest) {
+    CpuCopy16(GetItemIconPalette(itemId), paletteDest, PLTT_SIZE_4BPP);
+    } else {
+    LoadPalette(GetItemIconPalette(itemId), BG_PLTT_ID(gWindows[windowId].window.paletteNum), PLTT_SIZE_4BPP);
+    }
+    FreeItemIconTemporaryBuffers();
+    return 0;
+}
+
 u8 AddCustomItemIconSprite(const struct SpriteTemplate *customSpriteTemplate, u16 tilesTag, u16 paletteTag, u16 itemId)
 {
     if (!AllocItemIconTemporaryBuffers())
@@ -187,3 +209,4 @@ const u16 *GetItemIconPalette(u16 itemId)
 
     return gItemsInfo[itemId].iconPalette;
 }
+

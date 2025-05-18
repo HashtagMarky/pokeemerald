@@ -76,7 +76,7 @@ static EWRAM_DATA void *sTempTileDataBuffer[0x20] = {NULL};
 static const u8 sMessageBoxTilemap[] = INCBIN_U8("graphics/text_window/msgbox.bin");
 static const u8 sNameBoxTilemap[] = INCBIN_U8("graphics/text_window/namebox.bin");
 
-const u16 gStandardMenuPalette[] = INCBIN_U16("graphics/interface/std_menu.gbapal");
+//const u16 gStandardMenuPalette[] = INCBIN_U16("graphics/interface/std_menu.gbapal");
 
 static const u8 sTextSpeedFrameDelays[] =
 {

@@ -251,7 +251,7 @@ Give_EXP_Share::
 # 127 "data/maps/littlerootcave/scripts.pory"
 	faceplayer
 # 128 "data/maps/littlerootcave/scripts.pory"
-	goto_if_unset FLAG_UNUSED_0x264, Give_EXP_Share_2
+	goto_if_unset FLAG_EXP_SHARE_TOGGLE, Give_EXP_Share_2
 # 141 "data/maps/littlerootcave/scripts.pory"
 	speakername Give_EXP_Share_Text_0
 # 142 "data/maps/littlerootcave/scripts.pory"
@@ -279,7 +279,7 @@ Give_EXP_Share_5:
 # 132 "data/maps/littlerootcave/scripts.pory"
 	giveitem ITEM_EXP_SHARE, 1
 # 133 "data/maps/littlerootcave/scripts.pory"
-	setflag FLAG_UNUSED_0x264
+	setflag FLAG_EXP_SHARE_TOGGLE
 # 134 "data/maps/littlerootcave/scripts.pory"
 	msgbox Give_EXP_Share_Text_2
 	goto Give_EXP_Share_1

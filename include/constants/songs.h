@@ -556,4 +556,8 @@
 #define PHONEME_ID(song)            ((song) - FIRST_PHONEME_SONG)
 #define PHONEME_ID_NONE             0xFF
 
+//USUM music
+#define MUS_USUM_IKITOWN_DAY        610
+
+
 #endif  // GUARD_CONSTANTS_SONGS_H

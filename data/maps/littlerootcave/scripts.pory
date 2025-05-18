@@ -125,12 +125,12 @@ script littlerootcave_eventscript_chikorita_gift{
 script Give_EXP_Share{
     lock
     faceplayer
-    if(!(flag(FLAG_UNUSED_0x264))){
+    if(!(flag(FLAG_EXP_SHARE_TOGGLE))){
         speakername("Birch")
         msgbox("Would you like the EXP Share?\n" "I've got an extra.", MSGBOX_YESNO)
         if(var(VAR_RESULT) == YES){
             giveitem(ITEM_EXP_SHARE, 1)
-            setflag(FLAG_UNUSED_0x264)
+            setflag(FLAG_EXP_SHARE_TOGGLE) // this might not be necessary, since the item does the same thing, in future scripts, use a different flag for this sort of stuff.
             msgbox("Now you on easy mode.")
         }
         else{

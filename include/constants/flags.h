@@ -656,10 +656,10 @@
 #define FLAG_HIDDEN_ITEM_ROUTE_123_RARE_CANDY                (FLAG_HIDDEN_ITEMS_START + 0x6E)
 #define FLAG_HIDDEN_ITEM_ROUTE_105_BIG_PEARL                 (FLAG_HIDDEN_ITEMS_START + 0x6F)
 
-#define FLAG_UNUSED_0x264  0x264 // Unused Flag
-#define FLAG_UNUSED_0x265  0x265 // Unused Flag
-#define FLAG_UNUSED_0x266  0x266 // Unused Flag
-#define FLAG_UNUSED_0x267  0x267 // Unused Flag
+#define FLAG_EXP_SHARE_TOGGLE  0x264 // Unused Flag change to toggle EXP Share
+#define FLAG_SMART_WILD_AI  0x265 // Unused Flag change to toggle Smart Wild AI
+#define FLAG_NO_WILD_CATCHING  0x266 // Unused Flag change to toggle No Catching
+#define FLAG_NO_WILD_RUNNING  0x267 // Unused Flag change to toggle No Running
 #define FLAG_UNUSED_0x268  0x268 // Unused Flag
 #define FLAG_UNUSED_0x269  0x269 // Unused Flag
 #define FLAG_UNUSED_0x26A  0x26A // Unused Flag
@@ -1227,7 +1227,7 @@
 #define FLAG_DN_FLAG_DEXNAV_GET                                          0x495 // changed from unused to DN_FLAG_DEXNAV_GET
 #define FLAG_DN_FLAG_DETECTOR_MODE                                       0x496 // changed from unused to DN_FLAG_DETECTOR_MODE
 #define FLAG_ENABLE_STAT_EDITOR                                           0x497 // Unused Flag changed to stat editor
-#define FLAG_UNUSED_0x498                                           0x498 // Unused Flag
+#define FLAG_FORCE_SHINY                                           0x498 // Unused Flag changed to force shiny
 #define FLAG_UNUSED_0x499                                           0x499 // Unused Flag
 #define FLAG_UNUSED_0x49A                                           0x49A // Unused Flag
 #define FLAG_UNUSED_0x49B                                           0x49B // Unused Flag

@@ -42,6 +42,8 @@
 #include "constants/songs.h"
 #include "constants/trainer_hill.h"
 
+#include "vol_start_menu.h"
+
 static EWRAM_DATA u8 sWildEncounterImmunitySteps = 0;
 static EWRAM_DATA u16 sPrevMetatileBehavior = 0;
 
@@ -157,8 +159,6 @@ void FieldGetPlayerInput(struct FieldInput *input, u16 newKeys, u16 heldKeys)
     }
 }
 
-#include "heat_start_menu.h"
-
 int ProcessPlayerFieldInput(struct FieldInput *input)
 {
     struct MapPosition position;
@@ -226,7 +226,8 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
     if (input->pressedStartButton)
     {
         PlaySE(SE_WIN_OPEN);
-        HeatStartMenu_Init();
+        // ShowStartMenu();
+        Vol_StartMenu_Init();
         return TRUE;
     }
 

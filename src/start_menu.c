@@ -50,6 +50,7 @@
 #include "constants/rgb.h"
 #include "constants/songs.h"
 
+#include "vol_start_menu.h"
 // Menu actions
 enum
 {
@@ -71,13 +72,13 @@ enum
 };
 
 // Save status
-enum
-{
-    SAVE_IN_PROGRESS,
-    SAVE_SUCCESS,
-    SAVE_CANCELED,
-    SAVE_ERROR
-};
+// enum
+// {
+//     SAVE_IN_PROGRESS,
+//     SAVE_SUCCESS,
+//     SAVE_CANCELED,
+//     SAVE_ERROR
+// };
 
 // IWRAM common
 COMMON_DATA bool8 (*gMenuCallback)(void) = NULL;
@@ -569,15 +570,14 @@ static void CreateStartMenuTask(TaskFunc followupFunc)
     SetTaskFuncWithFollowupFunc(taskId, StartMenuTask, followupFunc);
 }
 
-#include "heat_start_menu.h"
 static bool8 FieldCB_ReturnToFieldStartMenu(void)
 {
-    //if (InitStartMenuStep() == FALSE)
-    //{
-    //    return FALSE;
-    //}
+    // if (InitStartMenuStep() == FALSE)
+    // {
+    //     return FALSE;
+    // }
   
-    HeatStartMenu_Init();
+    Vol_StartMenu_Init();
 
     ReturnToFieldOpenStartMenu();
     return TRUE;
@@ -938,6 +938,11 @@ static void InitSave(void)
     sSavingComplete = FALSE;
 }
 
+void InitSave_Global(void)
+{
+    InitSave();
+}
+
 static u8 RunSaveCallback(void)
 {
     // True if text is still printing
@@ -948,6 +953,11 @@ static u8 RunSaveCallback(void)
 
     sSavingComplete = FALSE;
     return sSaveDialogCallback();
+}
+
+u8 RunSaveCallback_Global(void)
+{
+    return RunSaveCallback();
 }
 
 void SaveGame(void)

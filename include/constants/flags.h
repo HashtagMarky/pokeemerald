@@ -1223,12 +1223,12 @@
 #define FLAG_ITEM_SAFARI_ZONE_SOUTH_EAST_BIG_PEARL                  0x492
 
 #define FLAG_RUNNING_SHOES_TOGGLE                                   0x493 // changged from unused to running shoes toggle
-#define FLAG_DN_FLAG_SEARCHING                                           0x494 // changed from unused to DN_FLAG_SEARCHING
-#define FLAG_DN_FLAG_DEXNAV_GET                                          0x495 // changed from unused to DN_FLAG_DEXNAV_GET
-#define FLAG_DN_FLAG_DETECTOR_MODE                                       0x496 // changed from unused to DN_FLAG_DETECTOR_MODE
-#define FLAG_ENABLE_STAT_EDITOR                                           0x497 // Unused Flag changed to stat editor
-#define FLAG_FORCE_SHINY                                           0x498 // Unused Flag changed to force shiny
-#define FLAG_UNUSED_0x499                                           0x499 // Unused Flag
+#define FLAG_DN_FLAG_SEARCHING                                      0x494 // changed from unused to DN_FLAG_SEARCHING
+#define FLAG_DN_FLAG_DEXNAV_GET                                     0x495 // changed from unused to DN_FLAG_DEXNAV_GET
+#define FLAG_DN_FLAG_DETECTOR_MODE                                  0x496 // changed from unused to DN_FLAG_DETECTOR_MODE
+#define FLAG_ENABLE_STAT_EDITOR                                     0x497 // Unused Flag changed to stat editor
+#define FLAG_FORCE_SHINY                                            0x498 // Unused Flag changed to force shiny
+#define FLAG_RUNNING_SHOES_MENU_TOGGLE                              0x499 // Unused Flag changed to running shoes menu toggle so i can turn of press b to run toggle in menu.
 #define FLAG_UNUSED_0x49A                                           0x49A // Unused Flag
 #define FLAG_UNUSED_0x49B                                           0x49B // Unused Flag
 #define FLAG_UNUSED_0x49C                                           0x49C // Unused Flag

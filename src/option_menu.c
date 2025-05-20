@@ -27,6 +27,7 @@
 #define tWindowFrameType data[6]
 #define tFollowers data[7]
 #define tBattleSpeed data[8]
+#define tAutorun data[9]
 
 // Page 1
 enum
@@ -47,6 +48,7 @@ enum
 {
     MENUITEM_FOLLOWER,
     MENUITEM_BATTLESPEED,
+    MENUITEM_AUTORUN,
     MENUITEM_CANCEL_PG2,
     MENUITEM_COUNT_PG2,
 };
@@ -69,6 +71,7 @@ enum
 // Page 2
 #define YPOS_FOLLOWER        (MENUITEM_FOLLOWER * 16)
 #define YPOS_BATTLESPEED      (MENUITEM_BATTLESPEED * 16)
+#define YPOS_AUTORUN         (MENUITEM_AUTORUN * 16)
 
 #define PAGE_COUNT 2
 
@@ -90,6 +93,8 @@ static u8   Follower_ProcessInput(u8 selection);
 static void Follower_DrawChoices(u8 selection);
 static u8   BattleSpeed_ProcessInput(u8 selection);
 static void BattleSpeed_DrawChoices(u8 selection);
+static u8 AutoRun_ProcessInput(u8 selection);
+static void AutoRun_DrawChoices(u8 selection);
 static u8 Sound_ProcessInput(u8 selection);
 static void Sound_DrawChoices(u8 selection);
 static u8 FrameType_ProcessInput(u8 selection);
@@ -122,6 +127,7 @@ static const u8 *const sOptionMenuItemsNames_Pg2[MENUITEM_COUNT_PG2] =
 {
     [MENUITEM_FOLLOWER]        = gText_Follower,
     [MENUITEM_BATTLESPEED]     = gText_BattleSpeed,
+    [MENUITEM_AUTORUN]         = gText_AutoRun,
     [MENUITEM_CANCEL_PG2]      = gText_OptionMenuCancel,
 };
 
@@ -199,6 +205,7 @@ static void ReadAllCurrentSettings(u8 taskId)
     gTasks[taskId].tWindowFrameType = gSaveBlock2Ptr->optionsWindowFrameType;
     gTasks[taskId].tFollowers = FlagGet(FLAG_DISABLE_FOLLOWERS);
     gTasks[taskId].tBattleSpeed = gSaveBlock2Ptr->optionsBattleSpeed;
+    gTasks[taskId].tAutorun = FlagGet(FLAG_AUTORUN_MENU_TOGGLE);
 }
 
 static void DrawOptionsPg1(u8 taskId)
@@ -219,6 +226,7 @@ static void DrawOptionsPg2(u8 taskId)
     ReadAllCurrentSettings(taskId);
     Follower_DrawChoices(gTasks[taskId].tFollowers);
     BattleSpeed_DrawChoices(gTasks[taskId].tBattleSpeed);
+    AutoRun_DrawChoices(gTasks[taskId].tAutorun);
     HighlightOptionMenuItem(gTasks[taskId].tMenuSelection);
     CopyWindowToVram(WIN_OPTIONS, COPYWIN_FULL);
 }
@@ -519,6 +527,13 @@ static void Task_OptionMenuProcessInput_Pg2(u8 taskId)
             if (previousOption != gTasks[taskId].tBattleSpeed)
                 BattleSpeed_DrawChoices(gTasks[taskId].tBattleSpeed);
             break;
+        case MENUITEM_AUTORUN:
+            previousOption = gTasks[taskId].tAutorun;
+            gTasks[taskId].tAutorun = AutoRun_ProcessInput(gTasks[taskId].tAutorun);
+
+            if (previousOption != gTasks[taskId].tAutorun)
+                AutoRun_DrawChoices(gTasks[taskId].tAutorun);
+            break;    
         default:
             return;
         }
@@ -645,6 +660,39 @@ static void BattleSpeed_DrawChoices(u8 selection)
     DrawOptionMenuChoice(gText_BattleSpeed2x, 104 + xSpacer, YPOS_BATTLESPEED, styles[1]);
     DrawOptionMenuChoice(gText_BattleSpeed3x, 104 + 2 * xSpacer, YPOS_BATTLESPEED, styles[2]);
     DrawOptionMenuChoice(gText_BattleSpeed4x, GetStringRightAlignXOffset(1, gText_BattleSpeed4x, 198), YPOS_BATTLESPEED, styles[3]);
+}
+
+static u8 AutoRun_ProcessInput(u8 selection)
+{
+    if (JOY_NEW(DPAD_LEFT | DPAD_RIGHT))
+    {
+        selection ^= 1;
+        sArrowPressed = TRUE;
+    }
+
+    return selection;
+}
+
+static void AutoRun_DrawChoices(u8 selection)
+{
+    u8 styles[2];
+    styles[0] = 0;
+    styles[1] = 0;
+    styles[selection] = 1;
+
+    if (selection == 0) 
+    {
+        FlagClear(FLAG_AUTORUN_MENU_TOGGLE);
+    }
+    else
+    {
+
+        FlagSet(FLAG_AUTORUN_MENU_TOGGLE);
+        FlagClear(FLAG_RUNNING_SHOES_TOGGLE);
+    }
+
+    DrawOptionMenuChoice(gText_AutoRunOn, 104, YPOS_AUTORUN, styles[0]);
+    DrawOptionMenuChoice(gText_AutoRunOff, GetStringRightAlignXOffset(FONT_NORMAL, gText_AutoRunOff, 198), YPOS_AUTORUN, styles[1]);
 }
 
 static u8 TextSpeed_ProcessInput(u8 selection)

@@ -1228,7 +1228,7 @@
 #define FLAG_DN_FLAG_DETECTOR_MODE                                  0x496 // changed from unused to DN_FLAG_DETECTOR_MODE
 #define FLAG_ENABLE_STAT_EDITOR                                     0x497 // Unused Flag changed to stat editor
 #define FLAG_FORCE_SHINY                                            0x498 // Unused Flag changed to force shiny
-#define FLAG_RUNNING_SHOES_MENU_TOGGLE                              0x499 // Unused Flag changed to running shoes menu toggle so i can turn of press b to run toggle in menu.
+#define FLAG_AUTORUN_MENU_TOGGLE                                    0x499 // Unused Flag changed to running shoes menu toggle so i can turn of press b to run toggle in menu.
 #define FLAG_UNUSED_0x49A                                           0x49A // Unused Flag
 #define FLAG_UNUSED_0x49B                                           0x49B // Unused Flag
 #define FLAG_UNUSED_0x49C                                           0x49C // Unused Flag

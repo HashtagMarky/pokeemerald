@@ -94,6 +94,7 @@ void FieldClearPlayerInput(struct FieldInput *input)
     input->tookStep = FALSE;
     input->pressedBButton = FALSE;
     input->pressedRButton = FALSE;
+    input->pressedLButton = FALSE;
     input->input_field_1_1 = FALSE;
     input->input_field_1_2 = FALSE;
     input->input_field_1_3 = FALSE;
@@ -120,6 +121,8 @@ void FieldGetPlayerInput(struct FieldInput *input, u16 newKeys, u16 heldKeys)
                 input->pressedBButton = TRUE;
             if (newKeys & R_BUTTON && !FlagGet(DN_FLAG_SEARCHING))
                 input->pressedRButton = TRUE;
+            if (newKeys & L_BUTTON)
+                input->pressedLButton = TRUE;    
         }
 
         if (heldKeys & (DPAD_UP | DPAD_DOWN | DPAD_LEFT | DPAD_RIGHT))
@@ -164,6 +167,16 @@ void FieldGetPlayerInput(struct FieldInput *input, u16 newKeys, u16 heldKeys)
     }
 }
 #include "heat_start_menu.h"
+
+static bool8 TryAccessPortablePC()
+{
+    if (FlagGet(FLAG_PORTABLE_PC_TOGGLE) == TRUE)
+    {
+        ScriptContext_SetupScript(EventScript_AccessPokemonBoxLink);
+        return TRUE; // Indicate that the PC access was triggered
+    }
+    return FALSE; // Indicate that the PC access was not triggered 
+}
 
 int ProcessPlayerFieldInput(struct FieldInput *input)
 {
@@ -244,6 +257,9 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
     
     if (input->pressedRButton && TryStartDexNavSearch())
         return TRUE;
+
+    if (input->pressedLButton && TryAccessPortablePC())  
+        return TRUE; 
 
     if(input->input_field_1_2 && DEBUG_OVERWORLD_MENU && !DEBUG_OVERWORLD_IN_MENU)
     {

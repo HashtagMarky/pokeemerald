@@ -62,6 +62,7 @@ struct StatEditorResources
     u16 ivTotal;
     u16 partyid;
     u16 inputMode;
+    struct Pokemon *mon;
 };
 
 #define INPUT_SELECT_STAT 0
@@ -341,7 +342,8 @@ static bool8 StatEditor_DoGfxSetup(void)
             gMain.state++;
         break;
     case 4:
-        sStatEditorDataPtr->speciesID = GetMonData(ReturnPartyMon(), MON_DATA_SPECIES);
+        sStatEditorDataPtr->mon = ReturnPartyMon();
+        sStatEditorDataPtr->speciesID = GetMonData(sStatEditorDataPtr->mon, MON_DATA_SPECIES);
         FreeMonIconPalettes();
         LoadMonIconPalettes();
         LoadCompressedSpriteSheet(&sSpriteSheet_Selector);
@@ -498,8 +500,34 @@ static struct Pokemon *ReturnPartyMon()
 #define MON_ICON_Y     32 + 24
 static void SampleUi_DrawMonIcon(u16 dexNum)
 {
+    // The species ID for the Pokémon icon.
     u16 speciesId = dexNum;
-    sStatEditorDataPtr->monIconSpriteId = CreateMonPicSprite_Affine(speciesId, 0, 0x8000, TRUE, MON_ICON_X, MON_ICON_Y, 0, TAG_NONE);
+
+    // Initialize personality to 0 as a default.
+    u32 personality = 0;
+    // Initialize isShiny to FALSE as a default.
+    bool8 isShiny = FALSE;
+
+    // Check if a Pokémon struct is available in the stat editor data.
+    // We assume 'sStatEditorDataPtr->mon' points to the current Pokémon being edited.
+    if (sStatEditorDataPtr->mon != NULL)
+    {
+        // Retrieve the personality ID from the Pokémon data.
+        personality = GetMonData(sStatEditorDataPtr->mon, MON_DATA_PERSONALITY);
+        // Also retrieve the isShiny flag directly from the Pokémon data.
+        isShiny = GetMonData(sStatEditorDataPtr->mon, MON_DATA_IS_SHINY);
+    }
+
+    sStatEditorDataPtr->monIconSpriteId = CreateMonPicSprite_Affine(
+        speciesId,
+        isShiny,     // Pass the retrieved shiny status
+        personality, // Pass the actual personality to enable shiny detection
+        TRUE,        // Assuming this is the 'flags' argument (e.g., for front pic)
+        MON_ICON_X,
+        MON_ICON_Y,
+        0,           // paletteSlot
+        TAG_NONE     // paletteTag
+    );
 
     gSprites[sStatEditorDataPtr->monIconSpriteId].oam.priority = 0;
 }
@@ -803,11 +831,19 @@ static void Task_DelayedSpriteLoad(u8 taskId) // wait 4 frames after changing th
 
 static void ReloadNewPokemon(u8 taskId)
 {
+    // Make the old sprite invisible and free its resources.
     gSprites[sStatEditorDataPtr->monIconSpriteId].invisible = TRUE;
     FreeResourcesAndDestroySprite(&gSprites[sStatEditorDataPtr->monIconSpriteId], sStatEditorDataPtr->monIconSpriteId);
-    sStatEditorDataPtr->speciesID = GetMonData(ReturnPartyMon(), MON_DATA_SPECIES);
+
+    //Update sStatEditorDataPtr->mon to point to the currently selected party Pokémon.
+    sStatEditorDataPtr->mon = ReturnPartyMon();
+
+    //retrieve the species ID from the updated mon pointer.
+    sStatEditorDataPtr->speciesID = GetMonData(sStatEditorDataPtr->mon, MON_DATA_SPECIES);
+
+    // Set the task function to handle the delayed sprite loading.
     gTasks[taskId].func = Task_DelayedSpriteLoad;
-    gTasks[taskId].data[11] = 0;
+    gTasks[taskId].data[11] = 0; // Initialize data for the delayed task if needed
 }
 
 static void Task_StatEditorMain(u8 taskId) // input control when first loaded into menu

@@ -151,6 +151,28 @@ static const u32 sStartMenuTilemapSafari[] = INCBIN_U32("graphics/heat_start_men
 static const u16 sStartMenuPalette[] = INCBIN_U16("graphics/heat_start_menu/bg.gbapal");
 const u16 gStandardMenuPalette[] = INCBIN_U16("graphics/interface/std_menu.gbapal");
 
+// --alternate BG pals--
+static const u16 sStartMenuPalettes[MENU_PAL_COUNT][16] = {
+    INCBIN_U16("graphics/heat_start_menu/bg.gbapal"),
+    INCBIN_U16("graphics/heat_start_menu/bg_blue.gbapal"),
+    INCBIN_U16("graphics/heat_start_menu/bg_red.gbapal"),
+    INCBIN_U16("graphics/heat_start_menu/bg_grass_green.gbapal"),
+    INCBIN_U16("graphics/heat_start_menu/bg_slowpoke.gbapal"),
+    INCBIN_U16("graphics/heat_start_menu/bg_lava_red.gbapal"),
+    INCBIN_U16("graphics/heat_start_menu/bg_ice_white.gbapal"),
+    INCBIN_U16("graphics/heat_start_menu/bg_sandy_brown.gbapal"),
+};
+#define MENU_PAL_COUNT 8
+
+const u16 *GetStartMenuPalette(u8 id)
+{
+    if (id >= MENU_PAL_COUNT)
+        return sStartMenuPalettes[0]; // Return the default if ID is out of bounds
+    else
+        return sStartMenuPalettes[id];
+}
+
+u8 gCurrentStartMenuPalette = 0; // Initialize to the first palette by default
 //--SPRITE-GFX--
 #define TAG_ICON_GFX 1234
 #define TAG_ICON_PAL 0x4654
@@ -724,17 +746,23 @@ static void HeatStartMenu_SafariZone_CreateSprites(void) {
 }
 
 static void HeatStartMenu_LoadBgGfx(void) {
-  u8* buf = GetBgTilemapBuffer(0); 
-  LoadBgTilemap(0, 0, 0, 0);
-  DecompressAndCopyTileDataToVram(0, sStartMenuTiles, 0, 0, 0);
-  if (GetSafariZoneFlag() == FALSE) {
-    LZDecompressWram(sStartMenuTilemap, buf);
-  } else {
-    LZDecompressWram(sStartMenuTilemapSafari, buf);
-  }
-  LoadPalette(gStandardMenuPalette, BG_PLTT_ID(15), PLTT_SIZE_4BPP);
-  LoadPalette(sStartMenuPalette, BG_PLTT_ID(14), PLTT_SIZE_4BPP);
-  ScheduleBgCopyTilemapToVram(0);
+    u8* buf = GetBgTilemapBuffer(0);
+    LoadBgTilemap(0, 0, 0, 0);
+    DecompressAndCopyTileDataToVram(0, sStartMenuTiles, 0, 0, 0); // Keep as sStartMenuTiles (u32)
+    if (GetSafariZoneFlag() == FALSE) {
+        LZDecompressWram(sStartMenuTilemap, buf);
+    } else {
+        LZDecompressWram(sStartMenuTilemapSafari, buf);
+    }
+
+    // Load the standard menu palette
+    LoadPalette(gStandardMenuPalette, BG_PLTT_ID(15), PLTT_SIZE_4BPP);
+
+    // Load the start menu palette based on the ID
+    const u16 *selectedPalette = GetStartMenuPalette(gCurrentStartMenuPalette);
+    LoadPalette(selectedPalette, BG_PLTT_ID(14), PLTT_SIZE_4BPP);
+
+    ScheduleBgCopyTilemapToVram(0);
 }
 
 static void HeatStartMenu_ShowTimeWindow(void)

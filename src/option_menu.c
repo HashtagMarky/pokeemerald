@@ -17,6 +17,7 @@
 #include "gba/m4a_internal.h"
 #include "constants/rgb.h"
 #include "string_util.h"
+#include "heat_start_menu.h"
 
 #define tMenuSelection data[0]
 #define tTextSpeed data[1]
@@ -28,6 +29,7 @@
 #define tFollowers data[7]
 #define tBattleSpeed data[8]
 #define tAutorun data[9]
+#define tStartMenuPalette data[10]
 
 // Page 1
 enum
@@ -49,6 +51,7 @@ enum
     MENUITEM_FOLLOWER,
     MENUITEM_BATTLESPEED,
     MENUITEM_AUTORUN,
+    MENUITEM_MENUPAL,
     MENUITEM_CANCEL_PG2,
     MENUITEM_COUNT_PG2,
 };
@@ -72,6 +75,7 @@ enum
 #define YPOS_FOLLOWER        (MENUITEM_FOLLOWER * 16)
 #define YPOS_BATTLESPEED      (MENUITEM_BATTLESPEED * 16)
 #define YPOS_AUTORUN         (MENUITEM_AUTORUN * 16)
+#define YPOS_MENUPAL        (MENUITEM_MENUPAL * 16)
 
 #define PAGE_COUNT 2
 
@@ -99,6 +103,8 @@ static u8 Sound_ProcessInput(u8 selection);
 static void Sound_DrawChoices(u8 selection);
 static u8 FrameType_ProcessInput(u8 selection);
 static void FrameType_DrawChoices(u8 selection);
+static u8 MenuPal_ProcessInput(u8 selection);
+static void MenuPal_DrawChoices(u8 selection);
 static u8 ButtonMode_ProcessInput(u8 selection);
 static void ButtonMode_DrawChoices(u8 selection);
 static void DrawHeaderText(void);
@@ -128,6 +134,7 @@ static const u8 *const sOptionMenuItemsNames_Pg2[MENUITEM_COUNT_PG2] =
     [MENUITEM_FOLLOWER]        = gText_Follower,
     [MENUITEM_BATTLESPEED]     = gText_BattleSpeed,
     [MENUITEM_AUTORUN]         = gText_AutoRun,
+    [MENUITEM_MENUPAL]        = gText_MenuColor,
     [MENUITEM_CANCEL_PG2]      = gText_OptionMenuCancel,
 };
 
@@ -206,6 +213,7 @@ static void ReadAllCurrentSettings(u8 taskId)
     gTasks[taskId].tFollowers = FlagGet(FLAG_DISABLE_FOLLOWERS);
     gTasks[taskId].tBattleSpeed = gSaveBlock2Ptr->optionsBattleSpeed;
     gTasks[taskId].tAutorun = FlagGet(FLAG_AUTORUN_MENU_TOGGLE);
+    gTasks[taskId].tStartMenuPalette = gSaveBlock2Ptr->optionsStartMenuPalette;
 }
 
 static void DrawOptionsPg1(u8 taskId)
@@ -227,6 +235,7 @@ static void DrawOptionsPg2(u8 taskId)
     Follower_DrawChoices(gTasks[taskId].tFollowers);
     BattleSpeed_DrawChoices(gTasks[taskId].tBattleSpeed);
     AutoRun_DrawChoices(gTasks[taskId].tAutorun);
+    MenuPal_DrawChoices(gTasks[taskId].tStartMenuPalette);
     HighlightOptionMenuItem(gTasks[taskId].tMenuSelection);
     CopyWindowToVram(WIN_OPTIONS, COPYWIN_FULL);
 }
@@ -533,7 +542,13 @@ static void Task_OptionMenuProcessInput_Pg2(u8 taskId)
 
             if (previousOption != gTasks[taskId].tAutorun)
                 AutoRun_DrawChoices(gTasks[taskId].tAutorun);
-            break;    
+            break;
+        case MENUITEM_MENUPAL:
+            previousOption = gTasks[taskId].tStartMenuPalette;
+            gTasks[taskId].tStartMenuPalette = MenuPal_ProcessInput(gTasks[taskId].tStartMenuPalette);
+            if (previousOption != gTasks[taskId].tStartMenuPalette)
+                MenuPal_DrawChoices(gTasks[taskId].tStartMenuPalette);
+            break;           
         default:
             return;
         }
@@ -554,6 +569,7 @@ static void Task_OptionMenuSave(u8 taskId)
     gSaveBlock2Ptr->optionsButtonMode = gTasks[taskId].tButtonMode;
     gSaveBlock2Ptr->optionsWindowFrameType = gTasks[taskId].tWindowFrameType;
     gSaveBlock2Ptr->optionsBattleSpeed = gTasks[taskId].tBattleSpeed;
+    gSaveBlock2Ptr->optionsStartMenuPalette = gTasks[taskId].tStartMenuPalette;
 
     BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
     gTasks[taskId].func = Task_OptionMenuFadeOut;
@@ -693,6 +709,72 @@ static void AutoRun_DrawChoices(u8 selection)
 
     DrawOptionMenuChoice(gText_AutoRunOn, 104, YPOS_AUTORUN, styles[0]);
     DrawOptionMenuChoice(gText_AutoRunOff, GetStringRightAlignXOffset(FONT_NORMAL, gText_AutoRunOff, 198), YPOS_AUTORUN, styles[1]);
+}
+
+static u8 MenuPal_ProcessInput(u8 selection)
+{
+    if (JOY_NEW(DPAD_RIGHT))
+    {
+        if (selection < MENU_PAL_COUNT - 1)
+        {
+            selection++;
+            sArrowPressed = TRUE;
+        }
+        else
+        {
+            selection = 0;
+            sArrowPressed = TRUE;
+        }
+    }
+    if (JOY_NEW(DPAD_LEFT))
+    {
+        if (selection != 0)
+        {
+            selection--;
+            sArrowPressed = TRUE;
+        }
+        else
+        {
+            selection = MENU_PAL_COUNT - 1;
+            sArrowPressed = TRUE;
+        }
+    }
+
+    // Immediately update the global palette index
+    gCurrentStartMenuPalette = selection;
+
+    return selection;
+}
+
+static void MenuPal_DrawChoices(u8 selection)
+{
+    u8 text[16] = {EOS};
+    u8 n = selection + 1;
+    u16 i;
+
+    for (i = 0; gText_MenuColorNumber[i] != EOS && i <= 5; i++)
+        text[i] = gText_MenuColorNumber[i];
+
+    // Convert a number to decimal string
+    if (n / 10 != 0)
+    {
+        text[i] = n / 10 + CHAR_0;
+        i++;
+        text[i] = n % 10 + CHAR_0;
+        i++;
+    }
+    else
+    {
+        text[i] = n % 10 + CHAR_0;
+        i++;
+        text[i] = CHAR_SPACER;
+        i++;
+    }
+
+    text[i] = EOS;
+
+    DrawOptionMenuChoice(gText_MenuColorColor, 104, YPOS_MENUPAL, 0);
+    DrawOptionMenuChoice(text, 134, YPOS_MENUPAL, 1);
 }
 
 static u8 TextSpeed_ProcessInput(u8 selection)

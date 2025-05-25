@@ -62,11 +62,11 @@ static const struct TilesPal sWindowFrames[WINDOW_FRAMES_COUNT] =
 {
     {gTextWindowFrame1_Gfx, gTextWindowFrame1_Pal},
     {sTextWindowFrame2_Gfx, sTextWindowFrame2_Pal},
-    {sTextWindowFrame3_Gfx, sTextWindowFrame3_Pal},
-    {sTextWindowFrame4_Gfx, sTextWindowFrame4_Pal},
+    //{sTextWindowFrame3_Gfx, sTextWindowFrame3_Pal},
+    //{sTextWindowFrame4_Gfx, sTextWindowFrame4_Pal},
     {sTextWindowFrame5_Gfx, sTextWindowFrame5_Pal},
     {sTextWindowFrame6_Gfx, sTextWindowFrame6_Pal},
-    {sTextWindowFrame7_Gfx, sTextWindowFrame7_Pal},
+    //{sTextWindowFrame7_Gfx, sTextWindowFrame7_Pal},
     {sTextWindowFrame8_Gfx, sTextWindowFrame8_Pal},
     {sTextWindowFrame9_Gfx, sTextWindowFrame9_Pal},
     {sTextWindowFrame10_Gfx, sTextWindowFrame10_Pal},
@@ -78,7 +78,7 @@ static const struct TilesPal sWindowFrames[WINDOW_FRAMES_COUNT] =
     {sTextWindowFrame16_Gfx, sTextWindowFrame16_Pal},
     {sTextWindowFrame17_Gfx, sTextWindowFrame17_Pal},
     {sTextWindowFrame18_Gfx, sTextWindowFrame18_Pal},
-    {sTextWindowFrame19_Gfx, sTextWindowFrame19_Pal},
+    //{sTextWindowFrame19_Gfx, sTextWindowFrame19_Pal},
     {sTextWindowFrame20_Gfx, sTextWindowFrame20_Pal}
 };
 

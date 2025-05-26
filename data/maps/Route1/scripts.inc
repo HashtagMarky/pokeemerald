@@ -20,36 +20,32 @@ MomSaysHi::
 # 11 "data/maps/Route1/scripts.pory"
 	special HealPlayerParty
 # 12 "data/maps/Route1/scripts.pory"
-	setflag FLAG_DN_FLAG_SEARCHING
-# 13 "data/maps/Route1/scripts.pory"
 	setflag FLAG_DN_FLAG_DEXNAV_GET
-# 14 "data/maps/Route1/scripts.pory"
-	setflag FLAG_DN_FLAG_DETECTOR_MODE
-# 15 "data/maps/Route1/scripts.pory"
+# 13 "data/maps/Route1/scripts.pory"
 	setflag FLAG_ENABLE_STAT_EDITOR
-# 16 "data/maps/Route1/scripts.pory"
+# 14 "data/maps/Route1/scripts.pory"
 	setflag FLAG_PORTABLE_PC_TOGGLE
-# 17 "data/maps/Route1/scripts.pory"
+# 15 "data/maps/Route1/scripts.pory"
 	fadescreen FADE_FROM_BLACK
-# 18 "data/maps/Route1/scripts.pory"
+# 16 "data/maps/Route1/scripts.pory"
 	msgbox MomSaysHi_Text_2
-# 19 "data/maps/Route1/scripts.pory"
+# 17 "data/maps/Route1/scripts.pory"
 	release
 	end
 
 
 Mailbox::
-# 24 "data/maps/Route1/scripts.pory"
+# 22 "data/maps/Route1/scripts.pory"
 	lock
-# 25 "data/maps/Route1/scripts.pory"
+# 23 "data/maps/Route1/scripts.pory"
 	msgbox Mailbox_Text_0
-# 26 "data/maps/Route1/scripts.pory"
+# 24 "data/maps/Route1/scripts.pory"
 	release
 	end
 
 
 Route1LittleBoyNPC::
-# 31 "data/maps/Route1/scripts.pory"
+# 29 "data/maps/Route1/scripts.pory"
 	msgbox Route1LittleBoyNPC_Text_0, MSGBOX_NPC
 	end
 
@@ -65,13 +61,13 @@ MomSaysHi_Text_1:
 	.string "You should take a rest.$"
 
 MomSaysHi_Text_2:
-# 18 "data/maps/Route1/scripts.pory"
+# 16 "data/maps/Route1/scripts.pory"
 	.string "Take care, honey!$"
 
 Mailbox_Text_0:
-# 25 "data/maps/Route1/scripts.pory"
+# 23 "data/maps/Route1/scripts.pory"
 	.string "{PLAYER}'s House$"
 
 Route1LittleBoyNPC_Text_0:
-# 31 "data/maps/Route1/scripts.pory"
+# 29 "data/maps/Route1/scripts.pory"
 	.string "I gotta catch more Pokémon!\nPokémon with cool knees are so neat.$"

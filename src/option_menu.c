@@ -31,6 +31,8 @@
 #define tAutorun data[9]
 #define tStartMenuPalette data[10]
 
+ //extern u8 gCurrentStartMenuPalette;
+
 // Page 1
 enum
 {
@@ -739,9 +741,6 @@ static u8 MenuPal_ProcessInput(u8 selection)
             sArrowPressed = TRUE;
         }
     }
-
-    // Immediately update the global palette index
-    gCurrentStartMenuPalette = selection;
 
     return selection;
 }

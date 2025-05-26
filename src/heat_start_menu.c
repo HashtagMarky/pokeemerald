@@ -172,7 +172,6 @@ const u16 *GetStartMenuPalette(u8 id)
         return sStartMenuPalettes[id];
 }
 
-u8 gCurrentStartMenuPalette = 0; // Initialize to the first palette by default
 //--SPRITE-GFX--
 #define TAG_ICON_GFX 1234
 #define TAG_ICON_PAL 0x4654
@@ -758,8 +757,8 @@ static void HeatStartMenu_LoadBgGfx(void) {
     // Load the standard menu palette
     LoadPalette(gStandardMenuPalette, BG_PLTT_ID(15), PLTT_SIZE_4BPP);
 
-    // Load the start menu palette based on the ID
-    const u16 *selectedPalette = GetStartMenuPalette(gCurrentStartMenuPalette);
+    // Load the start menu palette based on the persistent setting
+    const u16 *selectedPalette = GetStartMenuPalette(gSaveBlock2Ptr->optionsStartMenuPalette);
     LoadPalette(selectedPalette, BG_PLTT_ID(14), PLTT_SIZE_4BPP);
 
     ScheduleBgCopyTilemapToVram(0);

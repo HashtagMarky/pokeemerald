@@ -89,6 +89,7 @@ static const u8 sWindowVerticalScrollSpeeds[] = {
     [OPTIONS_TEXT_SPEED_SLOW] = 1,
     [OPTIONS_TEXT_SPEED_MID] = 2,
     [OPTIONS_TEXT_SPEED_FAST] = 4,
+    
 };
 
 static const struct GlyphWidthFunc sGlyphWidthFuncs[] =
@@ -1065,9 +1066,10 @@ void DrawDownArrow(u8 windowId, u16 x, u16 y, u8 bgColor, bool32 drawArrow, u8 *
 static u16 RenderText(struct TextPrinter *textPrinter)
 {
     struct TextPrinterSubStruct *subStruct = (struct TextPrinterSubStruct *)(&textPrinter->subStructFields);
-    u16 currChar;
+    u16 currChar, nextChar;
     s32 width;
     s32 widthHelper;
+    u8 repeats = 0;
 
     switch (textPrinter->state)
     {
@@ -1090,9 +1092,26 @@ static u16 RenderText(struct TextPrinter *textPrinter)
             textPrinter->delayCounter = 3;
         else
             textPrinter->delayCounter = textPrinter->textSpeed;
+        switch (GetPlayerTextSpeed())
+        {
+            case OPTIONS_TEXT_SPEED_SLOW:
+                repeats = 1;
+                break;
+            case OPTIONS_TEXT_SPEED_MID:
+                repeats = 1;
+                break;
+            case OPTIONS_TEXT_SPEED_FAST:
+                repeats = 1;
+                break;
+            case OPTIONS_TEXT_SPEED_FASTER:
+                repeats = 2;
+                break;
+        }
 
+        do {
         currChar = *textPrinter->printerTemplate.currentChar;
         textPrinter->printerTemplate.currentChar++;
+        nextChar = *textPrinter->printerTemplate.currentChar;
 
         switch (currChar)
         {
@@ -1306,6 +1325,23 @@ static u16 RenderText(struct TextPrinter *textPrinter)
             else
                 textPrinter->printerTemplate.currentX += gCurGlyph.width;
         }
+        if (repeats == 2)
+        {
+            switch (nextChar)
+            {
+            case CHAR_NEWLINE:
+            case PLACEHOLDER_BEGIN:
+            case EXT_CTRL_CODE_BEGIN:
+            case CHAR_PROMPT_CLEAR:
+            case CHAR_PROMPT_SCROLL:
+            case CHAR_KEYPAD_ICON:
+            case EOS:
+                repeats--;
+                break;
+            }
+        }
+        repeats--;
+        } while (repeats > 0);
         return RENDER_PRINT;
     case RENDER_STATE_WAIT:
         if (TextPrinterWait(textPrinter))

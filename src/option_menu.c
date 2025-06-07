@@ -1,5 +1,6 @@
 #include "global.h"
 #include "option_menu.h"
+#include "option_plus_menu.h"
 #include "bg.h"
 #include "gpu_regs.h"
 #include "international_string_util.h"
@@ -18,6 +19,8 @@
 #include "constants/rgb.h"
 #include "string_util.h"
 #include "heat_start_menu.h"
+
+#define useOptionPlusMenu TRUE
 
 #define tMenuSelection data[0]
 #define tTextSpeed data[1]
@@ -243,6 +246,11 @@ static void DrawOptionsPg2(u8 taskId)
 
 void CB2_InitOptionMenu(void)
 {
+    if (useOptionPlusMenu)
+    {
+        CB2_InitOptionPlusMenu();
+        return;
+    }
     u8 taskId;
     switch (gMain.state)
     {

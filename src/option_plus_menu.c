@@ -36,7 +36,6 @@ enum
     MENUITEM_BATTLESCENE,
     MENUITEM_BATTLESTYLE,
     MENUITEM_SOUND,
-    MENUITEM_BUTTONMODE,
     MENUITEM_FRAMETYPE,
     MENUITEM_CANCEL,
     MENUITEM_COUNT,
@@ -45,10 +44,10 @@ enum
 // Custom options
 enum
 {
+    MENUITEM_MENUPAL,
     MENUITEM_FOLLOWER,
     MENUITEM_BATTLESPEED,
     MENUITEM_AUTORUN,
-    MENUITEM_MENUPAL,
     MENUITEM_CANCEL_PG2,
     MENUITEM_COUNT_PG2,
 };
@@ -70,7 +69,7 @@ static const struct WindowTemplate sOptionMenuWinTemplates[] =
         .tilemapTop = 0,
         .width = 30,
         .height = 2,
-        .paletteNum = 1,
+        .paletteNum = 2,
         .baseBlock = 2
     },
     {//WIN_OPTIONS
@@ -123,7 +122,7 @@ static const struct BgTemplate sOptionMenuBgTemplates[] =
     {
        .bg = 3,
        .charBaseIndex = 3,
-       .mapBaseIndex = 27,
+       .mapBaseIndex = 28,
        .screenSize = 0,
        .paletteMode = 0,
        .priority = 2,
@@ -176,9 +175,7 @@ static void DrawDescriptionText(void);
 static void DrawOptionMenuChoice(const u8 *text, u8 x, u8 y, u8 style, bool8 active);
 static void UNUSED DrawChoices_Options_Three(const u8 *const *const strings, int selection, int y, bool8 active);
 static void ReDrawAll(void);
-static void TextSpeed_DrawChoices(int selection, int y);
 static void TextSpeed_DrawChoicesTwo(int selection, int y);
-static void ButtonMode_DrawChoices(int selection, int y);
 static void FrameType_DrawChoices(int selection, int y);
 static void BattleScene_DrawChoices(int selection, int y);
 static void BattleStyle_DrawChoices(int selection, int y);
@@ -206,9 +203,9 @@ static const u16 sOptionsPlusPalette[] = INCBIN_U16("graphics/ui_options_plus/op
 static const u32 sOptionsPlusTilemap[] = INCBIN_U32("graphics/ui_options_plus/options_plus_tiles.bin.lz");
 
 // Scrolling Background
-static const u32 sScrollBgTiles[] = INCBIN_U32("graphics/ui_options_plus/scroll_tiles.4bpp.lz");
-static const u32 sScrollBgTilemap[] = INCBIN_U32("graphics/ui_options_plus/scroll_tiles.bin.lz");
-static const u16 sScrollBgPalette[] = INCBIN_U16("graphics/ui_options_plus/scroll_tiles.gbapal");
+static const u32 sScrollBgTiles[] = INCBIN_U32("graphics/ui_options_plus/waterscrollscaletwo.4bpp.lz");
+static const u32 sScrollBgTilemap[] = INCBIN_U32("graphics/ui_options_plus/waterscrollscaletwo.bin.lz");
+static const u16 sScrollBgPalette[] = INCBIN_U16("graphics/ui_options_plus/waterscrollscaletwo.gbapal");
 
 #define TEXT_COLOR_OPTIONS_WHITE                1
 #define TEXT_COLOR_OPTIONS_GRAY_FG              2
@@ -238,17 +235,16 @@ static const MenuItemFunctions sItemFunctionsVanilla[MENUITEM_COUNT] =
     [MENUITEM_BATTLESCENE]   = {BattleScene_DrawChoices,    TwoOptions_ProcessInput},
     [MENUITEM_BATTLESTYLE]    = {BattleStyle_DrawChoices,     TwoOptions_ProcessInput},
     [MENUITEM_SOUND]    = {SoundMode_DrawChoices,     Sound_ProcessInput},
-    [MENUITEM_BUTTONMODE]    = {ButtonMode_DrawChoices,     ThreeOptions_ProcessInput},
     [MENUITEM_FRAMETYPE]    = {FrameType_DrawChoices,     FrameType_ProcessInput},
     [MENUITEM_CANCEL]       = {NULL, NULL},
 };
 
 static const MenuItemFunctions sItemFunctionsCustom[MENUITEM_COUNT_PG2] =
 {
+    [MENUITEM_MENUPAL]       = {DrawChoices_MenuPal,   ProcessInput_MenuPal},
     [MENUITEM_FOLLOWER]  = {DrawChoices_Follower,    TwoOptions_ProcessInput},
     [MENUITEM_BATTLESPEED]  = {BattleSpeed_DrawChoices,    BattleSpeed_ProcessInput_New},
     [MENUITEM_AUTORUN]  = {DrawChoices_AutoRun,    TwoOptions_ProcessInput},
-    [MENUITEM_MENUPAL]       = {DrawChoices_MenuPal,   ProcessInput_MenuPal},
     [MENUITEM_CANCEL_PG2]       = {NULL, NULL},
 };
 
@@ -259,7 +255,6 @@ static const u8 *const sOptionMenuItemsNamesVanilla[MENUITEM_COUNT] =
     [MENUITEM_BATTLESCENE] = gText_BattleScene,
     [MENUITEM_BATTLESTYLE] = gText_BattleStyle,
     [MENUITEM_SOUND]       = gText_Sound,
-    [MENUITEM_BUTTONMODE]  = gText_ButtonMode,
     [MENUITEM_FRAMETYPE]   = gText_Frame,
     [MENUITEM_CANCEL]       = gText_OptionMenuSave,
 };
@@ -297,7 +292,6 @@ static bool8 CheckConditions(int selection)
         case MENUITEM_BATTLESCENE:
         case MENUITEM_BATTLESTYLE:
         case MENUITEM_SOUND:
-        case MENUITEM_BUTTONMODE:
         case MENUITEM_FRAMETYPE:
         case MENUITEM_CANCEL:
         case MENUITEM_COUNT:
@@ -329,17 +323,14 @@ static const u8 sText_Desc_TextSpeedSlow[]     = _("Text will be displayed slowl
 static const u8 sText_Desc_TextSpeedMedium[]      = _("Text will be displayed at a\nmedium speed.");
 static const u8 sText_Desc_TextSpeedFast[]      = _("Text will be displayed quickly.");
 static const u8 sText_Desc_TextSpeedFaster[]    = _("Text will be displayed at the\nfastest speed possible.");
-static const u8 sText_Desc_MenuPal[]            = _("Choose the color of the menu.");
+static const u8 sText_Desc_MenuPal[]            = _("Choose the color of the start\nmenu.");
 static const u8 sText_Desc_Follower_On[]         = _("Your POKéMON will follow you\nin the overworld.");
 static const u8 sText_Desc_Follower_Off[]        = _("Your POKéMON will not follow you\nin the overworld.");
-static const u8 sText_Desc_ButtonMode[]         = _("All buttons work as normal.");
-static const u8 sText_Desc_ButtonMode_LR[]      = _("On some screens the L and R buttons\nact as left and right.");
-static const u8 sText_Desc_ButtonMode_LA[]      = _("The L button acts as another A\nbutton for one-handed play.");
 static const u8 sText_Desc_FrameType[]          = _("Choose the frame surrounding the\nwindows.");
 static const u8 sText_Desc_MatchCallOn[]        = _("TRAINERs will be able to call you,\noffering rematches and info.");
 static const u8 sText_Desc_MatchCallOff[]       = _("You will not receive calls.\nSpecial events will still occur.");
 static const u8 sText_Desc_Autorun_Toggle[]     = _("Toggle between running and walking\nby pressing the {B_BUTTON} button.");
-static const u8 sText_Desc_Autorun_Hold[]       = _("Hold the {B_BUTTON} button to run");
+static const u8 sText_Desc_Autorun_Hold[]       = _("Hold the {B_BUTTON} button to run.");
 static const u8 sText_Desc_BattleScene_On[]     = _("Show the POKéMON battle animations.");
 static const u8 sText_Desc_BattleScene_Off[]    = _("Skip the POKéMON battle animations.");
 static const u8 sText_Desc_BattleStyle_Shift[]  = _("Get the option to switch your\nPOKéMON after the enemies faints.");
@@ -354,9 +345,9 @@ static const u8 sText_Desc_DoubleBattles_Off[]  = _("All Trainer battles will be
 static const u8 sText_Desc_MoveInfo_On[]        = _("Shows a window with information of\nmoves.");
 static const u8 sText_Desc_MoveInfo_Off[]       = _("Disables move information window.");
 static const u8 sText_Desc_BattleSpeed_1x[]     = _("Battle animations will play at default\nspeed.");
-static const u8 sText_Desc_BattleSpeed_2x[]     = _("Battle animations will play in 2x\n speed.");
-static const u8 sText_Desc_BattleSpeed_3x[]     = _("Battle animations will play in 3x\n speed.");
-static const u8 sText_Desc_BattleSpeed_4x[]     = _("Battle animations will play in 4x\n speed.");
+static const u8 sText_Desc_BattleSpeed_2x[]     = _("Battle animations will play at 2x\nspeed.");
+static const u8 sText_Desc_BattleSpeed_3x[]     = _("Battle animations will play at 3x\nspeed.");
+static const u8 sText_Desc_BattleSpeed_4x[]     = _("Battle animations will play at 4x\nspeed.");
 
 static const u8 sText_Desc_SoundMono[]          = _("Sound is the same in all speakers.\nRecommended for original hardware.");
 static const u8 sText_Desc_SoundStereo[]        = _("Play the left and right audio channel\nseperatly. Great with headphones.");
@@ -371,7 +362,6 @@ static const u8 *const sOptionMenuItemDescriptionsVanilla[MENUITEM_COUNT][3] =
     [MENUITEM_BATTLESCENE]  = {sText_Desc_BattleScene_On,       sText_Desc_BattleScene_Off,       sText_Empty},
     [MENUITEM_BATTLESTYLE]  = {sText_Desc_BattleStyle_Shift,    sText_Desc_BattleStyle_Set,       sText_Empty},
     [MENUITEM_SOUND]     = {sText_Desc_SoundMono,            sText_Desc_SoundStereo,            sText_Empty},
-    [MENUITEM_BUTTONMODE]  = {sText_Desc_ButtonMode,           sText_Desc_ButtonMode_LR,        sText_Desc_ButtonMode_LA},
     [MENUITEM_FRAMETYPE]   = {sText_Desc_FrameType,            sText_Empty,                     sText_Empty},
     [MENUITEM_CANCEL]      = {sText_Desc_Save,                 sText_Empty,                     sText_Empty},
 };
@@ -396,7 +386,6 @@ static const u8 *const sOptionMenuItemDescriptionsDisabledVanilla[MENUITEM_COUNT
     [MENUITEM_BATTLESCENE] = sText_Empty,
     [MENUITEM_BATTLESTYLE] = sText_Empty,
     [MENUITEM_SOUND]       = sText_Empty,
-    [MENUITEM_BUTTONMODE]  = sText_Empty,
     [MENUITEM_FRAMETYPE]   = sText_Empty,
     [MENUITEM_CANCEL]      = sText_Empty,
 };
@@ -476,7 +465,7 @@ static void VBlankCB(void)
     LoadOam();
     ProcessSpriteCopyRequests();
     TransferPlttBuffer();
-    ChangeBgY(3, 96, BG_COORD_ADD);
+    ChangeBgY(3, 96, BG_COORD_SUB);
 }
 
 static const u8 sText_TopBar_Vanilla[]         = _("VANILLA");
@@ -492,18 +481,18 @@ static void DrawTopBarText(void)
 {
     const u8 color[3] = { 0, TEXT_COLOR_WHITE, TEXT_COLOR_OPTIONS_GRAY_FG };
 
-    FillWindowPixelBuffer(WIN_TOPBAR, PIXEL_FILL(0));
+    FillWindowPixelBuffer(WIN_TOPBAR, PIXEL_FILL(7));
     switch (sOptions->submenu)
     {
         case MENU_VANILLA:
             AddTextPrinterParameterized3(WIN_TOPBAR, FONT_SMALL, 105, 1, color, 0, sText_TopBar_Vanilla);
-            AddTextPrinterParameterized3(WIN_TOPBAR, FONT_SMALL, 2, 1, color, 0, sText_TopBar_General_Left);  // Show L to go to SOUND
+            //AddTextPrinterParameterized3(WIN_TOPBAR, FONT_SMALL, 2, 1, color, 0, sText_TopBar_General_Left);  // Show L to go to SOUND
             AddTextPrinterParameterized3(WIN_TOPBAR, FONT_SMALL, 190, 1, color, 0, sText_TopBar_General_Right);
             break;
         case MENU_CUSTOM:
             AddTextPrinterParameterized3(WIN_TOPBAR, FONT_SMALL, 105, 1, color, 0, sText_TopBar_Custom);
             AddTextPrinterParameterized3(WIN_TOPBAR, FONT_SMALL, 2, 1, color, 0, sText_TopBar_Battle_Left);
-            AddTextPrinterParameterized3(WIN_TOPBAR, FONT_SMALL, 190, 1, color, 0, sText_TopBar_Battle_Right);
+            //AddTextPrinterParameterized3(WIN_TOPBAR, FONT_SMALL, 190, 1, color, 0, sText_TopBar_Battle_Right);
             break;
     }
     PutWindowTilemap(WIN_TOPBAR);
@@ -719,7 +708,6 @@ void CB2_InitOptionPlusMenu(void)
         sOptions->sel_vanilla[MENUITEM_BATTLESCENE] = gSaveBlock2Ptr->optionsBattleSceneOff;
         sOptions->sel_vanilla[MENUITEM_BATTLESTYLE] = gSaveBlock2Ptr->optionsBattleStyle;
         sOptions->sel_vanilla[MENUITEM_SOUND]       = gSaveBlock2Ptr->optionsSound;
-        sOptions->sel_vanilla[MENUITEM_BUTTONMODE]  = gSaveBlock2Ptr->optionsButtonMode;
         sOptions->sel_vanilla[MENUITEM_FRAMETYPE]   = gSaveBlock2Ptr->optionsWindowFrameType;
     
         sOptions->sel_custom[MENUITEM_MENUPAL]       = gSaveBlock2Ptr->optionsStartMenuPalette;
@@ -905,23 +893,29 @@ static void Task_OptionMenuProcessInput(u8 taskId)
     }
     else if (JOY_NEW(R_BUTTON))
     {
-        // Circular navigation: GENERAL → BATTLE → SOUND → GENERAL
-        sOptions->submenu = (sOptions->submenu + 1) % MENU_COUNT;
-        
-        DrawTopBarText();
-        ReDrawAll();
-        HighlightOptionMenuItem();
-        DrawDescriptionText();
+        // Move from VANILLA to CUSTOM only
+        if (sOptions->submenu == MENU_VANILLA)
+        {
+            sOptions->submenu = MENU_CUSTOM;
+            DrawTopBarText();
+            ReDrawAll();
+            HighlightOptionMenuItem();
+            DrawDescriptionText();
+        }
+        // If already MENU_CUSTOM, do nothing.
     }
     else if (JOY_NEW(L_BUTTON))
     {
-        // Circular navigation: GENERAL ← BATTLE ← SOUND ← GENERAL
-        sOptions->submenu = (sOptions->submenu + MENU_COUNT - 1) % MENU_COUNT;
-        
-        DrawTopBarText();
-        ReDrawAll();
-        HighlightOptionMenuItem();
-        DrawDescriptionText();
+        // Move from CUSTOM to VANILLA only
+        if (sOptions->submenu == MENU_CUSTOM)
+        {
+            sOptions->submenu = MENU_VANILLA;
+            DrawTopBarText();
+            ReDrawAll();
+            HighlightOptionMenuItem();
+            DrawDescriptionText();
+        }
+        // If already MENU_VANILLA, do nothing.
     }
 }
 
@@ -933,7 +927,6 @@ static void Task_OptionMenuSave(u8 taskId)
     gSaveBlock2Ptr->optionsBattleSceneOff   = sOptions->sel_vanilla[MENUITEM_BATTLESCENE];
     gSaveBlock2Ptr->optionsBattleStyle      = sOptions->sel_vanilla[MENUITEM_BATTLESTYLE];
     gSaveBlock2Ptr->optionsSound            = sOptions->sel_vanilla[MENUITEM_SOUND];
-    gSaveBlock2Ptr->optionsButtonMode       = sOptions->sel_vanilla[MENUITEM_BUTTONMODE];
     gSaveBlock2Ptr->optionsWindowFrameType  = sOptions->sel_vanilla[MENUITEM_FRAMETYPE];
 
     // These options (BattleSpeed and StartMenuPalette) are now
@@ -1204,17 +1197,6 @@ static void ReDrawAll(void)
 
 // Process Input functions ****SPECIFIC****
 
-static void ButtonMode_DrawChoices(int selection, int y)
-{
-    bool8 active = CheckConditions(MENUITEM_BUTTONMODE);
-    u8 styles[3] = {0};
-    int xMid = GetMiddleX(gText_ButtonTypeNormal, gText_ButtonTypeLR, gText_ButtonTypeLEqualsA);
-    styles[selection] = 1;
-
-    DrawOptionMenuChoice(gText_ButtonTypeNormal, 104, y, styles[0], active);
-    DrawOptionMenuChoice(gText_ButtonTypeLR, xMid, y, styles[1], active);
-    DrawOptionMenuChoice(gText_ButtonTypeLEqualsA, GetStringRightAlignXOffset(1, gText_ButtonTypeLEqualsA, 198), y, styles[2], active);
-}
 
 static void TextSpeed_DrawChoicesTwo(int selection, int y)
 {

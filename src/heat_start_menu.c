@@ -160,13 +160,14 @@ static const u16 sStartMenuPalettes[MENU_PAL_COUNT][16] = {
     INCBIN_U16("graphics/heat_start_menu/bg_og_grey.gbapal"),
     INCBIN_U16("graphics/heat_start_menu/bg_grass_green.gbapal"),
     INCBIN_U16("graphics/heat_start_menu/bg_slowpoke.gbapal"),
+    INCBIN_U16("graphics/heat_start_menu/bg_sunshine.gbapal"),
     INCBIN_U16("graphics/heat_start_menu/bg_lava_red.gbapal"),
     INCBIN_U16("graphics/heat_start_menu/bg_ice_white.gbapal"),
     INCBIN_U16("graphics/heat_start_menu/bg_sandy_brown.gbapal"),
-    INCBIN_U16("graphics/heat_start_menu/bg_lava_red.gbapal"), 
+    INCBIN_U16("graphics/heat_start_menu/bg_spacey.gbapal"), 
 
 };
-#define MENU_PAL_COUNT 11
+#define MENU_PAL_COUNT 12
 
 const u16 *GetStartMenuPalette(u8 id)
 {

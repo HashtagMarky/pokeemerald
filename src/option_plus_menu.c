@@ -188,6 +188,8 @@ static void DrawChoices_MenuPal(int selection, int y);
 static int BattleSpeed_ProcessInput_New(int selection);
 static void DrawBgWindowFrames(void);
 
+EWRAM_DATA static u8 sCurrPage = 0;
+
 // EWRAM vars
 EWRAM_DATA static struct OptionMenu *sOptions = NULL;
 static EWRAM_DATA u8 *sBg2TilemapBuffer = NULL;
@@ -715,7 +717,7 @@ void CB2_InitOptionPlusMenu(void)
         sOptions->sel_custom[MENUITEM_BATTLESPEED]  = gSaveBlock2Ptr->optionsBattleSpeed;
         sOptions->sel_custom[MENUITEM_AUTORUN]      = FlagGet(FLAG_AUTORUN_MENU_TOGGLE);
 
-        sOptions->submenu = MENU_VANILLA;
+        sOptions->submenu = sCurrPage; // Restore last page
 
         gMain.state++;
         break;
@@ -897,6 +899,7 @@ static void Task_OptionMenuProcessInput(u8 taskId)
         if (sOptions->submenu == MENU_VANILLA)
         {
             sOptions->submenu = MENU_CUSTOM;
+            sCurrPage = MENU_CUSTOM; // Remember last page
             DrawTopBarText();
             ReDrawAll();
             HighlightOptionMenuItem();
@@ -910,6 +913,7 @@ static void Task_OptionMenuProcessInput(u8 taskId)
         if (sOptions->submenu == MENU_CUSTOM)
         {
             sOptions->submenu = MENU_VANILLA;
+            sCurrPage = MENU_VANILLA;
             DrawTopBarText();
             ReDrawAll();
             HighlightOptionMenuItem();

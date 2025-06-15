@@ -837,7 +837,7 @@ static void HeatStartMenu_UpdateClockDisplay(void)
 }
 
 static const u8 gText_Poketch[] = _("   DexNav");
-static const u8 gText_Pokedex[] = _("  Pokédex");
+static const u8 gText_Pokedex[] = _(" Rotom Dex");
 static const u8 gText_Party[]   = _("    Party ");
 static const u8 gText_Bag[]     = _("      Bag  ");
 static const u8 gText_Trainer[] = _("   Trainer");

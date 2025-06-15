@@ -12,7 +12,7 @@ MomSaysHi::
 # 7 "data/maps/Route1/scripts.pory"
 	msgbox MomSaysHi_Text_1
 # 8 "data/maps/Route1/scripts.pory"
-	fadescreen FADE_TO_BLACK
+	fadescreenswapbuffers FADE_TO_BLACK
 # 9 "data/maps/Route1/scripts.pory"
 	playfanfare MUS_HEAL
 # 10 "data/maps/Route1/scripts.pory"
@@ -26,7 +26,7 @@ MomSaysHi::
 # 14 "data/maps/Route1/scripts.pory"
 	setflag FLAG_PORTABLE_PC_TOGGLE
 # 15 "data/maps/Route1/scripts.pory"
-	fadescreen FADE_FROM_BLACK
+	fadescreenswapbuffers FADE_FROM_BLACK
 # 16 "data/maps/Route1/scripts.pory"
 	msgbox MomSaysHi_Text_2
 # 17 "data/maps/Route1/scripts.pory"

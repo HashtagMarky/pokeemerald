@@ -1,7 +1,7 @@
 #ifndef GUARD_CONSTANTS_EVENT_OBJECTS_H
 #define GUARD_CONSTANTS_EVENT_OBJECTS_H
 
-#define OBJ_EVENT_GFX_BRENDAN_NORMAL               0
+#define OBJ_EVENT_GFX_ELIO_NORMAL                  0
 #define OBJ_EVENT_GFX_BRENDAN_MACH_BIKE            1
 #define OBJ_EVENT_GFX_BRENDAN_SURFING              2
 #define OBJ_EVENT_GFX_BRENDAN_FIELD_MOVE           3
@@ -90,7 +90,7 @@
 #define OBJ_EVENT_GFX_BREAKABLE_ROCK              86
 #define OBJ_EVENT_GFX_PUSHABLE_BOULDER            87
 #define OBJ_EVENT_GFX_MR_BRINEYS_BOAT             88
-#define OBJ_EVENT_GFX_MAY_NORMAL                  89
+#define OBJ_EVENT_GFX_SELENE_NORMAL               89
 #define OBJ_EVENT_GFX_MAY_MACH_BIKE               90
 #define OBJ_EVENT_GFX_MAY_ACRO_BIKE               91
 #define OBJ_EVENT_GFX_MAY_SURFING                 92
@@ -256,8 +256,9 @@
 #define OBJ_EVENT_GFX_KIAWE                      252               
 #define OBJ_EVENT_GFX_KUKUI                      253 
 #define OBJ_EVENT_GFX_LILLIE                     254
-#define OBJ_EVENT_GFX_ELIO_NORMAL                255
-#define OBJ_EVENT_GFX_SELENE_NORMAL              256
+#define OBJ_EVENT_GFX_BRENDAN_NORMAL             255
+#define OBJ_EVENT_GFX_MAY_NORMAL                 256
+
 
 
 // NOTE: The maximum amount of object events has been expanded from 255 to 65535.

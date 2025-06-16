@@ -1743,6 +1743,23 @@ extern const u16 gItemIconPalette_TwiceSpicedRadish[];
 extern const u32 gItemIcon_ReturnToFieldArrow[];
 extern const u16 gItemIconPalette_ReturnToFieldArrow[];
 
+//PokeRides
+extern const u32 gItemIcon_PokeRideCharizard[];
+extern const u16 gItemIconPalette_PokeRideCharizard[];
+extern const u32 gItemIcon_PokeRideStoutland[];
+extern const u16 gItemIconPalette_PokeRideStoutland[];
+extern const u32 gItemIcon_PokeRideSharpedo[];
+extern const u16 gItemIconPalette_PokeRideSharpedo[];
+extern const u32 gItemIcon_PokeRideLapras[];
+extern const u16 gItemIconPalette_PokeRideLapras[];
+extern const u32 gItemIcon_PokeRideMachamp[];
+extern const u16 gItemIconPalette_PokeRideMachamp[];
+extern const u32 gItemIcon_PokeRideMudsdale[];
+extern const u16 gItemIconPalette_PokeRideMudsdale[];
+extern const u32 gItemIcon_PokeRideTauros[];
+extern const u16 gItemIconPalette_PokeRideTauros[];
+
+
 //menu graphics
 extern const u16 gMenuInfoElements1_Pal[16];
 extern const u16 gMenuInfoElements2_Pal[16];

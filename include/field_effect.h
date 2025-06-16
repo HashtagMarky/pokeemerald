@@ -51,4 +51,22 @@ void StartEscapeRopeFieldEffect(void);
 void FieldEffectFreeGraphicsResources(struct Sprite *sprite);
 void FieldEff_CaveDust(void);
 
+// Start qol_field_moves
+#include "task.h"
+
+void Task_SurfFieldEffect(u8);
+void SurfFieldEffect_Init(struct Task *);
+void SurfFieldEffect_JumpOnSurfBlob(struct Task *);
+void SurfFieldEffect_End(struct Task *);
+
+bool8 WaterfallFieldEffect_Init(struct Task *task, struct ObjectEvent *objectEvent);
+bool8 WaterfallFieldEffect_RideUp(struct Task *task, struct ObjectEvent *objectEvent);
+bool8 WaterfallFieldEffect_ContinueRideOrEnd(struct Task *task, struct ObjectEvent *objectEvent);
+void Task_UseWaterfall(u8);
+
+void Task_UseDive(u8);
+bool8 DiveFieldEffect_Init(struct Task *);
+bool8 DiveFieldEffect_TryWarp(struct Task *);
+// End qol_field_moves
+
 #endif // GUARD_FIELD_EFFECTS_H

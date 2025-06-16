@@ -88,6 +88,30 @@ const u16 gItemIconPalette_BeastBall[] = INCBIN_U16("graphics/items/icon_palette
 const u32 gItemIcon_CherishBall[] = INCBIN_U32("graphics/items/icons/cherish_ball.4bpp.lz");
 const u16 gItemIconPalette_CherishBall[] = INCBIN_U16("graphics/items/icon_palettes/cherish_ball.gbapal");
 
+// PokeRides
+
+const u32 gItemIcon_PokeRideCharizard[] = INCBIN_U32("graphics/items/icons/pokeridecharizard.4bpp.lz");
+const u16 gItemIconPalette_PokeRideCharizard[] = INCBIN_U16("graphics/items/icon_palettes/pokeridecharizard.gbapal");
+
+const u32 gItemIcon_PokeRideLapras[] = INCBIN_U32("graphics/items/icons/pokeridelapras.4bpp.lz");
+const u16 gItemIconPalette_PokeRideLapras[] = INCBIN_U16("graphics/items/icon_palettes/pokeridelapras.gbapal");
+
+const u32 gItemIcon_PokeRideMachamp[] = INCBIN_U32("graphics/items/icons/pokeridemachamp.4bpp.lz");
+const u16 gItemIconPalette_PokeRideMachamp[] = INCBIN_U16("graphics/items/icon_palettes/pokeridemachamp.gbapal");
+
+const u32 gItemIcon_PokeRideSharpedo[] = INCBIN_U32("graphics/items/icons/pokeridesharpedo.4bpp.lz");
+const u16 gItemIconPalette_PokeRideSharpedo[] = INCBIN_U16("graphics/items/icon_palettes/pokeridesharpedo.gbapal");
+
+const u32 gItemIcon_PokeRideTauros[] = INCBIN_U32("graphics/items/icons/pokeridetauros.4bpp.lz");
+const u16 gItemIconPalette_PokeRideTauros[] = INCBIN_U16("graphics/items/icon_palettes/pokeridetauros.gbapal");
+
+const u32 gItemIcon_PokeRideMudsdale[] = INCBIN_U32("graphics/items/icons/pokeridemudsdale.4bpp.lz");
+const u16 gItemIconPalette_PokeRideMudsdale[] = INCBIN_U16("graphics/items/icon_palettes/pokeridemudsdale.gbapal");
+
+const u32 gItemIcon_PokeRideStoutland[] = INCBIN_U32("graphics/items/icons/pokeridestoutland.4bpp.lz");
+const u16 gItemIconPalette_PokeRideStoutland[] = INCBIN_U16("graphics/items/icon_palettes/pokeridestoutland.gbapal");
+
+
 // Medicine
 
 const u32 gItemIcon_Potion[] = INCBIN_U32("graphics/items/icons/potion.4bpp.lz");

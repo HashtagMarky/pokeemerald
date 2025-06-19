@@ -142,24 +142,24 @@ static const u8 sGenericMulchDesc[]   = _("A fertilizer that\n"
 // Start qol_field_moves
 
 static const u8 sCutToolDesc[] = _(
-	"This tool\n"
-    "is used for\n"
-    "cutting trees.");
+	"This Mudsdale\n"
+    "can gallop over\n"
+    "rocky terrain.");
 
 static const u8 sFlyToolDesc[] = _(
-	"This tool\n"
-    "is used for\n"
-    "going places.");
+	"This Charizard\n"
+    "flies you to\n"
+    "other places.");
 
 static const u8 sSurfToolDesc[] = _(
-	"This tool\n"
-    "is used for\n"
-    "riding waves.");
+	"This Lapras\n"
+    "allows you to\n"
+    "fish on the water.");
 
 static const u8 sStrengthToolDesc[] = _(
-	"This tool\n"
-    "is used for\n"
-    "moving boulders.");
+	"This Machamp\n"
+    "can move\n"
+    "heavy boulders.");
 
 static const u8 sFlashToolDesc[] = _(
 	"This tool\n"
@@ -167,14 +167,14 @@ static const u8 sFlashToolDesc[] = _(
     "lighting caves.");
 
 static const u8 sRockSmashToolDesc[] = _(
-	"This tool\n"
-    "is used for\n"
-    "smashing rocks.");
+	"This Tauros's\n"
+    "charge can\n"
+    "break rocks.");
 
 static const u8 sWaterfallToolDesc[] = _(
-	"This tool\n"
-    "is used for\n"
-    "climbing waterfalls.");
+	"This Sharpedo's\n"
+    "speed can jet\n"
+    "over waves.");
 
 static const u8 sDiveToolDesc[] = _(
 	"This tool\n"
@@ -12258,8 +12258,8 @@ const struct Item gItemsInfo[] =
         .type = ITEM_USE_FIELD,
         .fieldUseFunc = ItemUseOutOfBattle_Bike,
         .secondaryId = MACH_BIKE,
-        .iconPic = gItemIcon_MachBike,
-        .iconPalette = gItemIconPalette_MachBike,
+        .iconPic = gItemIcon_PokeRideTauros,
+        .iconPalette = gItemIconPalette_PokeRideTauros,
     },
 
     [ITEM_ACRO_BIKE] =
@@ -12332,18 +12332,18 @@ const struct Item gItemsInfo[] =
 
     [ITEM_DOWSING_MACHINE] =
     {
-        .name = _("Dowsing Machine"),
+        .name = _("Stoutland Search"),
         .price = 0,
         .description = COMPOUND_STRING(
-            "A device that\n"
-            "signals an invisible\n"
-            "item by sound."),
+            "This Stoutland\n"
+            "can search for\n"
+            "buried items."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
         .type = ITEM_USE_FIELD,
         .fieldUseFunc = ItemUseOutOfBattle_Itemfinder,
-        .iconPic = gItemIcon_DowsingMachine,
-        .iconPalette = gItemIconPalette_DowsingMachine,
+        .iconPic = gItemIcon_PokeRideStoutland,
+        .iconPalette = gItemIconPalette_PokeRideStoutland,
     },
 
     [ITEM_TOWN_MAP] =
@@ -14177,20 +14177,20 @@ const struct Item gItemsInfo[] =
 
     [ITEM_CUT_TOOL] =
     {
-        .name = _("Cut Tool"),
+        .name = _("Mudsdale Gallop"),
         .price = 0,
         .importance = 1,
         .description = sCutToolDesc,
         .pocket = POCKET_KEY_ITEMS,
         .type = ITEM_USE_FIELD,
         .fieldUseFunc = ItemUseOutOfBattle_CutTool,
-        .iconPic = gItemIcon_QuestionMark,
-        .iconPalette = gItemIconPalette_QuestionMark,
+        .iconPic = gItemIcon_PokeRideMudsdale,
+        .iconPalette = gItemIconPalette_PokeRideMudsdale,
     },
 
     [ITEM_FLY_TOOL] =
     {
-        .name = _("Fly Tool"),
+        .name = _("Charizard Glide"),
         .price = 0,
         .importance = 1,
         .description = sFlyToolDesc,
@@ -14203,28 +14203,28 @@ const struct Item gItemsInfo[] =
 
     [ITEM_SURF_TOOL] =
     {
-        .name = _("Surf Tool"),
+        .name = _("Lapras Paddle"),
         .price = 0,
         .importance = 1,
         .description = sSurfToolDesc,
         .pocket = POCKET_KEY_ITEMS,
         .type = ITEM_USE_FIELD,
         .fieldUseFunc = ItemUseOutOfBattle_SurfTool,
-        .iconPic = gItemIcon_QuestionMark,
-        .iconPalette = gItemIconPalette_QuestionMark,        
+        .iconPic = gItemIcon_PokeRideLapras,
+        .iconPalette = gItemIconPalette_PokeRideLapras,       
     },
 
     [ITEM_STRENGTH_TOOL] =
     {
-        .name = _("Strength Tool"),
+        .name = _("Machamp Shove"),
         .price = 0,
         .importance = 1,
         .description = sStrengthToolDesc,
         .pocket = POCKET_KEY_ITEMS,
         .type = ITEM_USE_FIELD,
         .fieldUseFunc = ItemUseOutOfBattle_StrengthTool,
-        .iconPic = gItemIcon_QuestionMark,
-        .iconPalette = gItemIconPalette_QuestionMark,        
+        .iconPic = gItemIcon_PokeRideMachamp,
+        .iconPalette = gItemIconPalette_PokeRideMachamp,        
     },
 
     [ITEM_FLASH_TOOL] =
@@ -14242,28 +14242,28 @@ const struct Item gItemsInfo[] =
 
     [ITEM_ROCKSMASH_TOOL] =
     {
-        .name = _("RockSmashTool"),
+        .name = _("Tauros Charge"),
         .price = 0,
         .importance = 1,
         .description = sRockSmashToolDesc,
         .pocket = POCKET_KEY_ITEMS,
         .type = ITEM_USE_FIELD,
         .fieldUseFunc = ItemUseOutOfBattle_RockSmashTool,
-        .iconPic = gItemIcon_QuestionMark,
-        .iconPalette = gItemIconPalette_QuestionMark,        
+        .iconPic = gItemIcon_PokeRideTauros,
+        .iconPalette = gItemIconPalette_PokeRideTauros,        
     },
 
     [ITEM_WATERFALL_TOOL] =
     {
-        .name = _("WaterfallTool"),
+        .name = _("Sharpedo Jet"),
         .price = 0,
         .importance = 1,
         .description = sWaterfallToolDesc,
         .pocket = POCKET_KEY_ITEMS,
         .type = ITEM_USE_FIELD,
         .fieldUseFunc = ItemUseOutOfBattle_WaterfallTool,
-        .iconPic = gItemIcon_QuestionMark,
-        .iconPalette = gItemIconPalette_QuestionMark,        
+        .iconPic = gItemIcon_PokeRideSharpedo,
+        .iconPalette = gItemIconPalette_PokeRideSharpedo,        
     },
 
     [ITEM_DIVE_TOOL] =
@@ -14275,8 +14275,8 @@ const struct Item gItemsInfo[] =
         .pocket = POCKET_KEY_ITEMS,
         .type = ITEM_USE_FIELD,
         .fieldUseFunc = ItemUseOutOfBattle_DiveTool,
-        .iconPic = gItemIcon_QuestionMark,
-        .iconPalette = gItemIconPalette_QuestionMark,        
+        .iconPic = gItemIcon_PokeRideSharpedo,
+        .iconPalette = gItemIconPalette_PokeRideSharpedo,        
     },
 
     [ITEM_TELEPORT_TOOL] =

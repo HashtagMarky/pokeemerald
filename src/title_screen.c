@@ -29,6 +29,12 @@ enum {
     TAG_LOGO_SHINE,
 };
 
+enum TitleScreens
+{
+    TS_ULTRA_ECROZMA,
+    TS_SOLGALEO,
+};
+
 #define VERSION_BANNER_RIGHT_TILEOFFSET 64
 #define VERSION_BANNER_LEFT_X 98
 #define VERSION_BANNER_RIGHT_X 162
@@ -57,6 +63,12 @@ static void SpriteCB_VersionBannerRight(struct Sprite *sprite);
 static void SpriteCB_PressStartCopyrightBanner(struct Sprite *sprite);
 static void SpriteCB_PokemonLogoShine(struct Sprite *sprite);
 
+static enum TitleScreens ReturnTitleScreenToDisplay(void);
+static const u32 *ReturnTitleScreenGfx(void);
+static const u32 *ReturnTitleScreenTilemap(void);
+static const u16 *ReturnTitleScreenPal(void);
+static const struct FadeColors *ReturnTitleScreenFadeColors(void);
+
 // const rom data
 static const u16 sUnusedUnknownPal[] = INCBIN_U16("graphics/title_screen/unused.gbapal");
 
@@ -65,6 +77,10 @@ static const u32 sTitleScreenRayquazaTilemap[] = INCBIN_U32("graphics/title_scre
 static const u32 sTitleScreenLogoShineGfx[] = INCBIN_U32("graphics/title_screen/logo_shine.4bpp.lz");
 static const u32 sTitleScreenCloudsGfx[] = INCBIN_U32("graphics/title_screen/clouds.4bpp.lz");
 
+static const u32 sTitleScreenSolgaleoGfx[] = INCBIN_U32("graphics/title_screen/solgaleo_tiles.4bpp.lz");
+static const u32 sTitleScreenSolgaleoTilemap[] = INCBIN_U32("graphics/title_screen/solgaleo_tiles.bin.lz");
+const u16 sTitleScreenBgPalettes_Solgaleo[] = INCBIN_U16("graphics/title_screen/pokemon_logo.gbapal",
+                                                        "graphics/title_screen/solgaleo_tiles.gbapal");
 
 
 // Used to blend "Emerald Version" as it passes over over the Pokémon banner.
@@ -598,10 +614,10 @@ void CB2_InitTitleScreen(void)
         // bg2
         LZ77UnCompVram(gTitleScreenPokemonLogoGfx, (void *)(BG_CHAR_ADDR(0)));
         LZ77UnCompVram(gTitleScreenPokemonLogoTilemap, (void *)(BG_SCREEN_ADDR(9))); 
-        LoadPalette(gTitleScreenBgPalettes, BG_PLTT_ID(0), 15 * PLTT_SIZE_4BPP);
+        LoadPalette(ReturnTitleScreenPal(), BG_PLTT_ID(0), 15 * PLTT_SIZE_4BPP);
         // bg3
-        LZ77UnCompVram(sTitleScreenRayquazaGfx, (void *)(BG_CHAR_ADDR(2)));
-        LZ77UnCompVram(sTitleScreenRayquazaTilemap, (void *)(BG_SCREEN_ADDR(26)));
+        LZ77UnCompVram(ReturnTitleScreenGfx(), (void *)(BG_CHAR_ADDR(2)));
+        LZ77UnCompVram(ReturnTitleScreenTilemap(), (void *)(BG_SCREEN_ADDR(26)));
         // bg1
         LZ77UnCompVram(sTitleScreenCloudsGfx, (void *)(BG_CHAR_ADDR(3)));
         LZ77UnCompVram(gTitleScreenCloudsTilemap, (void *)(BG_SCREEN_ADDR(27)));
@@ -854,18 +870,154 @@ static void CB2_GoToBerryFixScreen(void)
     }
 }
 
+// static void UpdateLegendaryMarkingColor(u8 frameNum)
+// {
+// {
+//     if ((frameNum % 4) == 0) // Change color every 4th frame
+//     {
+//         s32 intensity = Cos(frameNum, 128) + 128;
+//         s32 r = 24 - (intensity * 15 / 250);
+//         s32 g = 24 - (intensity * 15 / 250);
+//         s32 b = 24 - (intensity * 15 / 250); // modified to make it glow from dark grey to white.
+
+//         u16 color = RGB(r, g, b);
+//         LoadPalette(&color, BG_PLTT_ID(14) + 15, sizeof(color));
+//    }
+// }
+// }
+
+struct FadeColors
+{
+    u16 color1;
+    u16 color2;
+    u8 colorIndex;
+};
+
+#ifndef RHH_EXPANSION
+#define RGB2GBA(r, g, b) (((r >> 3) & 31) | (((g >> 3) & 31) << 5) | (((b >> 3) & 31) << 10))
+#endif
+
+static const struct FadeColors sFadeColors_Necrozma[16] = {
+    {
+        .color1 = RGB2GBA(85, 85, 85),
+        .color2 = RGB2GBA(250, 250, 250),
+        .colorIndex = 15
+    }
+};
+
+static const struct FadeColors sFadeColors_Solgaleo[16] = {
+    {
+        .color1 = RGB2GBA(223, 104, 8),
+        .color2 = RGB2GBA(255, 255, 255),
+        .colorIndex = 2
+    },
+    {
+        .color1 = RGB2GBA(240, 203, 73),
+        .color2 = RGB2GBA(255, 255, 255),
+        .colorIndex = 3
+    }
+};
+
 static void UpdateLegendaryMarkingColor(u8 frameNum)
 {
-{
+    const struct FadeColors *fadeColors = ReturnTitleScreenFadeColors();
     if ((frameNum % 4) == 0) // Change color every 4th frame
     {
-        s32 intensity = Cos(frameNum, 128) + 128;
-        s32 r = 24 - (intensity * 15 / 250);
-        s32 g = 24 - (intensity * 15 / 250);
-        s32 b = 24 - (intensity * 15 / 250); // modified to make it glow from dark grey to white.
+        s32 intensity = (((Cos(frameNum, 128) + 128) * 10) / 250);
+        s32 r;
+        s32 g;
+        s32 b;
+        u16 color;
+        u32 i;
 
-        u16 color = RGB(r, g, b);
-        LoadPalette(&color, BG_PLTT_ID(14) + 15, sizeof(color));
-   }
+        for (i = 0; i < 16; i++)
+        {
+            if (!fadeColors[i].colorIndex)
+            {
+                continue;
+            }
+            
+            if (intensity == 0)
+            {
+                color = fadeColors[i].color2;
+            }
+            else
+            {
+                if (GET_R(fadeColors[i].color1) <= GET_R(fadeColors[i].color2))
+                    r = (GET_R(fadeColors[i].color2) - (((GET_R(fadeColors[i].color2) - GET_R(fadeColors[i].color1)) * intensity) / 10));
+                else
+                    r = (GET_R(fadeColors[i].color2) + (((GET_R(fadeColors[i].color1) - GET_R(fadeColors[i].color2)) * intensity) / 10));
+
+                if (GET_G(fadeColors[i].color1) <= GET_G(fadeColors[i].color2))
+                    g = (GET_G(fadeColors[i].color2) - (((GET_G(fadeColors[i].color2) - GET_G(fadeColors[i].color1)) * intensity) / 10));
+                else
+                    g = (GET_G(fadeColors[i].color2) + (((GET_G(fadeColors[i].color1) - GET_G(fadeColors[i].color2)) * intensity) / 10));
+
+                if (GET_B(fadeColors[i].color1) <= GET_B(fadeColors[i].color2))
+                    b = (GET_B(fadeColors[i].color2) - (((GET_B(fadeColors[i].color2) - GET_B(fadeColors[i].color1)) * intensity) / 10));
+                else
+                    b = (GET_B(fadeColors[i].color2) + (((GET_B(fadeColors[i].color1) - GET_B(fadeColors[i].color2)) * intensity) / 10));
+
+                color = RGB(r, g, b);
+            }
+            
+            LoadPalette(&color, BG_PLTT_ID(14) + fadeColors[i].colorIndex, sizeof(color));
+        }
+    }
 }
+
+static enum TitleScreens ReturnTitleScreenToDisplay(void)
+{
+    return TS_ULTRA_ECROZMA;
+}
+
+static const u32 *ReturnTitleScreenGfx(void)
+{
+    switch (ReturnTitleScreenToDisplay())
+    {
+    default:
+    case TS_ULTRA_ECROZMA:
+        return sTitleScreenRayquazaGfx;
+    
+    case TS_SOLGALEO:
+        return sTitleScreenSolgaleoGfx;
+    }
+}
+
+static const u32 *ReturnTitleScreenTilemap(void)
+{
+    switch (ReturnTitleScreenToDisplay())
+    {
+    default:
+    case TS_ULTRA_ECROZMA:
+        return sTitleScreenRayquazaTilemap;
+    
+    case TS_SOLGALEO:
+        return sTitleScreenSolgaleoTilemap;
+    }
+}
+static const u16 *ReturnTitleScreenPal(void)
+{
+    switch (ReturnTitleScreenToDisplay())
+    {
+    default:
+    case TS_ULTRA_ECROZMA:
+        return gTitleScreenBgPalettes;
+    
+    case TS_SOLGALEO:
+        return sTitleScreenBgPalettes_Solgaleo;
+    }
+}
+
+static const struct FadeColors *ReturnTitleScreenFadeColors(void)
+{
+    switch (ReturnTitleScreenToDisplay())
+    {
+    default:
+    case TS_ULTRA_ECROZMA:
+        return sFadeColors_Necrozma;
+    
+    case TS_SOLGALEO:
+        return sFadeColors_Solgaleo;
+    }
 }

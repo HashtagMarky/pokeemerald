@@ -65,7 +65,6 @@ static void SpriteCB_PressStartCopyrightBanner(struct Sprite *sprite);
 static void SpriteCB_PokemonLogoShine(struct Sprite *sprite);
 
 static enum TitleScreenPokemon ReturnTitleScreenToDisplay(void);
-static const struct FadeColors *ReturnTitleScreenFadeColors(void);
 
 // const rom data
 static const u16 sUnusedUnknownPal[] = INCBIN_U16("graphics/title_screen/unused.gbapal");
@@ -81,11 +80,46 @@ static const u32 sTitleScreenSolgaleoTilemap[] = INCBIN_U32("graphics/title_scre
 static const u16 sTitleScreenPalSolgaleo[] = INCBIN_U16("graphics/title_screen/solgaleo_tiles.gbapal");
 
 #define BG_INDEX_TITLE_SCREEN_POKEMON 14
+#define FADE_COLOUR_COUNT PLTT_SIZE_4BPP / sizeof(u16)
+
+struct FadeColors
+{
+    u16 color1;
+    u16 color2;
+    u8 colorIndex;
+};
+
+#ifndef RHH_EXPANSION
+#define RGB2GBA(r, g, b) (((r >> 3) & 31) | (((g >> 3) & 31) << 5) | (((b >> 3) & 31) << 10))
+#endif
+
+static const struct FadeColors sFadeColors_Necrozma[FADE_COLOUR_COUNT] = {
+    {
+        .color1 = RGB2GBA(85, 85, 85),
+        .color2 = RGB2GBA(250, 250, 250),
+        .colorIndex = 15
+    }
+};
+
+static const struct FadeColors sFadeColors_Solgaleo[FADE_COLOUR_COUNT] = {
+    {
+        .color1 = RGB2GBA(223, 104, 8),
+        .color2 = RGB2GBA(255, 255, 255),
+        .colorIndex = 2
+    },
+    {
+        .color1 = RGB2GBA(240, 203, 73),
+        .color2 = RGB2GBA(255, 255, 255),
+        .colorIndex = 3
+    }
+};
+
 struct TitleScreenGraphics
 {
     const u32 *gfx;
     const u32 *tilemap;
     const u16 *pal;
+    const struct FadeColors *fadeColors;
 };
 
 const struct TitleScreenGraphics sTitleScreenGraphics[TSP_COUNT] =
@@ -95,12 +129,14 @@ const struct TitleScreenGraphics sTitleScreenGraphics[TSP_COUNT] =
         .gfx = sTitleScreenRayquazaGfx,
         .tilemap = sTitleScreenRayquazaTilemap,
         .pal = sTitleScreenPalUltraNecrozma,
+        .fadeColors = sFadeColors_Necrozma,
     },
     [TSP_SOLGALEO] =
     {
         .gfx = sTitleScreenSolgaleoGfx,
         .tilemap = sTitleScreenSolgaleoTilemap,
         .pal = sTitleScreenPalSolgaleo,
+        .fadeColors = sFadeColors_Solgaleo,
     },
 };
 
@@ -909,41 +945,9 @@ static void CB2_GoToBerryFixScreen(void)
 // }
 // }
 
-struct FadeColors
-{
-    u16 color1;
-    u16 color2;
-    u8 colorIndex;
-};
-
-#ifndef RHH_EXPANSION
-#define RGB2GBA(r, g, b) (((r >> 3) & 31) | (((g >> 3) & 31) << 5) | (((b >> 3) & 31) << 10))
-#endif
-
-static const struct FadeColors sFadeColors_Necrozma[16] = {
-    {
-        .color1 = RGB2GBA(85, 85, 85),
-        .color2 = RGB2GBA(250, 250, 250),
-        .colorIndex = 15
-    }
-};
-
-static const struct FadeColors sFadeColors_Solgaleo[16] = {
-    {
-        .color1 = RGB2GBA(223, 104, 8),
-        .color2 = RGB2GBA(255, 255, 255),
-        .colorIndex = 2
-    },
-    {
-        .color1 = RGB2GBA(240, 203, 73),
-        .color2 = RGB2GBA(255, 255, 255),
-        .colorIndex = 3
-    }
-};
-
 static void UpdateLegendaryMarkingColor(u8 frameNum)
 {
-    const struct FadeColors *fadeColors = ReturnTitleScreenFadeColors();
+    const struct FadeColors *fadeColors = sTitleScreenGraphics[ReturnTitleScreenToDisplay()].fadeColors;
     if ((frameNum % 4) == 0) // Change color every 4th frame
     {
         s32 intensity = (((Cos(frameNum, 128) + 128) * 10) / 250);
@@ -992,17 +996,4 @@ static void UpdateLegendaryMarkingColor(u8 frameNum)
 static enum TitleScreenPokemon ReturnTitleScreenToDisplay(void)
 {
     return TSP_ULTRA_ECROZMA;
-}
-
-static const struct FadeColors *ReturnTitleScreenFadeColors(void)
-{
-    switch (ReturnTitleScreenToDisplay())
-    {
-    default:
-    case TSP_ULTRA_ECROZMA:
-        return sFadeColors_Necrozma;
-    
-    case TSP_SOLGALEO:
-        return sFadeColors_Solgaleo;
-    }
 }

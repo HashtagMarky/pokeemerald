@@ -13,6 +13,8 @@
 #include "palette.h"
 #include "reset_rtc_screen.h"
 #include "berry_fix_program.h"
+#include "rtc.h"
+#include "save.h"
 #include "sound.h"
 #include "sprite.h"
 #include "task.h"
@@ -27,13 +29,6 @@ enum {
     TAG_VERSION = 1000,
     TAG_PRESS_START_COPYRIGHT,
     TAG_LOGO_SHINE,
-};
-
-enum TitleScreenPokemon
-{
-    TSP_ULTRA_ECROZMA,
-    TSP_SOLGALEO,
-    TSP_COUNT,
 };
 
 #define VERSION_BANNER_RIGHT_TILEOFFSET 64
@@ -63,8 +58,6 @@ static void SpriteCB_VersionBannerLeft(struct Sprite *sprite);
 static void SpriteCB_VersionBannerRight(struct Sprite *sprite);
 static void SpriteCB_PressStartCopyrightBanner(struct Sprite *sprite);
 static void SpriteCB_PokemonLogoShine(struct Sprite *sprite);
-
-static enum TitleScreenPokemon ReturnTitleScreenToDisplay(void);
 
 // const rom data
 static const u16 sUnusedUnknownPal[] = INCBIN_U16("graphics/title_screen/unused.gbapal");
@@ -122,7 +115,7 @@ struct TitleScreenGraphics
     const struct FadeColors *fadeColors;
 };
 
-const struct TitleScreenGraphics sTitleScreenGraphics[TSP_COUNT] =
+const struct TitleScreenGraphics sTitleScreenGraphics[TSP_COUNT_RANDOM] =
 {
     [TSP_ULTRA_ECROZMA] =
     {
@@ -140,6 +133,37 @@ const struct TitleScreenGraphics sTitleScreenGraphics[TSP_COUNT] =
     },
 };
 
+static enum TitleScreenPokemon ReturnTitleScreenToDisplay(void)
+{
+    if (gSaveFileStatus != SAVE_STATUS_OK)
+        return TSP_ULTRA_ECROZMA;
+
+    if (gSaveBlock2Ptr->optionsTitleScreenPokemon < TSP_COUNT_RANDOM)
+        return gSaveBlock2Ptr->optionsTitleScreenPokemon;
+    
+    if (gSaveBlock2Ptr->optionsTitleScreenPokemon == TSP_COUNT_RANDOM)
+        return Random() % TSP_COUNT_RANDOM;
+
+    if (gSaveBlock2Ptr->optionsTitleScreenPokemon == TSP_TIME)
+    {
+        switch (GetTimeOfDay())
+        {
+        default:
+        case TIME_MORNING:
+        case TIME_EVENING:
+            return TSP_ULTRA_ECROZMA;
+        
+        case TIME_DAY:
+            return TSP_SOLGALEO;
+        
+        case TIME_NIGHT:
+            return TSP_LUNALA;
+        }
+    }
+
+    return TSP_ULTRA_ECROZMA;
+}
+static EWRAM_DATA enum TitleScreenPokemon sTitleScreenPokemon;
 
 // Used to blend "Emerald Version" as it passes over over the Pokémon banner.
 // Also used by the intro to blend the Game Freak name/logo in and out as they appear and disappear
@@ -666,6 +690,7 @@ void CB2_InitTitleScreen(void)
         DmaFill32(3, 0, (void *)OAM, OAM_SIZE);
         DmaFill16(3, 0, (void *)(PLTT + 2), PLTT_SIZE - 2);
         ResetPaletteFade();
+        sTitleScreenPokemon = ReturnTitleScreenToDisplay();
         gMain.state = 1;
         break;
     case 1:
@@ -673,10 +698,10 @@ void CB2_InitTitleScreen(void)
         LZ77UnCompVram(gTitleScreenPokemonLogoGfx, (void *)(BG_CHAR_ADDR(0)));
         LZ77UnCompVram(gTitleScreenPokemonLogoTilemap, (void *)(BG_SCREEN_ADDR(9))); 
         LoadPalette(gTitleScreenBgPalettes, BG_PLTT_ID(0), 15 * PLTT_SIZE_4BPP);
-        LoadPalette(sTitleScreenGraphics[ReturnTitleScreenToDisplay()].pal, BG_PLTT_ID(BG_INDEX_TITLE_SCREEN_POKEMON), 15 * PLTT_SIZE_4BPP);
+        LoadPalette(sTitleScreenGraphics[sTitleScreenPokemon].pal, BG_PLTT_ID(BG_INDEX_TITLE_SCREEN_POKEMON), 15 * PLTT_SIZE_4BPP);
         // bg3
-        LZ77UnCompVram(sTitleScreenGraphics[ReturnTitleScreenToDisplay()].gfx, (void *)(BG_CHAR_ADDR(2)));
-        LZ77UnCompVram(sTitleScreenGraphics[ReturnTitleScreenToDisplay()].tilemap, (void *)(BG_SCREEN_ADDR(26)));
+        LZ77UnCompVram(sTitleScreenGraphics[sTitleScreenPokemon].gfx, (void *)(BG_CHAR_ADDR(2)));
+        LZ77UnCompVram(sTitleScreenGraphics[sTitleScreenPokemon].tilemap, (void *)(BG_SCREEN_ADDR(26)));
         // bg1
         LZ77UnCompVram(sTitleScreenCloudsGfx, (void *)(BG_CHAR_ADDR(3)));
         LZ77UnCompVram(gTitleScreenCloudsTilemap, (void *)(BG_SCREEN_ADDR(27)));
@@ -947,7 +972,7 @@ static void CB2_GoToBerryFixScreen(void)
 
 static void UpdateLegendaryMarkingColor(u8 frameNum)
 {
-    const struct FadeColors *fadeColors = sTitleScreenGraphics[ReturnTitleScreenToDisplay()].fadeColors;
+    const struct FadeColors *fadeColors = sTitleScreenGraphics[sTitleScreenPokemon].fadeColors;
     if ((frameNum % 4) == 0) // Change color every 4th frame
     {
         s32 intensity = (((Cos(frameNum, 128) + 128) * 10) / 250);
@@ -991,9 +1016,4 @@ static void UpdateLegendaryMarkingColor(u8 frameNum)
             LoadPalette(&color, BG_PLTT_ID(BG_INDEX_TITLE_SCREEN_POKEMON) + fadeColors[i].colorIndex, sizeof(color));
         }
     }
-}
-
-static enum TitleScreenPokemon ReturnTitleScreenToDisplay(void)
-{
-    return TSP_ULTRA_ECROZMA;
 }

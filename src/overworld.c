@@ -79,6 +79,8 @@
 #include "constants/weather.h"
 #include "qol_field_moves.h" // qol_field_moves
 
+#include "followmon.h"
+
 STATIC_ASSERT((B_FLAG_FOLLOWERS_DISABLED == 0 || OW_FOLLOWERS_ENABLED), FollowersFlagAssignedWithoutEnablingThem);
 
 struct CableClubPlayer
@@ -680,6 +682,7 @@ void WarpIntoMap(void)
     ApplyCurrentWarp();
     LoadCurrentMapData();
     SetPlayerCoordsFromWarp();
+    FollowMon_OnWarp();
 }
 
 void SetWarpDestination(s8 mapGroup, s8 mapNum, s8 warpId, s8 x, s8 y)
@@ -1549,6 +1552,7 @@ static void DoCB1_Overworld(u16 newKeys, u16 heldKeys)
         else
         {
             PlayerStep(inputStruct.dpadDirection, newKeys, heldKeys);
+            FollowMon_OverworldCB();
         }
     }
     // If stop running but keep holding B -> fix follower frame.

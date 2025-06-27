@@ -288,6 +288,19 @@
 #define OBJ_EVENT_GFX_VAR_E  (OBJ_EVENT_GFX_VARS + 0xE)
 #define OBJ_EVENT_GFX_VAR_F  (OBJ_EVENT_GFX_VARS + 0xF)
 
+#define OBJ_EVENT_GFX_VAR_FIRST   OBJ_EVENT_GFX_VAR_0
+#define OBJ_EVENT_GFX_VAR_LAST    OBJ_EVENT_GFX_VAR_F
+
+#define OBJ_EVENT_GFX_FOLLOW_MON_0               (OBJ_EVENT_GFX_VAR_F + 1)
+#define OBJ_EVENT_GFX_FOLLOW_MON_1               (OBJ_EVENT_GFX_VAR_F + 2)
+#define OBJ_EVENT_GFX_FOLLOW_MON_2               (OBJ_EVENT_GFX_VAR_F + 3)
+#define OBJ_EVENT_GFX_FOLLOW_MON_3               (OBJ_EVENT_GFX_VAR_F + 4)
+#define OBJ_EVENT_GFX_FOLLOW_MON_4               (OBJ_EVENT_GFX_VAR_F + 5)
+#define OBJ_EVENT_GFX_FOLLOW_MON_5               (OBJ_EVENT_GFX_VAR_F + 6)
+
+#define OBJ_EVENT_GFX_FOLLOW_MON_FIRST           OBJ_EVENT_GFX_FOLLOW_MON_0
+#define OBJ_EVENT_GFX_FOLLOW_MON_LAST            OBJ_EVENT_GFX_FOLLOW_MON_5
+
 // Don't use (1u << 15) to avoid conflict with BLEND_IMMUNE_FLAG.
 #define OBJ_EVENT_MON               (1u << 14)
 #define OBJ_EVENT_MON_SHINY         (1u << 13)
@@ -341,6 +354,22 @@
 #define OBJ_EVENT_ID_CAMERA 0x7F
 #define OBJ_EVENT_ID_FOLLOWER 0xFE
 #define OBJ_EVENT_ID_NPC_FOLLOWER 0xFD
+
+// Each object event template gets an ID that can be used to refer to it in scripts and elsewhere.
+// This is referred to as the "local id" (and it's really just 1 + its index in the templates array).
+// There are a few special IDs reserved for objects that don't have templates in the map data -- one for the player
+// in regular offline play, five for linked players while playing Berry Blender, and one for an invisible object that
+// can be spawned for the camera to track instead of the player. Additionally, the value 0 is reserved as an "empty" indicator.
+#define LOCALID_NONE                         0
+#define LOCALID_CAMERA                     127
+#define LOCALID_BERRY_BLENDER_PLAYER_END   240 // This will use 5 (MAX_RFU_PLAYERS) IDs ending at 240, i.e. 236-240
+#define LOCALID_PLAYER                     255
+#define OBJ_EVENT_ID_FOLLOWER              0xFE //254
+#define OBJ_EVENT_ID_NPC_FOLLOWER          0xFD //253
+
+// IDs for dynamic object event spawns
+#define OBJ_EVENT_ID_FOLLOW_MON_FIRST      230
+#define OBJ_EVENT_ID_FOLLOW_MON_LAST       240
 
 // Object event local ids referenced in C files
 #define LOCALID_ROUTE111_PLAYER_FALLING 45

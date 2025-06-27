@@ -29,10 +29,11 @@ enum {
     TAG_LOGO_SHINE,
 };
 
-enum TitleScreens
+enum TitleScreenPokemon
 {
-    TS_ULTRA_ECROZMA,
-    TS_SOLGALEO,
+    TSP_ULTRA_ECROZMA,
+    TSP_SOLGALEO,
+    TSP_COUNT,
 };
 
 #define VERSION_BANNER_RIGHT_TILEOFFSET 64
@@ -63,10 +64,7 @@ static void SpriteCB_VersionBannerRight(struct Sprite *sprite);
 static void SpriteCB_PressStartCopyrightBanner(struct Sprite *sprite);
 static void SpriteCB_PokemonLogoShine(struct Sprite *sprite);
 
-static enum TitleScreens ReturnTitleScreenToDisplay(void);
-static const u32 *ReturnTitleScreenGfx(void);
-static const u32 *ReturnTitleScreenTilemap(void);
-static const u16 *ReturnTitleScreenPal(void);
+static enum TitleScreenPokemon ReturnTitleScreenToDisplay(void);
 static const struct FadeColors *ReturnTitleScreenFadeColors(void);
 
 // const rom data
@@ -77,10 +75,34 @@ static const u32 sTitleScreenRayquazaTilemap[] = INCBIN_U32("graphics/title_scre
 static const u32 sTitleScreenLogoShineGfx[] = INCBIN_U32("graphics/title_screen/logo_shine.4bpp.lz");
 static const u32 sTitleScreenCloudsGfx[] = INCBIN_U32("graphics/title_screen/clouds.4bpp.lz");
 
+static const u16 sTitleScreenPalUltraNecrozma[] = INCBIN_U16("graphics/title_screen/ultranecrozma.gbapal");
 static const u32 sTitleScreenSolgaleoGfx[] = INCBIN_U32("graphics/title_screen/solgaleo_tiles.4bpp.lz");
 static const u32 sTitleScreenSolgaleoTilemap[] = INCBIN_U32("graphics/title_screen/solgaleo_tiles.bin.lz");
-const u16 sTitleScreenBgPalettes_Solgaleo[] = INCBIN_U16("graphics/title_screen/pokemon_logo.gbapal",
-                                                        "graphics/title_screen/solgaleo_tiles.gbapal");
+static const u16 sTitleScreenPalSolgaleo[] = INCBIN_U16("graphics/title_screen/solgaleo_tiles.gbapal");
+
+#define BG_INDEX_TITLE_SCREEN_POKEMON 14
+struct TitleScreenGraphics
+{
+    const u32 *gfx;
+    const u32 *tilemap;
+    const u16 *pal;
+};
+
+const struct TitleScreenGraphics sTitleScreenGraphics[TSP_COUNT] =
+{
+    [TSP_ULTRA_ECROZMA] =
+    {
+        .gfx = sTitleScreenRayquazaGfx,
+        .tilemap = sTitleScreenRayquazaTilemap,
+        .pal = sTitleScreenPalUltraNecrozma,
+    },
+    [TSP_SOLGALEO] =
+    {
+        .gfx = sTitleScreenSolgaleoGfx,
+        .tilemap = sTitleScreenSolgaleoTilemap,
+        .pal = sTitleScreenPalSolgaleo,
+    },
+};
 
 
 // Used to blend "Emerald Version" as it passes over over the Pokémon banner.
@@ -614,10 +636,11 @@ void CB2_InitTitleScreen(void)
         // bg2
         LZ77UnCompVram(gTitleScreenPokemonLogoGfx, (void *)(BG_CHAR_ADDR(0)));
         LZ77UnCompVram(gTitleScreenPokemonLogoTilemap, (void *)(BG_SCREEN_ADDR(9))); 
-        LoadPalette(ReturnTitleScreenPal(), BG_PLTT_ID(0), 15 * PLTT_SIZE_4BPP);
+        LoadPalette(gTitleScreenBgPalettes, BG_PLTT_ID(0), 15 * PLTT_SIZE_4BPP);
+        LoadPalette(sTitleScreenGraphics[ReturnTitleScreenToDisplay()].pal, BG_PLTT_ID(BG_INDEX_TITLE_SCREEN_POKEMON), 15 * PLTT_SIZE_4BPP);
         // bg3
-        LZ77UnCompVram(ReturnTitleScreenGfx(), (void *)(BG_CHAR_ADDR(2)));
-        LZ77UnCompVram(ReturnTitleScreenTilemap(), (void *)(BG_SCREEN_ADDR(26)));
+        LZ77UnCompVram(sTitleScreenGraphics[ReturnTitleScreenToDisplay()].gfx, (void *)(BG_CHAR_ADDR(2)));
+        LZ77UnCompVram(sTitleScreenGraphics[ReturnTitleScreenToDisplay()].tilemap, (void *)(BG_SCREEN_ADDR(26)));
         // bg1
         LZ77UnCompVram(sTitleScreenCloudsGfx, (void *)(BG_CHAR_ADDR(3)));
         LZ77UnCompVram(gTitleScreenCloudsTilemap, (void *)(BG_SCREEN_ADDR(27)));
@@ -961,52 +984,14 @@ static void UpdateLegendaryMarkingColor(u8 frameNum)
                 color = RGB(r, g, b);
             }
             
-            LoadPalette(&color, BG_PLTT_ID(14) + fadeColors[i].colorIndex, sizeof(color));
+            LoadPalette(&color, BG_PLTT_ID(BG_INDEX_TITLE_SCREEN_POKEMON) + fadeColors[i].colorIndex, sizeof(color));
         }
     }
 }
 
-static enum TitleScreens ReturnTitleScreenToDisplay(void)
+static enum TitleScreenPokemon ReturnTitleScreenToDisplay(void)
 {
-    return TS_ULTRA_ECROZMA;
-}
-
-static const u32 *ReturnTitleScreenGfx(void)
-{
-    switch (ReturnTitleScreenToDisplay())
-    {
-    default:
-    case TS_ULTRA_ECROZMA:
-        return sTitleScreenRayquazaGfx;
-    
-    case TS_SOLGALEO:
-        return sTitleScreenSolgaleoGfx;
-    }
-}
-
-static const u32 *ReturnTitleScreenTilemap(void)
-{
-    switch (ReturnTitleScreenToDisplay())
-    {
-    default:
-    case TS_ULTRA_ECROZMA:
-        return sTitleScreenRayquazaTilemap;
-    
-    case TS_SOLGALEO:
-        return sTitleScreenSolgaleoTilemap;
-    }
-}
-static const u16 *ReturnTitleScreenPal(void)
-{
-    switch (ReturnTitleScreenToDisplay())
-    {
-    default:
-    case TS_ULTRA_ECROZMA:
-        return gTitleScreenBgPalettes;
-    
-    case TS_SOLGALEO:
-        return sTitleScreenBgPalettes_Solgaleo;
-    }
+    return TSP_ULTRA_ECROZMA;
 }
 
 static const struct FadeColors *ReturnTitleScreenFadeColors(void)
@@ -1014,10 +999,10 @@ static const struct FadeColors *ReturnTitleScreenFadeColors(void)
     switch (ReturnTitleScreenToDisplay())
     {
     default:
-    case TS_ULTRA_ECROZMA:
+    case TSP_ULTRA_ECROZMA:
         return sFadeColors_Necrozma;
     
-    case TS_SOLGALEO:
+    case TSP_SOLGALEO:
         return sFadeColors_Solgaleo;
     }
 }

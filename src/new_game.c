@@ -49,6 +49,7 @@
 #include "constants/items.h"
 #include "difficulty.h"
 #include "follower_npc.h"
+#include "title_screen.h"
 
 extern const u8 EventScript_ResetAllMapFlags[];
 
@@ -102,6 +103,7 @@ static void SetDefaultOptions(void)
     gSaveBlock2Ptr->optionsBattleStyle = OPTIONS_BATTLE_STYLE_SHIFT;
     gSaveBlock2Ptr->optionsBattleSceneOff = FALSE;
     gSaveBlock2Ptr->regionMapZoom = FALSE;
+    gSaveBlock2Ptr->optionsStartMenuPalette = DEFAULT_TITLE_SCREEN;
 }
 
 static void ClearPokedexFlags(void)

@@ -14,5 +14,6 @@ enum TitleScreenPokemon
     TSP_COUNT_RANDOM,
     TSP_TIME,
 };
+#define DEFAULT_TITLE_SCREEN TSP_TIME
 
 #endif // GUARD_TITLE_SCREEN_H

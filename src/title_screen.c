@@ -156,8 +156,8 @@ static enum TitleScreenPokemon ReturnTitleScreenToDisplay(void)
         case TIME_DAY:
             return TSP_SOLGALEO;
         
-        case TIME_NIGHT:
-            return TSP_LUNALA;
+        // case TIME_NIGHT:
+        //     return TSP_LUNALA;
         }
     }
 

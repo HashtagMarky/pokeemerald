@@ -11545,3 +11545,12 @@ bool8 MovementAction_SurfStillRight_Step1(struct ObjectEvent *objectEvent, struc
     }
     return FALSE;
 }
+
+bool8 MovementAction_FollowMonSpawn(enum FollowMonSpawnAnim spawnAnimType, struct ObjectEvent *objEvent) {
+    gFieldEffectArguments[0] = objEvent->currentCoords.x;
+    gFieldEffectArguments[1] = objEvent->currentCoords.y;
+    gFieldEffectArguments[2] = gSprites[objEvent->spriteId].oam.priority + 1;
+    gFieldEffectArguments[3] = spawnAnimType;
+    FieldEffectStart(FLDEFF_BUBBLES); // Commandeer this field effect for the spawn anims
+    return TRUE;
+}

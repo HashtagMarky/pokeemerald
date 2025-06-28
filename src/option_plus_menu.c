@@ -20,6 +20,7 @@
 #include "decompress.h"
 #include "heat_start_menu.h"
 #include "event_data.h"
+#include "followmon.h"
 
 enum
 {
@@ -47,6 +48,7 @@ enum
     MENUITEM_MENUPAL,
     MENUITEM_FOLLOWER,
     MENUITEM_BATTLESPEED,
+    MENUITEM_OW_ENCOUNTERS,
     MENUITEM_AUTORUN,
     MENUITEM_CANCEL_PG2,
     MENUITEM_COUNT_PG2,
@@ -186,6 +188,7 @@ static void DrawChoices_AutoRun(int selection, int y);
 static int ProcessInput_AutoRun(int selection);
 static int ProcessInput_MenuPal(int selection);
 static void DrawChoices_MenuPal(int selection, int y);
+static void DrawChoices_OW_Encounters(int selection, int y);
 static int BattleSpeed_ProcessInput_New(int selection);
 static void DrawBgWindowFrames(void);
 
@@ -247,6 +250,7 @@ static const MenuItemFunctions sItemFunctionsCustom[MENUITEM_COUNT_PG2] =
     [MENUITEM_MENUPAL]       = {DrawChoices_MenuPal,   ProcessInput_MenuPal},
     [MENUITEM_FOLLOWER]  = {DrawChoices_Follower,    TwoOptions_ProcessInput},
     [MENUITEM_BATTLESPEED]  = {BattleSpeed_DrawChoices,    BattleSpeed_ProcessInput_New},
+    [MENUITEM_OW_ENCOUNTERS] = {DrawChoices_OW_Encounters,    TwoOptions_ProcessInput},
     [MENUITEM_AUTORUN]  = {DrawChoices_AutoRun,    ProcessInput_AutoRun},
     [MENUITEM_CANCEL_PG2]       = {NULL, NULL},
 };
@@ -267,6 +271,7 @@ static const u8 *const sOptionMenuItemsNamesCustom[MENUITEM_COUNT_PG2] =
     [MENUITEM_MENUPAL]        = gText_MenuColor,
     [MENUITEM_FOLLOWER]        = gText_Follower,
     [MENUITEM_BATTLESPEED]     = gText_BattleSpeed,
+    [MENUITEM_OW_ENCOUNTERS]   = gText_OW_Encounter,
     [MENUITEM_AUTORUN]         = gText_AutoRun,
     [MENUITEM_CANCEL_PG2]        = gText_OptionMenuSave,
 };
@@ -306,6 +311,7 @@ static bool8 CheckConditions(int selection)
         case MENUITEM_MENUPAL:
         case MENUITEM_FOLLOWER:
         case MENUITEM_BATTLESPEED:
+        case MENUITEM_OW_ENCOUNTERS:
         case MENUITEM_AUTORUN:
         case MENUITEM_CANCEL_PG2:
         case MENUITEM_COUNT_PG2:
@@ -329,6 +335,8 @@ static const u8 sText_Desc_TextSpeedFaster[]    = _("Text will be displayed at t
 static const u8 sText_Desc_MenuPal[]            = _("Choose the color of the start\nmenu.");
 static const u8 sText_Desc_Follower_On[]         = _("Your POKéMON will follow you\nin the overworld.");
 static const u8 sText_Desc_Follower_Off[]        = _("Your POKéMON will not follow you\nin the overworld.");
+static const u8 sText_Desc_OW_On[]            = _("Wild POKéMON will appear in the\noverworld.");
+static const u8 sText_Desc_OW_Off[]           = _("Wild POKéMON will not appear in the\noverworld.");
 static const u8 sText_Desc_FrameType[]          = _("Choose the frame surrounding the\nwindows.");
 static const u8 sText_Desc_MatchCallOn[]        = _("TRAINERs will be able to call you,\noffering rematches and info.");
 static const u8 sText_Desc_MatchCallOff[]       = _("You will not receive calls.\nSpecial events will still occur.");
@@ -375,6 +383,7 @@ static const u8 *const sOptionMenuItemDescriptionsCustom[MENUITEM_COUNT_PG2][4] 
     [MENUITEM_MENUPAL] = {sText_Desc_MenuPal,            sText_Empty,                      sText_Empty,                    sText_Empty},
     [MENUITEM_FOLLOWER] = {sText_Desc_Follower_On,        sText_Desc_Follower_Off,          sText_Empty,                    sText_Empty},
     [MENUITEM_BATTLESPEED]  = {sText_Desc_BattleSpeed_1x,       sText_Desc_BattleSpeed_2x,        sText_Desc_BattleSpeed_3x,      sText_Desc_BattleSpeed_4x},
+    [MENUITEM_OW_ENCOUNTERS] = {sText_Desc_OW_On,            sText_Desc_OW_Off,                sText_Empty,                    sText_Empty},
     [MENUITEM_AUTORUN] = {sText_Desc_Autorun_Hold,     sText_Desc_Autorun_Toggle,          sText_Empty,                    sText_Empty},
     [MENUITEM_CANCEL_PG2]       = {sText_Desc_Save,                 sText_Empty,                      sText_Empty,                    sText_Empty},
 };
@@ -398,6 +407,7 @@ static const u8 *const sOptionMenuItemDescriptionsDisabledCustom[MENUITEM_COUNT_
     [MENUITEM_MENUPAL]     = sText_Empty,
     [MENUITEM_FOLLOWER]    = sText_Empty,
     [MENUITEM_BATTLESPEED] = sText_Empty,
+    [MENUITEM_OW_ENCOUNTERS] = sText_Empty,
     [MENUITEM_AUTORUN]     = sText_Empty,
     [MENUITEM_CANCEL_PG2]      = sText_Empty,
 };
@@ -716,6 +726,7 @@ void CB2_InitOptionPlusMenu(void)
         sOptions->sel_custom[MENUITEM_MENUPAL]       = gSaveBlock2Ptr->optionsStartMenuPalette;
         sOptions->sel_custom[MENUITEM_FOLLOWER]     = FlagGet(FLAG_DISABLE_FOLLOWERS);
         sOptions->sel_custom[MENUITEM_BATTLESPEED]  = gSaveBlock2Ptr->optionsBattleSpeed;
+        sOptions->sel_custom[MENUITEM_OW_ENCOUNTERS] = !(FlagGet(OW_FLAG_SPAWN_OVERWORLD_MON) && FlagGet(FLAG_OW_NO_ENCOUNTER));
         sOptions->sel_custom[MENUITEM_AUTORUN]      = FlagGet(FLAG_AUTORUN_MENU_TOGGLE) ? 0 : 1;
 
         sOptions->submenu = sCurrPage; // Restore last page
@@ -959,6 +970,17 @@ static void Task_OptionMenuSave(u8 taskId)
     else // sOptions->sel_custom[MENUITEM_AUTORUN] == 1, meaning on
     {
         FlagClear(FLAG_AUTORUN_MENU_TOGGLE); // Clear flag to DISABLE autorun
+    }
+
+    if (sOptions->sel_custom[MENUITEM_OW_ENCOUNTERS] == 0) // Assuming 0 means Overworld Encounters are ON
+    {
+        FlagSet(OW_FLAG_SPAWN_OVERWORLD_MON); // Enable overworld encounters
+        FlagSet(FLAG_OW_NO_ENCOUNTER); // Set the no encounter flag
+    }
+    else // sOptions->sel_custom[MENUITEM_OW_ENCOUNTERS] == 1, meaning OFF
+    {
+        FlagClear(OW_FLAG_SPAWN_OVERWORLD_MON);   // Disable overworld encounters
+        FlagClear(FLAG_OW_NO_ENCOUNTER); // Clear the no encounter flag
     }
 
     // The fade-out and task function assignment remain the same.
@@ -1332,6 +1354,16 @@ static void DrawChoices_Follower(int selection, int y)
 
     DrawOptionMenuChoice(gText_FollowerOn, 104, y, styles[0], active);
     DrawOptionMenuChoice(gText_FollowerOff, GetStringRightAlignXOffset(FONT_NORMAL, gText_FollowerOff, 198), y, styles[1], active);
+}
+
+static void DrawChoices_OW_Encounters(int selection, int y)
+{
+    bool8 active = CheckConditions(MENUITEM_OW_ENCOUNTERS);
+    u8 styles[2] = {0};
+    styles[selection] = 1;
+
+    DrawOptionMenuChoice(gText_OW_Encounter_On, 104, y, styles[0], active);
+    DrawOptionMenuChoice(gText_OW_Encounter_Off, GetStringRightAlignXOffset(FONT_NORMAL, gText_OW_Encounter_Off, 198), y, styles[1], active);
 }
 
 static void DrawChoices_AutoRun(int selection, int y)

@@ -1156,7 +1156,8 @@ EventScript_VsSeekerChargingDone::
 	.include "data/text/birch_speech.inc"
 	.include "data/scripts/qol_field_move_scripts.inc" @ qol_field_moves
 	.include "data/scripts/dexnav.inc"
-
+	.include "data/scripts/followmon.inc"
+	
 	.include "data/maps/littlerootcave/scripts.inc"
 
 	.include "data/maps/Route1/scripts.inc"
@@ -1244,3 +1245,6 @@ EventScript_VsSeekerChargingDone::
 	.include "data/maps/MelemeleIslandTrialCave/scripts.inc"
 
 	.include "data/maps/MelemeleIslandTrialTotem/scripts.inc"
+
+	
+

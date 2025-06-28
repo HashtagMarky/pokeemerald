@@ -312,6 +312,7 @@ u16 GetSpriteTileTagByTileStart(u16 start);
 void RequestSpriteSheetCopy(const struct SpriteSheet *sheet);
 u16 LoadSpriteSheetDeferred(const struct SpriteSheet *sheet);
 void FreeAllSpritePalettes(void);
+u8 CountFreePaletteSlots(void);
 u32 LoadSpritePalette(const struct SpritePalette *palette);
 u32 LoadSpritePaletteWithTag(const u16 *pal, u16 tag);
 u8 LoadSpritePaletteInSlot(const struct SpritePalette *palette, u8 paletteNum);

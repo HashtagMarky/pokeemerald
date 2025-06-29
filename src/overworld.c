@@ -80,6 +80,7 @@
 #include "qol_field_moves.h" // qol_field_moves
 
 #include "followmon.h"
+#include "rotom_start_menu.h"
 
 STATIC_ASSERT((B_FLAG_FOLLOWERS_DISABLED == 0 || OW_FOLLOWERS_ENABLED), FollowersFlagAssignedWithoutEnablingThem);
 
@@ -1739,6 +1740,7 @@ static void OverworldBasic(void)
            UpdatePalettesWithTime(PALETTES_ALL);
         }
     }
+    RotomPhone_StartMenu_DisableRotomReality();
 }
 
 // This CB2 is used when starting

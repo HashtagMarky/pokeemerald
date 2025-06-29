@@ -43,6 +43,7 @@
 #include "qol_field_moves.h"
 
 #include "followmon.h"
+#include "rotom_start_menu.h"
 
 static EWRAM_DATA u8 sWildEncounterImmunitySteps = 0;
 static EWRAM_DATA u16 sPrevMetatileBehavior = 0;
@@ -253,7 +254,7 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
     if (input->pressedStartButton)
     {
         PlaySE(SE_WIN_OPEN);
-        HeatStartMenu_Init();
+        RotomPhone_StartMenu_Open(TRUE);
         return TRUE;
     }
     

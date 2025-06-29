@@ -50,6 +50,7 @@
 #include "constants/rgb.h"
 #include "constants/songs.h"
 #include "ui_stat_editor.h"
+#include "rotom_start_menu.h"
 
 // Menu actions
 enum
@@ -581,7 +582,7 @@ static bool8 FieldCB_ReturnToFieldStartMenu(void)
     //{
     //    return FALSE;
     //}
-    HeatStartMenu_Init();
+    RotomPhone_StartMenu_Open(FALSE);
 
     ReturnToFieldOpenStartMenu();
     return TRUE;

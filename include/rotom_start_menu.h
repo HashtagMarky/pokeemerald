@@ -192,6 +192,5 @@ flag, or save game options.
 #define RP_CONFIG_FACE_UPDATE_PERCENT     100
 
 void RotomPhone_StartMenu_Open(bool32 firstInit);
-void RotomPhone_StartMenu_DisableRotomReality(void);
 
 #endif // GUARD_ROTOM_START_MENU_H

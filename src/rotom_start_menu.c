@@ -192,7 +192,7 @@ void RotomPhone_StartMenu_Open(bool32 firstInit)
     ResetDexNavSearch();
 #endif
 
-    if (!RotomPhone_StartMenu_IsRotomReality())
+    if (!RotomPhone_StartMenu_IsRotomReality() || gMain.callback2 == CB2_Overworld)
     {
         if (!RP_CONFIG_USE_ROTOM_PHONE && firstInit)
             PlaySE(SE_BALL_TRAY_ENTER);
@@ -718,10 +718,6 @@ static EWRAM_DATA bool32 sRotomPhone_RotomReality;
 static bool32 RotomPhone_StartMenu_IsRotomReality(void)
 {
     return sRotomPhone_RotomReality;
-}
-void RotomPhone_StartMenu_DisableRotomReality(void)
-{
-    sRotomPhone_RotomReality = FALSE;
 }
 
 

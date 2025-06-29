@@ -1630,6 +1630,21 @@ bool8 IsPlayerFacingSurfableFishableWater(void)
         return FALSE;
 }
 
+bool8 IsPlayerFacingSurfableFishableWater2(u8 collision)
+{
+    struct ObjectEvent *playerObjEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
+    s16 x = playerObjEvent->currentCoords.x;
+    s16 y = playerObjEvent->currentCoords.y;
+
+    MoveCoords(playerObjEvent->facingDirection, &x, &y);
+    if (collision == COLLISION_ELEVATION_MISMATCH
+     && PlayerGetElevation() == 3
+     && MetatileBehavior_IsSurfableFishableWater(MapGridGetMetatileBehaviorAt(x, y)))
+        return TRUE;
+    else
+        return FALSE;
+}
+
 void ClearPlayerAvatarInfo(void)
 {
     memset(&gPlayerAvatar, 0, sizeof(struct PlayerAvatar));

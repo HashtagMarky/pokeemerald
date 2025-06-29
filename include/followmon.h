@@ -9,30 +9,33 @@
 
 #define INVALID_SPAWN_SLOT 0xFF
 
+// Could be reduced to an u8 but I prefer to leave some potential for more advanced features
 struct FollowMon
 {
-    u32 personality;
-    u16 species;
-    u16 level;
+    u16 isShiny:1;
+    u16 onWater:1;
+    u16 timeOfDay:2;
+    u16 unused:4;
+    u16 encounterIndex:8;
+    
 };
+
+#define EMPTY_FOLLOWMON 0xFF;
 
 struct FollowMonData
 {
     bool8 pendingInterction;
-    u8 activeCount;
-    //u8 encounterChainCount;
+    u8 spawnSlot;
     u16 spawnCountdown;
-    u16 spawnSlot;
     u16 pendingSpawnAnim;
-    //u16 encounterChainSpecies;
-    //u16 cachedPartnerMonGfx;
     struct FollowMon list[FOLLOWMON_MAX_SPAWN_SLOTS];
 };
 
 //data/scripts/followmon.inc
 extern const u8 InteractWithDynamicWildFollowMon[];
 
-void FollowMon_OverworldCB();
+void LoadFollowMonData(struct ObjectEvent *objectEvent);
+void FollowMon_OverworldCB(void);
 void CreateFollowMonEncounter(void);
 bool8 FollowMon_ProcessMonInteraction(void);
 bool8 FollowMon_IsCollisionExempt(struct ObjectEvent* obstacle, struct ObjectEvent* collider);

@@ -104,6 +104,7 @@ static void SetDefaultOptions(void)
     gSaveBlock2Ptr->optionsBattleSceneOff = FALSE;
     gSaveBlock2Ptr->regionMapZoom = FALSE;
     gSaveBlock2Ptr->optionsStartMenuPalette = DEFAULT_TITLE_SCREEN;
+    gSaveBlock2Ptr->optionsTitleScreenPokemon = 3;
 }
 
 static void ClearPokedexFlags(void)

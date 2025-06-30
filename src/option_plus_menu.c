@@ -50,6 +50,7 @@ enum
     MENUITEM_BATTLESPEED,
     MENUITEM_OW_ENCOUNTERS,
     MENUITEM_AUTORUN,
+    MENUITEM_TITLESCREEN,
     MENUITEM_CANCEL_PG2,
     MENUITEM_COUNT_PG2,
 };
@@ -166,6 +167,7 @@ static int XOptions_ProcessInput(int x, int selection);
 static int TwoOptions_ProcessInput(int selection);
 static int ThreeOptions_ProcessInput(int selection);
 static int FourOptions_ProcessInput(int selection);
+static int FiveOptions_ProcessInput(int selection);
 static int UNUSED ElevenOptions_ProcessInput(int selection);
 static int Sound_ProcessInput(int selection);
 static int FrameType_ProcessInput(int selection);
@@ -189,6 +191,7 @@ static int ProcessInput_AutoRun(int selection);
 static int ProcessInput_MenuPal(int selection);
 static void DrawChoices_MenuPal(int selection, int y);
 static void DrawChoices_OW_Encounters(int selection, int y);
+static void DrawChoices_TitleScreen(int selection, int y);
 static int BattleSpeed_ProcessInput_New(int selection);
 static void DrawBgWindowFrames(void);
 
@@ -201,7 +204,7 @@ static EWRAM_DATA u8 *sBg3TilemapBuffer = NULL;
 
 // const data
 static const u8 sEqualSignGfx[] = INCBIN_U8("graphics/interface/option_menu_equals_sign.4bpp"); // note: this is only used in the Japanese release
-static const u16 sOptionMenuBg_Pal[] = {RGB(17, 18, 31)};
+static const u16 sOptionMenuBg_Pal[] = {RGB(0, 0, 0)};
 static const u16 sOptionMenuText_Pal[] = INCBIN_U16("graphics/interface/option_menu_text_custom.gbapal");
 
 static const u32 sOptionsPlusTiles[] = INCBIN_U32("graphics/ui_options_plus/options_plus_tiles.4bpp.lz");
@@ -252,6 +255,7 @@ static const MenuItemFunctions sItemFunctionsCustom[MENUITEM_COUNT_PG2] =
     [MENUITEM_BATTLESPEED]  = {BattleSpeed_DrawChoices,    BattleSpeed_ProcessInput_New},
     [MENUITEM_OW_ENCOUNTERS] = {DrawChoices_OW_Encounters,    TwoOptions_ProcessInput},
     [MENUITEM_AUTORUN]  = {DrawChoices_AutoRun,    ProcessInput_AutoRun},
+    [MENUITEM_TITLESCREEN] = {DrawChoices_TitleScreen,    FiveOptions_ProcessInput},
     [MENUITEM_CANCEL_PG2]       = {NULL, NULL},
 };
 
@@ -273,6 +277,7 @@ static const u8 *const sOptionMenuItemsNamesCustom[MENUITEM_COUNT_PG2] =
     [MENUITEM_BATTLESPEED]     = gText_BattleSpeed,
     [MENUITEM_OW_ENCOUNTERS]   = gText_OW_Encounter,
     [MENUITEM_AUTORUN]         = gText_AutoRun,
+    [MENUITEM_TITLESCREEN]     = gText_TitleScreen,
     [MENUITEM_CANCEL_PG2]        = gText_OptionMenuSave,
 };
 
@@ -313,6 +318,7 @@ static bool8 CheckConditions(int selection)
         case MENUITEM_BATTLESPEED:
         case MENUITEM_OW_ENCOUNTERS:
         case MENUITEM_AUTORUN:
+        case MENUITEM_TITLESCREEN:
         case MENUITEM_CANCEL_PG2:
         case MENUITEM_COUNT_PG2:
             return TRUE;
@@ -337,6 +343,11 @@ static const u8 sText_Desc_Follower_On[]         = _("Your POKéMON will follow 
 static const u8 sText_Desc_Follower_Off[]        = _("Your POKéMON will not follow you\nin the overworld.");
 static const u8 sText_Desc_OW_On[]            = _("Wild POKéMON will appear in the\noverworld.");
 static const u8 sText_Desc_OW_Off[]           = _("Wild POKéMON will not appear in the\noverworld.");
+static const u8 sText_Desc_TS_Solgaleo[]       = _("The title screen will display\nSOLGALEO.");
+static const u8 sText_Desc_TS_Lunala[]         = _("The title screen will display\nLUNALA.");
+static const u8 sText_Desc_TS_Necrozma[]       = _("The title screen will display\nNECROZMA.");
+static const u8 sText_Desc_TS_Time[]            = _("The title screen will change\nbased on the time of day.");
+static const u8 sText_Desc_TS_Random[]          = _("The title screen will change\nrandomly each time you start the game.");
 static const u8 sText_Desc_FrameType[]          = _("Choose the frame surrounding the\nwindows.");
 static const u8 sText_Desc_MatchCallOn[]        = _("TRAINERs will be able to call you,\noffering rematches and info.");
 static const u8 sText_Desc_MatchCallOff[]       = _("You will not receive calls.\nSpecial events will still occur.");
@@ -377,15 +388,16 @@ static const u8 *const sOptionMenuItemDescriptionsVanilla[MENUITEM_COUNT][3] =
     [MENUITEM_CANCEL]      = {sText_Desc_Save,                 sText_Empty,                     sText_Empty},
 };
 
-static const u8 *const sOptionMenuItemDescriptionsCustom[MENUITEM_COUNT_PG2][4] =
+static const u8 *const sOptionMenuItemDescriptionsCustom[MENUITEM_COUNT_PG2][5] =
 {
 
-    [MENUITEM_MENUPAL] = {sText_Desc_MenuPal,            sText_Empty,                      sText_Empty,                    sText_Empty},
-    [MENUITEM_FOLLOWER] = {sText_Desc_Follower_On,        sText_Desc_Follower_Off,          sText_Empty,                    sText_Empty},
-    [MENUITEM_BATTLESPEED]  = {sText_Desc_BattleSpeed_1x,       sText_Desc_BattleSpeed_2x,        sText_Desc_BattleSpeed_3x,      sText_Desc_BattleSpeed_4x},
-    [MENUITEM_OW_ENCOUNTERS] = {sText_Desc_OW_On,            sText_Desc_OW_Off,                sText_Empty,                    sText_Empty},
-    [MENUITEM_AUTORUN] = {sText_Desc_Autorun_Hold,     sText_Desc_Autorun_Toggle,          sText_Empty,                    sText_Empty},
-    [MENUITEM_CANCEL_PG2]       = {sText_Desc_Save,                 sText_Empty,                      sText_Empty,                    sText_Empty},
+    [MENUITEM_MENUPAL] = {sText_Desc_MenuPal,            sText_Empty,                      sText_Empty,                    sText_Empty, sText_Empty,},
+    [MENUITEM_FOLLOWER] = {sText_Desc_Follower_On,        sText_Desc_Follower_Off,          sText_Empty,                    sText_Empty, sText_Empty,},
+    [MENUITEM_BATTLESPEED]  = {sText_Desc_BattleSpeed_1x,       sText_Desc_BattleSpeed_2x,        sText_Desc_BattleSpeed_3x,      sText_Desc_BattleSpeed_4x, sText_Empty,},
+    [MENUITEM_OW_ENCOUNTERS] = {sText_Desc_OW_On,            sText_Desc_OW_Off,                sText_Empty,                    sText_Empty, sText_Empty,},
+    [MENUITEM_AUTORUN] = {sText_Desc_Autorun_Hold,     sText_Desc_Autorun_Toggle,          sText_Empty,                    sText_Empty, sText_Empty,},
+    [MENUITEM_TITLESCREEN] = {sText_Desc_TS_Necrozma,            sText_Desc_TS_Solgaleo,              sText_Desc_TS_Lunala,                    sText_Desc_TS_Time, sText_Desc_TS_Random,},
+    [MENUITEM_CANCEL_PG2]       = {sText_Desc_Save,                 sText_Empty,                      sText_Empty,                    sText_Empty, sText_Empty,},
 };
 
 
@@ -409,6 +421,7 @@ static const u8 *const sOptionMenuItemDescriptionsDisabledCustom[MENUITEM_COUNT_
     [MENUITEM_BATTLESPEED] = sText_Empty,
     [MENUITEM_OW_ENCOUNTERS] = sText_Empty,
     [MENUITEM_AUTORUN]     = sText_Empty,
+    [MENUITEM_TITLESCREEN] = sText_Empty,
     [MENUITEM_CANCEL_PG2]      = sText_Empty,
 };
 
@@ -728,6 +741,7 @@ void CB2_InitOptionPlusMenu(void)
         sOptions->sel_custom[MENUITEM_BATTLESPEED]  = gSaveBlock2Ptr->optionsBattleSpeed;
         sOptions->sel_custom[MENUITEM_OW_ENCOUNTERS] = !(FlagGet(OW_FLAG_SPAWN_OVERWORLD_MON) && FlagGet(FLAG_OW_NO_ENCOUNTER));
         sOptions->sel_custom[MENUITEM_AUTORUN]      = FlagGet(FLAG_AUTORUN_MENU_TOGGLE) ? 0 : 1;
+        sOptions->sel_custom[MENUITEM_TITLESCREEN]  = gSaveBlock2Ptr->optionsTitleScreenPokemon;
 
         sOptions->submenu = sCurrPage; // Restore last page
 
@@ -949,6 +963,7 @@ static void Task_OptionMenuSave(u8 taskId)
     // explicitly mapped from sOptions->sel_custom to gSaveBlock2Ptr.
     gSaveBlock2Ptr->optionsBattleSpeed      = sOptions->sel_custom[MENUITEM_BATTLESPEED];
     gSaveBlock2Ptr->optionsStartMenuPalette = sOptions->sel_custom[MENUITEM_MENUPAL];
+    gSaveBlock2Ptr->optionsTitleScreenPokemon = sOptions->sel_custom[MENUITEM_TITLESCREEN];
 
     // Handle Follower option (flag-based)
     // If sOptions->sel_custom[MENUITEM_FOLLOWER] is 0 (ON), clear the disable flag.
@@ -1120,6 +1135,10 @@ static int FourOptions_ProcessInput(int selection)
     return XOptions_ProcessInput(4, selection);
 }
 
+static int FiveOptions_ProcessInput(int selection)
+{
+    return XOptions_ProcessInput(5, selection);
+}
 static int UNUSED ElevenOptions_ProcessInput(int selection)
 {
     return XOptions_ProcessInput(11, selection);
@@ -1393,6 +1412,21 @@ static int ProcessInput_AutoRun(int selection)
     }
 
     return selection;
+}
+
+static const u8 *const sTitleScreenStrings[] = {
+    gText_TS_Necrozma,
+    gText_TS_Solgaleo,
+    gText_TS_Lunala,
+    gText_TS_Time,
+    gText_TS_Random,
+};
+
+static void DrawChoices_TitleScreen(int selection, int y)
+{
+    bool8 active = CheckConditions(MENUITEM_TITLESCREEN);
+    // Draw the option string at the desired position
+    DrawOptionMenuChoice(sTitleScreenStrings[selection], 104, y, 1, active);
 }
 
 static void DrawChoices_MenuPal(int selection, int y) 

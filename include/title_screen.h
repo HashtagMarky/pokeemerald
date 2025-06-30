@@ -8,11 +8,11 @@ void CB2_InitTitleScreen(void);
 // Assumes SaveBlock Values will be one of these values.
 enum TitleScreenPokemon
 {
-    TSP_ULTRA_ECROZMA,
+    TSP_ULTRA_NECROZMA,
     TSP_SOLGALEO,
     TSP_LUNALA,
-    TSP_COUNT_RANDOM,
     TSP_TIME,
+    TSP_COUNT_RANDOM,
 };
 #define DEFAULT_TITLE_SCREEN TSP_TIME
 

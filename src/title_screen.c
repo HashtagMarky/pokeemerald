@@ -68,9 +68,13 @@ static const u32 sTitleScreenLogoShineGfx[] = INCBIN_U32("graphics/title_screen/
 static const u32 sTitleScreenCloudsGfx[] = INCBIN_U32("graphics/title_screen/clouds.4bpp.lz");
 
 static const u16 sTitleScreenPalUltraNecrozma[] = INCBIN_U16("graphics/title_screen/ultranecrozma.gbapal");
-static const u32 sTitleScreenSolgaleoGfx[] = INCBIN_U32("graphics/title_screen/solgaleo_tiles.4bpp.lz");
-static const u32 sTitleScreenSolgaleoTilemap[] = INCBIN_U32("graphics/title_screen/solgaleo_tiles.bin.lz");
-static const u16 sTitleScreenPalSolgaleo[] = INCBIN_U16("graphics/title_screen/solgaleo_tiles.gbapal");
+static const u32 sTitleScreenSolgaleoGfx[] = INCBIN_U32("graphics/title_screen/solgaleo.4bpp.lz");
+static const u32 sTitleScreenSolgaleoTilemap[] = INCBIN_U32("graphics/title_screen/solgaleo.bin.lz");
+static const u16 sTitleScreenPalSolgaleo[] = INCBIN_U16("graphics/title_screen/solgaleo.gbapal");
+
+static const u32 sTitleScreenLunalaGfx[] = INCBIN_U32("graphics/title_screen/lunala.4bpp.lz");
+static const u32 sTitleScreenLunalaTilemap[] = INCBIN_U32("graphics/title_screen/lunala.bin.lz");
+static const u16 sTitleScreenPalLunala[] = INCBIN_U16("graphics/title_screen/lunala.gbapal");
 
 #define BG_INDEX_TITLE_SCREEN_POKEMON 14
 #define FADE_COLOUR_COUNT PLTT_SIZE_4BPP / sizeof(u16)
@@ -96,15 +100,33 @@ static const struct FadeColors sFadeColors_Necrozma[FADE_COLOUR_COUNT] = {
 
 static const struct FadeColors sFadeColors_Solgaleo[FADE_COLOUR_COUNT] = {
     {
-        .color1 = RGB2GBA(223, 104, 8),
-        .color2 = RGB2GBA(255, 255, 255),
-        .colorIndex = 2
+        .color1 = RGB2GBA(16, 16, 99),
+        .color2 = RGB2GBA(40, 40, 140),
+        .colorIndex = 12
     },
     {
-        .color1 = RGB2GBA(240, 203, 73),
-        .color2 = RGB2GBA(255, 255, 255),
-        .colorIndex = 3
+        .color1 = RGB2GBA(220, 160, 54),
+        .color2 = RGB2GBA(247, 206, 74),
+        .colorIndex = 1
+    },
+    {
+        .color1 = RGB2GBA(180, 69, 5),
+        .color2 = RGB2GBA(222, 107, 8),
+        .colorIndex = 8
     }
+};
+
+static const struct FadeColors sFadeColors_Lunala[FADE_COLOUR_COUNT] = {
+    {
+        .color1 = RGB2GBA(37, 8, 70),
+        .color2 = RGB2GBA(84, 30, 148),
+        .colorIndex = 12
+    },
+    {
+        .color1 = RGB2GBA(16, 16, 99),
+        .color2 = RGB2GBA(40, 40, 140),
+        .colorIndex = 11
+    },
 };
 
 struct TitleScreenGraphics
@@ -117,7 +139,7 @@ struct TitleScreenGraphics
 
 const struct TitleScreenGraphics sTitleScreenGraphics[TSP_COUNT_RANDOM] =
 {
-    [TSP_ULTRA_ECROZMA] =
+    [TSP_ULTRA_NECROZMA] =
     {
         .gfx = sTitleScreenRayquazaGfx,
         .tilemap = sTitleScreenRayquazaTilemap,
@@ -131,12 +153,19 @@ const struct TitleScreenGraphics sTitleScreenGraphics[TSP_COUNT_RANDOM] =
         .pal = sTitleScreenPalSolgaleo,
         .fadeColors = sFadeColors_Solgaleo,
     },
+    [TSP_LUNALA] =
+    {
+        .gfx = sTitleScreenLunalaGfx,
+        .tilemap = sTitleScreenLunalaTilemap,
+        .pal = sTitleScreenPalLunala,
+        .fadeColors = sFadeColors_Lunala,
+    },
 };
 
 static enum TitleScreenPokemon ReturnTitleScreenToDisplay(void)
 {
     if (gSaveFileStatus != SAVE_STATUS_OK)
-        return TSP_ULTRA_ECROZMA;
+        return TSP_ULTRA_NECROZMA;
 
     if (gSaveBlock2Ptr->optionsTitleScreenPokemon < TSP_COUNT_RANDOM)
         return gSaveBlock2Ptr->optionsTitleScreenPokemon;
@@ -151,17 +180,17 @@ static enum TitleScreenPokemon ReturnTitleScreenToDisplay(void)
         default:
         case TIME_MORNING:
         case TIME_EVENING:
-            return TSP_ULTRA_ECROZMA;
+            return TSP_ULTRA_NECROZMA;
         
         case TIME_DAY:
             return TSP_SOLGALEO;
         
-        // case TIME_NIGHT:
-        //     return TSP_LUNALA;
+         case TIME_NIGHT:
+             return TSP_LUNALA;
         }
     }
 
-    return TSP_ULTRA_ECROZMA;
+    return TSP_ULTRA_NECROZMA;
 }
 static EWRAM_DATA enum TitleScreenPokemon sTitleScreenPokemon;
 
@@ -882,7 +911,7 @@ static void Task_TitleScreenPhase3(u8 taskId)
     if (JOY_NEW(A_BUTTON) || JOY_NEW(START_BUTTON))
     {
         FadeOutBGM(4);
-        BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
+        BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_WHITE);
         SetMainCallback2(CB2_GoToMainMenu);
     }
     else if (JOY_HELD(CLEAR_SAVE_BUTTON_COMBO) == CLEAR_SAVE_BUTTON_COMBO)

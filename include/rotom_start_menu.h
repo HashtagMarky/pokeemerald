@@ -41,6 +41,10 @@ this if not already:
     more easily accessed by RP_GET_SHORTCUT_OPTION. These can
     be set by the developer, or the function can be made to
     dynamically change based on player selection.
+4.  The black save screen that is shown when saving the game
+    from the Rotom Reality Menu recreates the vanilla system,
+    however the background can be changed by updating the tiles,
+    tilemap and palette in graphics/rotom_start_menu/save_screen.
 
 
 

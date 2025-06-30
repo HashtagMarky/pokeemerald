@@ -107,6 +107,7 @@ static void RotomPhone_OverworldMenu_CheckUpdateMessage(u8 taskId);
 static void RotomPhone_OverworldMenu_PrintGoodbye(u8 taskId);
 static void RotomPhone_OverworldMenu_PrintTime(u8 taskId);
 static void RotomPhone_OverworldMenu_PrintSafari(u8 taskId);
+static void RotomPhone_OverworldMenu_PrintDateWeather(u8 taskId);
 static void RotomPhone_OverworldMenu_PrintHaveFun(u8 taskId);
 static void RotomPhone_OverworldMenu_Personality(u8 taskId);
 static void RotomPhone_OverworldMenu_PrintAdventure(u8 taskId);
@@ -494,6 +495,7 @@ enum RotomPhone_Overworld_Messages
     RP_MESSAGE_GOODBYE,
     RP_MESSAGE_TIME,
     RP_MESSAGE_SAFARI,
+    RP_MESSAGE_DATE_WEATHER,
     RP_MESSAGE_PERSONALITY,
     RP_MESSAGE_FUN,
     RP_MESSAGE_ADVENTURE,
@@ -516,6 +518,15 @@ enum RotomPhone_Overworld_MessagesGoodbye
     RP_MESSAGE_GOODBYE_LOGGING_OFF,
     RP_MESSAGE_GOODBYE_POWERING_DOWN,
     RP_MESSAGE_GOODBYE_COUNT,
+};
+
+enum RotomPhone_Overworld_MessagesDateWeather
+{
+    // RP_MESSAGE_DATE_WEATHER_DATE,
+    // RP_MESSAGE_DATE_WEATHER_SEASON,
+    RP_MESSAGE_DATE_WEATHER_CURRENT_WEATHER,
+    // RP_MESSAGE_DATE_WEATHER_NEXT_WEATHER,
+    RP_MESSAGE_DATE_WEATHER_COUNT,
 };
 
 enum RotomPhone_Overworld_MessagesPersonality
@@ -1694,6 +1705,11 @@ static void RotomPhone_OverworldMenu_CheckUpdateMessage(u8 taskId)
         case RP_MESSAGE_SAFARI:
             RotomPhone_OverworldMenu_PrintSafari(taskId);
             break;
+        
+        case RP_MESSAGE_DATE_WEATHER:
+            RotomPhone_OverworldMenu_PrintDateWeather(taskId);
+            break;
+
         case RP_MESSAGE_PERSONALITY:
             RotomPhone_OverworldMenu_Personality(taskId);
             break;
@@ -1807,6 +1823,66 @@ static void RotomPhone_OverworldMenu_PrintSafari(u8 taskId)
     CopyItemNameHandlePlural(ITEM_SAFARI_BALL, nameItem, gNumSafariBalls);
     StringAppend(textBuffer, nameItem);
     StringAppend(textBuffer, COMPOUND_STRING(" remaining."));
+    RotomPhone_OverworldMenu_PrintRotomSpeech(textBuffer, TRUE, TRUE);
+    tRotomUpdateMessage = RP_MESSAGE_TIME;
+}
+
+static void RotomPhone_OverworldMenu_PrintDateWeather(u8 taskId)
+{
+    u8 textBuffer[80];
+    enum RotomPhone_Overworld_MessagesDateWeather messageRotom = Random() % RP_MESSAGE_DATE_WEATHER_COUNT;
+
+    // if (messageRotom == RP_MESSAGE_DATE_WEATHER_SEASON)
+    // {
+    //     switch (Ikigai_FetchSeason())
+    //     {
+    //     default:
+    //     case SEASON_SPRING:
+    //         StringCopy(textBuffer, COMPOUND_STRING("Everything's blooming, including you!"));
+    //         break;
+        
+    //     case SEASON_SUMMER:
+    //         StringCopy(textBuffer, COMPOUND_STRING("It's hot, it's bright, it's calling!"));
+    //         break;
+        
+    //     case SEASON_AUTUMN:
+    //         StringCopy(textBuffer, COMPOUND_STRING("Time for cozy vives and crunchy leaves!"));
+    //         break;
+        
+    //     case SEASON_WINTER:
+    //         StringCopy(textBuffer, COMPOUND_STRING("Bundle up! Even my pixels get chilly."));
+    //         break;
+    //     }
+    // }
+    // else if (messageRotom == RP_MESSAGE_DATE_WEATHER_CURRENT_WEATHER)
+    // {
+        StringCopy(textBuffer, COMPOUND_STRING("Looking like it is "));
+        StringAppend(textBuffer, RotomPhone_OverworldMenu_GetWeatherAction(GetCurrentWeather()));
+        StringAppend(textBuffer, COMPOUND_STRING(" right now."));
+    // }
+    // else if (messageRotom == RP_MESSAGE_DATE_WEATHER_NEXT_WEATHER && gTimeOfDay < TIME_NIGHT)
+    // {
+    //     StringCopy(textBuffer, COMPOUND_STRING("It feels like it will be "));
+    //     StringAppend(textBuffer, RotomPhone_OverworldMenu_GetWeatherAction(Ikigai_GetCurrentVyratonWeather(gTimeOfDay + 1)));
+    //     StringAppend(textBuffer, COMPOUND_STRING(" later."));
+    // }
+    // else
+    // {
+    //     u8 textDate[2];
+    //     u8 textYear[3];
+
+    //     RtcCalcLocalTime();
+    //     StringCopy(textBuffer, COMPOUND_STRING("The date is "));
+    //     ConvertIntToDecimalStringN(textDate, Ikigai_GetDateFromDays(gLocalTime.days), STR_CONV_MODE_LEADING_ZEROS, 2);
+    //     StringAppend(textBuffer, textDate);
+    //     StringAppend(textBuffer, COMPOUND_STRING(" "));
+    //     StringAppend(textBuffer, gSeasonNames[Ikigai_FetchSeason()]);
+    //     StringAppend(textBuffer, COMPOUND_STRING(", Year "));
+    //     ConvertIntToDecimalStringN(textYear, Ikigai_GetYearFromDays(gLocalTime.days), STR_CONV_MODE_LEFT_ALIGN, 3);
+    //     StringAppend(textBuffer, textYear);
+    //     StringAppend(textBuffer, COMPOUND_STRING("."));
+    // }
+
     RotomPhone_OverworldMenu_PrintRotomSpeech(textBuffer, TRUE, TRUE);
     tRotomUpdateMessage = RP_MESSAGE_TIME;
 }

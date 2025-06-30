@@ -624,6 +624,10 @@ static void ShowSafariBallsWindow(void)
 }
 
 void HeatStartMenu_Init(void) {
+
+  ResetDexNavSearch();
+  while (REG_VCOUNT >= 160);
+  while (REG_VCOUNT < 160);  
   if (!IsOverworldLinkActive()) {
     FreezeObjectEvents();
     PlayerFreeze();

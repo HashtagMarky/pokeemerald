@@ -1418,8 +1418,8 @@ static const u8 *const sTitleScreenStrings[] = {
     gText_TS_Necrozma,
     gText_TS_Solgaleo,
     gText_TS_Lunala,
-    gText_TS_Time,
     gText_TS_Random,
+    gText_TS_Time,
 };
 
 static void DrawChoices_TitleScreen(int selection, int y)

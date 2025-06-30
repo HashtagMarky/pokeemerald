@@ -11,8 +11,8 @@ enum TitleScreenPokemon
     TSP_ULTRA_NECROZMA,
     TSP_SOLGALEO,
     TSP_LUNALA,
-    TSP_TIME,
     TSP_COUNT_RANDOM,
+    TSP_TIME,
 };
 #define DEFAULT_TITLE_SCREEN TSP_TIME
 

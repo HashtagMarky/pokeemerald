@@ -3,7 +3,6 @@
 #include "option_menu.h"
 #include "bg.h"
 #include "battle_pyramid.h"
-#include "comfy_anim.h"
 #include "daycare.h"
 #include "decompress.h"
 #include "dexnav.h"
@@ -48,6 +47,12 @@
 
 #ifdef RHH_EXPANSION
 #include "constants/expansion.h"
+#endif
+
+#if !__has_include("comfy_anim.h")
+    #error "ShantyTown's Comfy Anim Library is not found. Please download it from: https://github.com/huderlem/pokeemerald/tree/comfy_anims"
+#else
+    #include "comfy_anim.h"
 #endif
 
 

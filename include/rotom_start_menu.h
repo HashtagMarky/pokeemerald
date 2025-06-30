@@ -80,7 +80,7 @@ flag, or save game options.
         RotomPhone_RotomRealityMenu_LoadIconSpritePalette
         RotomPhone_RotomRealityMenu_LoadBgPalette
 
-    RP_CONFIG_FULL_SCREEN_SHORTCUT
+    RP_CONFIG_ROTOM_REALITY_SHORTCUT
     Allows for the START BUTTON to be used on the rotom reality
     menu to automatically open the shortcut. This menu option
     is denoted with a star.

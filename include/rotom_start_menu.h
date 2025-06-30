@@ -28,20 +28,14 @@ this if not already:
 
         --    Tips & Stipulations   --
 
-1.  In RotomPhone_StartMenu_Open, if using pokeemerald-expansion
-    v1.11.0 or later, ResetDexNavSearch is called. This is due
-    to it causing window issues when the start menu is called
-    and the DexNav is acive. If your project uses the DexNav but
-    is not on pokeemerald-expansion v1.11.0+, adjust the preproc
-    surrounding ResetDexNavSearch as necessary.
-2.  No two overworld icons that appear on screen at the same
+1.  No two overworld icons that appear on screen at the same
     time should have the same colour.
-3.  A shortcut option can be selected by using the function
+2.  A shortcut option can be selected by using the function
     called RotomPhone_StartMenu_GetShortcutOption, and can be
     more easily accessed by RP_GET_SHORTCUT_OPTION. These can
     be set by the developer, or the function can be made to
     dynamically change based on player selection.
-4.  The black save screen that is shown when saving the game
+3.  The black save screen that is shown when saving the game
     from the Rotom Reality Menu recreates the vanilla system,
     however the background can be changed by updating the tiles,
     tilemap and palette in graphics/rotom_start_menu/save_screen.

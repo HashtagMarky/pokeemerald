@@ -204,13 +204,6 @@ static void RotomPhone_StartMenu_SelectedFunc_Daycare(void);
 // Init Rotom Start Menu
 void RotomPhone_StartMenu_Open(bool32 firstInit)
 {
-#if defined(RHH_EXPANSION) && \
-           (EXPANSION_VERSION_MAJOR > 1 || \
-           (EXPANSION_VERSION_MAJOR == 1 && EXPANSION_VERSION_MINOR > 11) || \
-           (EXPANSION_VERSION_MAJOR == 1 && EXPANSION_VERSION_MINOR == 11 && EXPANSION_VERSION_PATCH >= 0))
-    ResetDexNavSearch();
-#endif
-
     if (!RotomPhone_StartMenu_IsRotomReality() || gMain.callback2 == CB2_Overworld)
     {
         if (!RP_CONFIG_USE_ROTOM_PHONE && firstInit)
@@ -1329,6 +1322,7 @@ static void RotomPhone_OverworldMenu_Init(bool32 firstInit)
     }
 
     HideMapNamePopUpWindow();
+    ResetDexNavSearch();
     LockPlayerFieldControls();
 
     if (sRotomPhone_StartMenu == NULL)

@@ -1738,7 +1738,7 @@ static u8 TrySetupObjectEventSprite(const struct ObjectEventTemplate *objectEven
     sprite = &gSprites[spriteId];
     // Use palette from species palette table
     if (spriteTemplate->paletteTag == OBJ_EVENT_PAL_TAG_DYNAMIC) {
-        if(objectEvent->graphicsId >= OBJ_EVENT_GFX_FOLLOW_MON_FIRST && objectEvent->graphicsId <= OBJ_EVENT_GFX_FOLLOW_MON_LAST) {
+        if (IS_FOLLOWMON_GFXID(objectEvent->graphicsId)) {
             u16 tmpGraphicsId = GetFollowMonObjectEventGraphicsId(objectEvent->graphicsId);
              sprite->oam.paletteNum = LoadDynamicFollowerPalette(
                 tmpGraphicsId & OBJ_EVENT_MON_SPECIES_MASK,
@@ -2889,7 +2889,7 @@ static void SpawnObjectEventOnReturnToField(u8 objectEventId, s16 x, s16 y)
     if (spriteTemplate.paletteTag == OBJ_EVENT_PAL_TAG_DYNAMIC)
     {
         u32 paletteNum;
-        if(objectEvent->graphicsId >= OBJ_EVENT_GFX_FOLLOW_MON_FIRST && objectEvent->graphicsId <= OBJ_EVENT_GFX_FOLLOW_MON_LAST) {
+        if (IS_FOLLOWMON_GFXID(objectEvent->graphicsId)) {
             u16 tmpGraphicsId = GetFollowMonObjectEventGraphicsId(objectEvent->graphicsId);
             paletteNum = LoadDynamicFollowerPalette(
                 tmpGraphicsId & OBJ_EVENT_MON_SPECIES_MASK,
@@ -3107,7 +3107,7 @@ const struct ObjectEventGraphicsInfo *GetObjectEventGraphicsInfo(u16 graphicsId)
     if (graphicsId == OBJ_EVENT_GFX_BARD)
         return gMauvilleOldManGraphicsInfoPointers[GetCurrentMauvilleOldMan()];
 
-    if (graphicsId >= OBJ_EVENT_GFX_FOLLOW_MON_FIRST && graphicsId <= OBJ_EVENT_GFX_FOLLOW_MON_LAST)
+    if (IS_FOLLOWMON_GFXID(graphicsId))
         graphicsId = GetFollowMonObjectEventGraphicsId(graphicsId);
 
     if (graphicsId & OBJ_EVENT_MON)

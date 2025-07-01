@@ -1738,7 +1738,7 @@ static u8 TrySetupObjectEventSprite(const struct ObjectEventTemplate *objectEven
     sprite = &gSprites[spriteId];
     // Use palette from species palette table
     if (spriteTemplate->paletteTag == OBJ_EVENT_PAL_TAG_DYNAMIC) {
-        if(objectEvent->graphicsId >= OBJ_EVENT_GFX_FOLLOW_MON_FIRST && objectEvent->graphicsId <= OBJ_EVENT_GFX_FOLLOW_MON_LAST) {
+        if (IS_FOLLOWMON_GFXID(objectEvent->graphicsId)) {
             u16 tmpGraphicsId = GetFollowMonObjectEventGraphicsId(objectEvent->graphicsId);
              sprite->oam.paletteNum = LoadDynamicFollowerPalette(
                 tmpGraphicsId & OBJ_EVENT_MON_SPECIES_MASK,
@@ -2889,7 +2889,7 @@ static void SpawnObjectEventOnReturnToField(u8 objectEventId, s16 x, s16 y)
     if (spriteTemplate.paletteTag == OBJ_EVENT_PAL_TAG_DYNAMIC)
     {
         u32 paletteNum;
-        if(objectEvent->graphicsId >= OBJ_EVENT_GFX_FOLLOW_MON_FIRST && objectEvent->graphicsId <= OBJ_EVENT_GFX_FOLLOW_MON_LAST) {
+        if (IS_FOLLOWMON_GFXID(objectEvent->graphicsId)) {
             u16 tmpGraphicsId = GetFollowMonObjectEventGraphicsId(objectEvent->graphicsId);
             paletteNum = LoadDynamicFollowerPalette(
                 tmpGraphicsId & OBJ_EVENT_MON_SPECIES_MASK,
@@ -3107,7 +3107,7 @@ const struct ObjectEventGraphicsInfo *GetObjectEventGraphicsInfo(u16 graphicsId)
     if (graphicsId == OBJ_EVENT_GFX_BARD)
         return gMauvilleOldManGraphicsInfoPointers[GetCurrentMauvilleOldMan()];
 
-    if (graphicsId >= OBJ_EVENT_GFX_FOLLOW_MON_FIRST && graphicsId <= OBJ_EVENT_GFX_FOLLOW_MON_LAST)
+    if (IS_FOLLOWMON_GFXID(graphicsId))
         graphicsId = GetFollowMonObjectEventGraphicsId(graphicsId);
 
     if (graphicsId & OBJ_EVENT_MON)
@@ -9974,6 +9974,8 @@ void GroundEffect_SpawnOnTallGrass(struct ObjectEvent *objEvent, struct Sprite *
 
 void GroundEffect_StepOnTallGrass(struct ObjectEvent *objEvent, struct Sprite *sprite)
 {
+    if (IS_FOLLOWMON_GFXID(objEvent->graphicsId))
+        return;
     gFieldEffectArguments[0] = objEvent->currentCoords.x;
     gFieldEffectArguments[1] = objEvent->currentCoords.y;
     gFieldEffectArguments[2] = objEvent->previousElevation;
@@ -9981,7 +9983,7 @@ void GroundEffect_StepOnTallGrass(struct ObjectEvent *objEvent, struct Sprite *s
     gFieldEffectArguments[4] = objEvent->localId << 8 | objEvent->mapNum;
     gFieldEffectArguments[5] = objEvent->mapGroup;
     gFieldEffectArguments[6] = (u8)gSaveBlock1Ptr->location.mapNum << 8 | (u8)gSaveBlock1Ptr->location.mapGroup;
-    gFieldEffectArguments[7] = FALSE; // don't skip to end of anim
+    gFieldEffectArguments[7] = TRUE; // don't skip to end of anim
     FieldEffectStart(FLDEFF_TALL_GRASS);
 }
 
@@ -9994,12 +9996,14 @@ void GroundEffect_SpawnOnLongGrass(struct ObjectEvent *objEvent, struct Sprite *
     gFieldEffectArguments[4] = objEvent->localId << 8 | objEvent->mapNum;
     gFieldEffectArguments[5] = objEvent->mapGroup;
     gFieldEffectArguments[6] = (u8)gSaveBlock1Ptr->location.mapNum << 8 | (u8)gSaveBlock1Ptr->location.mapGroup;
-    gFieldEffectArguments[7] = 1;
+    gFieldEffectArguments[7] = TRUE;
     FieldEffectStart(FLDEFF_LONG_GRASS);
 }
 
 void GroundEffect_StepOnLongGrass(struct ObjectEvent *objEvent, struct Sprite *sprite)
 {
+    if (IS_FOLLOWMON_GFXID(objEvent->graphicsId))
+        return;
     gFieldEffectArguments[0] = objEvent->currentCoords.x;
     gFieldEffectArguments[1] = objEvent->currentCoords.y;
     gFieldEffectArguments[2] = objEvent->previousElevation;
@@ -10007,7 +10011,7 @@ void GroundEffect_StepOnLongGrass(struct ObjectEvent *objEvent, struct Sprite *s
     gFieldEffectArguments[4] = (objEvent->localId << 8) | objEvent->mapNum;
     gFieldEffectArguments[5] = objEvent->mapGroup;
     gFieldEffectArguments[6] = (u8)gSaveBlock1Ptr->location.mapNum << 8 | (u8)gSaveBlock1Ptr->location.mapGroup;
-    gFieldEffectArguments[7] = 0;
+    gFieldEffectArguments[7] = TRUE;
     FieldEffectStart(FLDEFF_LONG_GRASS);
 }
 

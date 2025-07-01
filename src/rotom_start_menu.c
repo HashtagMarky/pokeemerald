@@ -406,13 +406,13 @@ static void SpriteCB_RotomPhone_OverworldMenu_RotomFace_Unload(struct Sprite* sp
 
 
 #define OW_FLIP_PHONE_TEXT_BG_COLOUR       12
-#define OW_FLIP_PHONE_TEXT_FG_COLOUR       4
-#define OW_FLIP_PHONE_TEXT_SHADOW_COLOUR   9
+#define OW_FLIP_PHONE_TEXT_FG_COLOUR       1
+#define OW_FLIP_PHONE_TEXT_SHADOW_COLOUR   10
 #define OW_ROTOM_PHONE_TEXT_BG_COLOUR      14
-#define OW_ROTOM_PHONE_TEXT_FG_COLOUR      4
-#define OW_ROTOM_PHONE_TEXT_SHADOW_COLOUR  9
+#define OW_ROTOM_PHONE_TEXT_FG_COLOUR      1
+#define OW_ROTOM_PHONE_TEXT_SHADOW_COLOUR  10
 #define RR_ROTOM_PHONE_TEXT_BG_COLOUR      14
-#define RR_ROTOM_PHONE_TEXT_FG_COLOUR      5
+#define RR_ROTOM_PHONE_TEXT_FG_COLOUR      1
 #define RR_ROTOM_PHONE_TEXT_SHADOW_COLOUR  10
 enum FontColor
 {
@@ -1534,6 +1534,24 @@ static void RotomPhone_OverworldMenu_CreateAllIconSprites(void)
         sRotomPhone_StartMenu->menuOverworldOptions[drawn] = RP_MENU_COUNT;
     }
 }
+
+
+/*/ Example palette table
+static const u16 *const sRotomPhonePalettes[] = {
+    sRotomPhone_StartMenuPalette,      // Default
+    sRotomPhone_StartMenuPaletteBlue,  // Blue
+    sRotomPhone_StartMenuPaletteRed,   // Red
+
+};*/
+
+//#define ROTOM_PHONE_PALETTE_COUNT (sizeof(sRotomPhonePalettes)/sizeof(*sRotomPhonePalettes))
+
+//const u16 *GetRotomPhonePalette(u8 id)
+//{
+//    if (id >= ROTOM_PHONE_PALETTE_COUNT)
+ //       return sRotomPhonePalettes[0]; // fallback to default
+  //  return sRotomPhonePalettes[id];
+//}
 
 static void RotomPhone_OverworldMenu_LoadBgPalette(bool32 firstLoad)
 {

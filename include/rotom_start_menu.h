@@ -24,6 +24,10 @@ It will need to be added to your project in order to use
 this if not already:
     https://github.com/huderlem/pokeemerald/tree/comfy_anims
 
+Additional credit must go to Phantonomy for creating the
+various coloured palettes for the phones, and helping with
+some other graphical improvements.
+
 
 
         --    Tips & Stipulations   --
@@ -56,6 +60,9 @@ flag, or save game options.
     Whether or not to use the Rotom Phone or a Generic Flip
     Phone, potentially an early game option due to story
     purposes.
+
+    RP_CONFIG_PHONE_COLOUR
+    The colour of the Rotom Phone that is displayed.
 
     RP_CONFIG_MONOCHROME_ICONS
     Whether each icon uses it's individual colours when on the
@@ -179,6 +186,25 @@ flag, or save game options.
 
 #include "global.h"
 
+enum RotomPhone_Colours
+{
+    ROTOM_PHONE_BLACK,
+    ROTOM_PHONE_RED,
+    ROTOM_PHONE_YELLOW,
+    ROTOM_PHONE_GREEN,
+    ROTOM_PHONE_PURPLE,
+    ROTOM_PHONE_BLUE,
+    ROTOM_PHONE_TURQUOISE,
+    ROTOM_PHONE_ROSE,
+    ROTOM_PHONE_BROWN,
+    ROTOM_PHONE_DARK_GREEN,
+    ROTOM_PHONE_WINE_RED,
+    ROTOM_PHONE_NAVY,
+    ROTOM_PHONE_WHITE,
+    ROTOM_PHONE_COLOUR_COUNT
+};
+
+#define RP_CONFIG_PHONE_COLOUR            ROTOM_PHONE_BLACK
 #define RP_CONFIG_USE_ROTOM_PHONE         TRUE
 #define RP_CONFIG_MONOCHROME_ICONS        FALSE
 #define RP_CONFIG_PALETTE_BUFFER          TRUE

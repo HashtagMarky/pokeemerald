@@ -243,6 +243,60 @@ static const u32 sRotomPhone_SaveScreenTiles[] =                INCBIN_U32("grap
 static const u32 sRotomPhone_SaveScreenTilemap[] =              INCBIN_U32("graphics/rotom_start_menu/save_screen/save_screen.bin.lz");
 static const u16 sRotomPhone_SaveScreenPalette[] =              INCBIN_U16("graphics/rotom_start_menu/save_screen/save_screen.gbapal");
 
+static const u16 sRotomPhonePalette_Black[] =                   INCBIN_U16("graphics/rotom_start_menu/palettes/black.gbapal");
+static const u16 sRotomPhonePalette_Red[] =                     INCBIN_U16("graphics/rotom_start_menu/palettes/red.gbapal");
+static const u16 sRotomPhonePalette_Yellow[] =                  INCBIN_U16("graphics/rotom_start_menu/palettes/yellow.gbapal");
+static const u16 sRotomPhonePalette_Green[] =                   INCBIN_U16("graphics/rotom_start_menu/palettes/green.gbapal");
+static const u16 sRotomPhonePalette_Purple[] =                  INCBIN_U16("graphics/rotom_start_menu/palettes/purple.gbapal");
+static const u16 sRotomPhonePalette_Blue[] =                    INCBIN_U16("graphics/rotom_start_menu/palettes/blue.gbapal");
+static const u16 sRotomPhonePalette_Turquoise[] =               INCBIN_U16("graphics/rotom_start_menu/palettes/turquoise.gbapal");
+static const u16 sRotomPhonePalette_Rose[] =                    INCBIN_U16("graphics/rotom_start_menu/palettes/rose.gbapal");
+static const u16 sRotomPhonePalette_Brown[] =                   INCBIN_U16("graphics/rotom_start_menu/palettes/brown.gbapal");
+static const u16 sRotomPhonePalette_DarkGreen[] =               INCBIN_U16("graphics/rotom_start_menu/palettes/dark_green.gbapal");
+static const u16 sRotomPhonePalette_WineRed[] =                 INCBIN_U16("graphics/rotom_start_menu/palettes/wine_red.gbapal");
+static const u16 sRotomPhonePalette_Navy[] =                    INCBIN_U16("graphics/rotom_start_menu/palettes/navy.gbapal");
+static const u16 sRotomPhonePalette_White[] =                   INCBIN_U16("graphics/rotom_start_menu/palettes/white.gbapal");
+
+static const u16 *const sRotomPhone_StartMenu_Palettes[ROTOM_PHONE_COLOUR_COUNT] =
+{
+    [ROTOM_PHONE_BLACK] =       sRotomPhonePalette_Black,
+    [ROTOM_PHONE_RED] =         sRotomPhonePalette_Red,
+    [ROTOM_PHONE_YELLOW] =      sRotomPhonePalette_Yellow,
+    [ROTOM_PHONE_GREEN] =       sRotomPhonePalette_Green,
+    [ROTOM_PHONE_PURPLE] =      sRotomPhonePalette_Purple,
+    [ROTOM_PHONE_BLUE] =        sRotomPhonePalette_Blue,
+    [ROTOM_PHONE_TURQUOISE] =   sRotomPhonePalette_Turquoise,
+    [ROTOM_PHONE_ROSE] =        sRotomPhonePalette_Rose,
+    [ROTOM_PHONE_BROWN] =       sRotomPhonePalette_Brown,
+    [ROTOM_PHONE_DARK_GREEN] =  sRotomPhonePalette_DarkGreen,
+    [ROTOM_PHONE_WINE_RED] =    sRotomPhonePalette_WineRed,
+    [ROTOM_PHONE_NAVY] =        sRotomPhonePalette_Navy,
+    [ROTOM_PHONE_WHITE] =       sRotomPhonePalette_White,
+};
+
+static const u16 *RotomPhone_StartMenu_GetPhoneColour(void)
+{
+    switch (RP_CONFIG_PHONE_COLOUR)
+    {
+        case ROTOM_PHONE_BLACK:
+        case ROTOM_PHONE_RED:
+        case ROTOM_PHONE_YELLOW:
+        case ROTOM_PHONE_GREEN:
+        case ROTOM_PHONE_PURPLE:
+        case ROTOM_PHONE_BLUE:
+        case ROTOM_PHONE_TURQUOISE:
+        case ROTOM_PHONE_ROSE:
+        case ROTOM_PHONE_BROWN:
+        case ROTOM_PHONE_DARK_GREEN:
+        case ROTOM_PHONE_WINE_RED:
+        case ROTOM_PHONE_NAVY:
+        case ROTOM_PHONE_WHITE:
+            return sRotomPhone_StartMenu_Palettes[RP_CONFIG_PHONE_COLOUR];
+        default:
+            return sRotomPhone_StartMenu_Palettes[ROTOM_PHONE_COLOUR_COUNT - ROTOM_PHONE_COLOUR_COUNT];
+    }
+}
+
 #if RP_CONFIG_PALETTE_BUFFER
 static EWRAM_DATA u16 ALIGNED(4) menuLoadedSpritePalette[PLTT_SIZE_4BPP];
 static EWRAM_DATA u16 ALIGNED(4) menuLoadedBackgroundPalette[PLTT_SIZE_4BPP];
@@ -273,7 +327,7 @@ static u16 RotomPhone_StartMenu_GetPhoneBackgroundColour(u8 palSlot)
 #if RP_CONFIG_PALETTE_BUFFER
     return menuLoadedBackgroundPalette[PHONE_BASE_COLOUR_INDEX];
 #else
-    return sRotomPhone_StartMenuPalette[PHONE_BASE_COLOUR_INDEX];
+    return RotomPhone_StartMenu_GetPhoneColour()[PHONE_BASE_COLOUR_INDEX];
 #endif
 }
 
@@ -1540,11 +1594,11 @@ static void RotomPhone_OverworldMenu_LoadBgPalette(bool32 firstLoad)
 #if RP_CONFIG_PALETTE_BUFFER
     if (firstLoad)
     {
-        memcpy(menuLoadedBackgroundPalette, sRotomPhone_StartMenuPalette, PLTT_SIZE_4BPP);
+        memcpy(menuLoadedBackgroundPalette, RotomPhone_StartMenu_GetPhoneColour(), PLTT_SIZE_4BPP);
     }
     LoadPalette(menuLoadedBackgroundPalette, BG_PLTT_ID(PHONE_BG_PAL_SLOT), PLTT_SIZE_4BPP);
 #else
-    LoadPalette(sRotomPhone_StartMenuPalette, BG_PLTT_ID(PHONE_BG_PAL_SLOT), PLTT_SIZE_4BPP);
+    LoadPalette(RotomPhone_StartMenu_GetPhoneColour(), BG_PLTT_ID(PHONE_BG_PAL_SLOT), PLTT_SIZE_4BPP);
 #endif
 }
 
@@ -2971,7 +3025,7 @@ static void RotomPhone_RotomRealityMenu_LoadBgPalette(void)
 #if RP_CONFIG_PALETTE_BUFFER
         LoadPalette(menuLoadedBackgroundPalette, BG_PLTT_ID(PHONE_BG_PAL_SLOT), PLTT_SIZE_4BPP);
 #else
-        LoadPalette(sRotomPhone_StartMenuPalette, BG_PLTT_ID(PHONE_BG_PAL_SLOT), PLTT_SIZE_4BPP);
+        LoadPalette(RotomPhone_StartMenu_GetPhoneColour(), BG_PLTT_ID(PHONE_BG_PAL_SLOT), PLTT_SIZE_4BPP);
 #endif
 }
 

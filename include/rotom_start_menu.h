@@ -24,6 +24,10 @@ It will need to be added to your project in order to use
 this if not already:
     https://github.com/huderlem/pokeemerald/tree/comfy_anims
 
+Additional credit must go to Phantonomy for creating the
+various coloured palettes for the phones, and helping with
+some other graphical improvements.
+
 
 
         --    Tips & Stipulations   --
@@ -57,6 +61,9 @@ flag, or save game options.
     Phone, potentially an early game option due to story
     purposes.
 
+    RP_CONFIG_PHONE_COLOUR
+    The colour of the Rotom Phone that is displayed.
+
     RP_CONFIG_MONOCHROME_ICONS
     Whether each icon uses it's individual colours when on the
     menu. Works better with RP_CONFIG_PALETTE_BUFFER set to TRUE.
@@ -64,9 +71,9 @@ flag, or save game options.
     RP_CONFIG_PALETTE_BUFFER
     Uses two bytes of EWRAM in order to store the background and
     sprite palettes used in the Rotom Phone. It is recommended to
-    turn keep this on if you want to have various colour phones or
-    change the monochrome sprite colour. When doing so you will
-    only have to make adjustments to these palettes once. To see
+    turn this on if you want to have various colour phone icons or
+    change the monochrome sprite colour in code. When doing so you
+    will only have to make adjustments to these palettes once. To see
     how the palettes are initialised, see these functions,
     particularly the ones with bool32 firstLoad as a parameter:
         RotomPhone_OverworldMenu_LoadIconSpritePalette
@@ -124,10 +131,14 @@ flag, or save game options.
     the palettes of the overworld icons are important, and their
     indexes have been defined in enum RotomPhone_Overworld_FaceIconPaletteIndex.
     Each overworld icon should use PAL_ICON_WHITE (index 10) and one
-    other colour in the indexes 1 - 9. Then define a new animation
-    for this icon, and add it to sAnims_OverworldIcons and
-    sAnims_RotomRealityIcons, makinf sure the table is in the same
-    order as enum RotomPhone_MenuOptions.
+    other colour in the indexes 1 - 9. For the Rotom Reality there,
+    are two icon files, 'icons_1.png' and 'icons_2.png'. These have
+    a lot more freedom and can use any combination of colours, apart
+    from PAL_ROTOM_OUTLINE (index 11) upwards in 'icons_1.png'.
+    
+    Then define a new animation for this icon, and add it to
+    sAnims_StartMenu_Icons making sure you keep track of what
+    icon belongs to what animation.
 
 3.  Then give this option an entry in sRotomPhoneOptions, see below
     for a brief overview of each field in struct RotomPhone_MenuOptions:
@@ -172,6 +183,14 @@ flag, or save game options.
     statement. See RotomPhone_StartMenu_SelectedFunc_Daycare for an example of a
     selectedFunc for an option that exists exists only on the Rotom Reality Menu and
     uses the sliding panel for its selectedFunc.
+
+    enum RotomPhone_IconAnims owAnim;
+    The value that denotes what index the animation for the menu option's Overworld
+    icon is in sAnims_StartMenu_Icons.
+
+    enum RotomPhone_IconAnims rrAnim;
+    The value that denotes what index the animation for the menu option's Rotom Reality
+    icon is in sAnims_StartMenu_Icons.
 */
 
 #ifndef GUARD_ROTOM_START_MENU_H
@@ -179,9 +198,28 @@ flag, or save game options.
 
 #include "global.h"
 
+enum RotomPhone_Colours
+{
+    ROTOM_PHONE_BLACK,
+    ROTOM_PHONE_RED,
+    ROTOM_PHONE_YELLOW,
+    ROTOM_PHONE_GREEN,
+    ROTOM_PHONE_PURPLE,
+    ROTOM_PHONE_BLUE,
+    ROTOM_PHONE_TURQUOISE,
+    ROTOM_PHONE_ROSE,
+    ROTOM_PHONE_BROWN,
+    ROTOM_PHONE_DARK_GREEN,
+    ROTOM_PHONE_WINE_RED,
+    ROTOM_PHONE_NAVY,
+    ROTOM_PHONE_WHITE,
+    ROTOM_PHONE_COLOUR_COUNT
+};
+
+#define RP_CONFIG_PHONE_COLOUR            ROTOM_PHONE_BLACK
 #define RP_CONFIG_USE_ROTOM_PHONE         TRUE
 #define RP_CONFIG_MONOCHROME_ICONS        FALSE
-#define RP_CONFIG_PALETTE_BUFFER          TRUE
+#define RP_CONFIG_PALETTE_BUFFER          FALSE
 #define RP_CONFIG_ROTOM_REALITY_SHORTCUT  TRUE
 #define RP_CONFIG_24_HOUR_MODE            TRUE
 #define RP_CONFIG_NUM_MINUTES_TO_UPDATE   3

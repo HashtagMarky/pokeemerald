@@ -217,7 +217,7 @@ static void ReadAllCurrentSettings(u8 taskId)
     gTasks[taskId].tFollowers = FlagGet(FLAG_DISABLE_FOLLOWERS);
     gTasks[taskId].tBattleSpeed = gSaveBlock2Ptr->optionsBattleSpeed;
     gTasks[taskId].tAutorun = FlagGet(FLAG_AUTORUN_MENU_TOGGLE);
-    gTasks[taskId].tStartMenuPalette = gSaveBlock2Ptr->optionsStartMenuPalette;
+    gTasks[taskId].tStartMenuPalette = gSaveBlock2Ptr->optionsRotomPhonePalette;
 }
 
 static void DrawOptionsPg1(u8 taskId)
@@ -578,7 +578,7 @@ static void Task_OptionMenuSave(u8 taskId)
     gSaveBlock2Ptr->optionsButtonMode = gTasks[taskId].tButtonMode;
     gSaveBlock2Ptr->optionsWindowFrameType = gTasks[taskId].tWindowFrameType;
     gSaveBlock2Ptr->optionsBattleSpeed = gTasks[taskId].tBattleSpeed;
-    gSaveBlock2Ptr->optionsStartMenuPalette = gTasks[taskId].tStartMenuPalette;
+    gSaveBlock2Ptr->optionsRotomPhonePalette = gTasks[taskId].tStartMenuPalette;
 
     BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
     gTasks[taskId].func = Task_OptionMenuFadeOut;

@@ -103,7 +103,7 @@ static void SetDefaultOptions(void)
     gSaveBlock2Ptr->optionsBattleStyle = OPTIONS_BATTLE_STYLE_SHIFT;
     gSaveBlock2Ptr->optionsBattleSceneOff = FALSE;
     gSaveBlock2Ptr->regionMapZoom = FALSE;
-    gSaveBlock2Ptr->optionsStartMenuPalette = 0;
+    gSaveBlock2Ptr->optionsRotomPhonePalette = 0;
     gSaveBlock2Ptr->optionsTitleScreenPokemon = DEFAULT_TITLE_SCREEN;
 }
 

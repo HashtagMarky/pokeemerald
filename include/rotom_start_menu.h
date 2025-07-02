@@ -200,6 +200,7 @@ flag, or save game options.
 
 enum RotomPhone_Colours
 {
+    ROTOM_PHONE_OG,
     ROTOM_PHONE_BLACK,
     ROTOM_PHONE_RED,
     ROTOM_PHONE_YELLOW,
@@ -213,6 +214,8 @@ enum RotomPhone_Colours
     ROTOM_PHONE_WINE_RED,
     ROTOM_PHONE_NAVY,
     ROTOM_PHONE_WHITE,
+    ROTOM_PHONE_LAVENDER,
+    ROTOM_PHONE_GOLD,
     ROTOM_PHONE_COLOUR_COUNT
 };
 

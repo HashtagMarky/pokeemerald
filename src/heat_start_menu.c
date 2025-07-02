@@ -767,7 +767,7 @@ static void HeatStartMenu_LoadBgGfx(void) {
     LoadPalette(gStandardMenuPalette, BG_PLTT_ID(15), PLTT_SIZE_4BPP);
 
     // Load the start menu palette based on the persistent setting
-    const u16 *selectedPalette = GetStartMenuPalette(gSaveBlock2Ptr->optionsStartMenuPalette);
+    const u16 *selectedPalette = GetStartMenuPalette(gSaveBlock2Ptr->optionsRotomPhonePalette);
     LoadPalette(selectedPalette, BG_PLTT_ID(14), PLTT_SIZE_4BPP);
 
     ScheduleBgCopyTilemapToVram(0);

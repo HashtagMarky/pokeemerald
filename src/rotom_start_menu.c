@@ -258,9 +258,13 @@ static const u16 sRotomPhonePalette_DarkGreen[] =               INCBIN_U16("grap
 static const u16 sRotomPhonePalette_WineRed[] =                 INCBIN_U16("graphics/rotom_start_menu/palettes/wine_red.gbapal");
 static const u16 sRotomPhonePalette_Navy[] =                    INCBIN_U16("graphics/rotom_start_menu/palettes/navy.gbapal");
 static const u16 sRotomPhonePalette_White[] =                   INCBIN_U16("graphics/rotom_start_menu/palettes/white.gbapal");
+static const u16 sRotomPhonePalette_Lavender[] =                INCBIN_U16("graphics/rotom_start_menu/palettes/lavender.gbapal");
+static const u16 sRotomPhonePalette_Gold[] =                    INCBIN_U16("graphics/rotom_start_menu/palettes/gold.gbapal");
+static const u16 sRotomPhonePalette_OG[] =                      INCBIN_U16("graphics/rotom_start_menu/palettes/og.gbapal");
 
 static const u16 *const sRotomPhone_StartMenu_Palettes[ROTOM_PHONE_COLOUR_COUNT] =
 {
+    [ROTOM_PHONE_OG] =            sRotomPhonePalette_OG,
     [ROTOM_PHONE_BLACK] =       sRotomPhonePalette_Black,
     [ROTOM_PHONE_RED] =         sRotomPhonePalette_Red,
     [ROTOM_PHONE_YELLOW] =      sRotomPhonePalette_Yellow,
@@ -274,30 +278,19 @@ static const u16 *const sRotomPhone_StartMenu_Palettes[ROTOM_PHONE_COLOUR_COUNT]
     [ROTOM_PHONE_WINE_RED] =    sRotomPhonePalette_WineRed,
     [ROTOM_PHONE_NAVY] =        sRotomPhonePalette_Navy,
     [ROTOM_PHONE_WHITE] =       sRotomPhonePalette_White,
+    [ROTOM_PHONE_LAVENDER] =      sRotomPhonePalette_Lavender,
+    [ROTOM_PHONE_GOLD] =          sRotomPhonePalette_Gold,
 };
 
 static const u16 *RotomPhone_StartMenu_GetPhoneColour(void)
 {
-    switch (RP_CONFIG_PHONE_COLOUR)
-    {
-        case ROTOM_PHONE_BLACK:
-        case ROTOM_PHONE_RED:
-        case ROTOM_PHONE_YELLOW:
-        case ROTOM_PHONE_GREEN:
-        case ROTOM_PHONE_PURPLE:
-        case ROTOM_PHONE_BLUE:
-        case ROTOM_PHONE_TURQUOISE:
-        case ROTOM_PHONE_ROSE:
-        case ROTOM_PHONE_BROWN:
-        case ROTOM_PHONE_DARK_GREEN:
-        case ROTOM_PHONE_WINE_RED:
-        case ROTOM_PHONE_NAVY:
-        case ROTOM_PHONE_WHITE:
-            return sRotomPhone_StartMenu_Palettes[RP_CONFIG_PHONE_COLOUR];
-        default:
-            return sRotomPhone_StartMenu_Palettes[ROTOM_PHONE_COLOUR_COUNT - ROTOM_PHONE_COLOUR_COUNT];
-    }
+    u8 paletteId = gSaveBlock2Ptr->optionsRotomPhonePalette;
+    if (paletteId >= ROTOM_PHONE_COLOUR_COUNT)
+        paletteId = ROTOM_PHONE_OG; 
+    return sRotomPhone_StartMenu_Palettes[paletteId];
 }
+
+
 
 #if RP_CONFIG_PALETTE_BUFFER
 static EWRAM_DATA u16 ALIGNED(4) menuLoadedSpritePalette_One[PLTT_SIZE_4BPP];
@@ -1252,7 +1245,7 @@ static const struct RotomPhone_MenuOptions sRotomPhoneOptions[RP_MENU_COUNT] =
         .rotomSpeech = COMPOUND_STRING("to view your Party?"),
         .unlockedFunc = RotomPhone_StartMenu_UnlockedFunc_Pokemon,
         .selectedFunc = RotomPhone_StartMenu_SelectedFunc_Pokemon,
-        .owIconPalSlot = PAL_ICON_YELLOW,
+        .owIconPalSlot = PAL_ICON_GREEN,
         .owAnim = RP_ICON_ANIM_FIVE,
         .rrAnim = RP_ICON_ANIM_THREE,
         .rrSpriteTemplate = &sSpriteTemplate_RotomRealityIcons_One,
@@ -1263,7 +1256,7 @@ static const struct RotomPhone_MenuOptions sRotomPhoneOptions[RP_MENU_COUNT] =
         .rotomSpeech = COMPOUND_STRING("to look through your Bag?"),
         .unlockedFunc = RotomPhone_StartMenu_UnlockedFunc_Unlocked,
         .selectedFunc = RotomPhone_StartMenu_SelectedFunc_Bag,
-        .owIconPalSlot = PAL_ICON_BLUE,
+        .owIconPalSlot = PAL_ICON_YELLOW,
         .owAnim = RP_ICON_ANIM_SEVEN,
         .rrAnim = RP_ICON_ANIM_FIVE,
         .rrSpriteTemplate = &sSpriteTemplate_RotomRealityIcons_One,
@@ -1305,7 +1298,7 @@ static const struct RotomPhone_MenuOptions sRotomPhoneOptions[RP_MENU_COUNT] =
         .rotomSpeech = COMPOUND_STRING("to change the Settings?"),
         .unlockedFunc = RotomPhone_StartMenu_UnlockedFunc_Unlocked,
         .selectedFunc = RotomPhone_StartMenu_SelectedFunc_Settings,
-        .owIconPalSlot = PAL_ICON_GREEN,
+        .owIconPalSlot = PAL_ICON_PINK,
         .owAnim = RP_ICON_ANIM_TEN,
         .rrAnim = RP_ICON_ANIM_EIGHT,
         .rrSpriteTemplate = &sSpriteTemplate_RotomRealityIcons_One,
@@ -1655,24 +1648,6 @@ static void RotomPhone_OverworldMenu_CreateAllIconSprites(void)
         sRotomPhone_StartMenu->menuOverworldOptions[drawn] = RP_MENU_COUNT;
     }
 }
-
-
-/*/ Example palette table
-static const u16 *const sRotomPhonePalettes[] = {
-    sRotomPhone_StartMenuPalette,      // Default
-    sRotomPhone_StartMenuPaletteBlue,  // Blue
-    sRotomPhone_StartMenuPaletteRed,   // Red
-
-};*/
-
-//#define ROTOM_PHONE_PALETTE_COUNT (sizeof(sRotomPhonePalettes)/sizeof(*sRotomPhonePalettes))
-
-//const u16 *GetRotomPhonePalette(u8 id)
-//{
-//    if (id >= ROTOM_PHONE_PALETTE_COUNT)
- //       return sRotomPhonePalettes[0]; // fallback to default
-  //  return sRotomPhonePalettes[id];
-//}
 
 static void RotomPhone_OverworldMenu_LoadBgPalette(bool32 firstLoad)
 {

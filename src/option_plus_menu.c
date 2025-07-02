@@ -21,6 +21,7 @@
 #include "heat_start_menu.h"
 #include "event_data.h"
 #include "followmon.h"
+#include "rotom_start_menu.h"
 
 enum
 {
@@ -168,6 +169,7 @@ static int TwoOptions_ProcessInput(int selection);
 static int ThreeOptions_ProcessInput(int selection);
 static int FourOptions_ProcessInput(int selection);
 static int FiveOptions_ProcessInput(int selection);
+static int SixteenOptions_ProcessInput(int selection);
 static int UNUSED ElevenOptions_ProcessInput(int selection);
 static int Sound_ProcessInput(int selection);
 static int FrameType_ProcessInput(int selection);
@@ -188,7 +190,7 @@ static void DrawChoices_Follower(int selection, int y);
 static void BattleSpeed_DrawChoices(int selection, int y);
 static void DrawChoices_AutoRun(int selection, int y);
 static int ProcessInput_AutoRun(int selection);
-static int ProcessInput_MenuPal(int selection);
+static int UNUSED ProcessInput_MenuPal(int selection);
 static void DrawChoices_MenuPal(int selection, int y);
 static void DrawChoices_OW_Encounters(int selection, int y);
 static void DrawChoices_TitleScreen(int selection, int y);
@@ -250,7 +252,7 @@ static const MenuItemFunctions sItemFunctionsVanilla[MENUITEM_COUNT] =
 
 static const MenuItemFunctions sItemFunctionsCustom[MENUITEM_COUNT_PG2] =
 {
-    [MENUITEM_MENUPAL]       = {DrawChoices_MenuPal,   ProcessInput_MenuPal},
+    [MENUITEM_MENUPAL]       = {DrawChoices_MenuPal,   SixteenOptions_ProcessInput},
     [MENUITEM_FOLLOWER]  = {DrawChoices_Follower,    TwoOptions_ProcessInput},
     [MENUITEM_BATTLESPEED]  = {BattleSpeed_DrawChoices,    BattleSpeed_ProcessInput_New},
     [MENUITEM_OW_ENCOUNTERS] = {DrawChoices_OW_Encounters,    TwoOptions_ProcessInput},
@@ -338,7 +340,7 @@ static const u8 sText_Desc_TextSpeedSlow[]     = _("Text will be displayed slowl
 static const u8 sText_Desc_TextSpeedMedium[]      = _("Text will be displayed at a\nmedium speed.");
 static const u8 sText_Desc_TextSpeedFast[]      = _("Text will be displayed quickly.");
 static const u8 sText_Desc_TextSpeedFaster[]    = _("Text will be displayed at the\nfastest speed possible.");
-static const u8 sText_Desc_MenuPal[]            = _("Choose the color of the start\nmenu.");
+static const u8 sText_Desc_MenuPal[]            = _("Choose the color of your\nRotom Phone.");
 static const u8 sText_Desc_Follower_On[]         = _("Your POKéMON will follow you\nin the overworld.");
 static const u8 sText_Desc_Follower_Off[]        = _("Your POKéMON will not follow you\nin the overworld.");
 static const u8 sText_Desc_OW_On[]            = _("Wild POKéMON will appear in the\noverworld.");
@@ -396,7 +398,7 @@ static const u8 *const sOptionMenuItemDescriptionsCustom[MENUITEM_COUNT_PG2][5] 
     [MENUITEM_BATTLESPEED]  = {sText_Desc_BattleSpeed_1x,       sText_Desc_BattleSpeed_2x,        sText_Desc_BattleSpeed_3x,      sText_Desc_BattleSpeed_4x, sText_Empty,},
     [MENUITEM_OW_ENCOUNTERS] = {sText_Desc_OW_On,            sText_Desc_OW_Off,                sText_Empty,                    sText_Empty, sText_Empty,},
     [MENUITEM_AUTORUN] = {sText_Desc_Autorun_Hold,     sText_Desc_Autorun_Toggle,          sText_Empty,                    sText_Empty, sText_Empty,},
-    [MENUITEM_TITLESCREEN] = {sText_Desc_TS_Necrozma,            sText_Desc_TS_Solgaleo,              sText_Desc_TS_Lunala,                    sText_Desc_TS_Time, sText_Desc_TS_Random,},
+    [MENUITEM_TITLESCREEN] = {sText_Desc_TS_Necrozma,            sText_Desc_TS_Solgaleo,              sText_Desc_TS_Lunala,                    sText_Desc_TS_Random, sText_Desc_TS_Time,},
     [MENUITEM_CANCEL_PG2]       = {sText_Desc_Save,                 sText_Empty,                      sText_Empty,                    sText_Empty, sText_Empty,},
 };
 
@@ -736,7 +738,7 @@ void CB2_InitOptionPlusMenu(void)
         sOptions->sel_vanilla[MENUITEM_SOUND]       = gSaveBlock2Ptr->optionsSound;
         sOptions->sel_vanilla[MENUITEM_FRAMETYPE]   = gSaveBlock2Ptr->optionsWindowFrameType;
     
-        sOptions->sel_custom[MENUITEM_MENUPAL]       = gSaveBlock2Ptr->optionsStartMenuPalette;
+        sOptions->sel_custom[MENUITEM_MENUPAL]       = gSaveBlock2Ptr->optionsRotomPhonePalette;
         sOptions->sel_custom[MENUITEM_FOLLOWER]     = FlagGet(FLAG_DISABLE_FOLLOWERS);
         sOptions->sel_custom[MENUITEM_BATTLESPEED]  = gSaveBlock2Ptr->optionsBattleSpeed;
         sOptions->sel_custom[MENUITEM_OW_ENCOUNTERS] = !(FlagGet(OW_FLAG_SPAWN_OVERWORLD_MON) && FlagGet(FLAG_OW_NO_ENCOUNTER));
@@ -962,7 +964,7 @@ static void Task_OptionMenuSave(u8 taskId)
     // These options (BattleSpeed and StartMenuPalette) are now
     // explicitly mapped from sOptions->sel_custom to gSaveBlock2Ptr.
     gSaveBlock2Ptr->optionsBattleSpeed      = sOptions->sel_custom[MENUITEM_BATTLESPEED];
-    gSaveBlock2Ptr->optionsStartMenuPalette = sOptions->sel_custom[MENUITEM_MENUPAL];
+    gSaveBlock2Ptr->optionsRotomPhonePalette = sOptions->sel_custom[MENUITEM_MENUPAL];
     gSaveBlock2Ptr->optionsTitleScreenPokemon = sOptions->sel_custom[MENUITEM_TITLESCREEN];
 
     // Handle Follower option (flag-based)
@@ -1139,6 +1141,12 @@ static int FiveOptions_ProcessInput(int selection)
 {
     return XOptions_ProcessInput(5, selection);
 }
+
+static int SixteenOptions_ProcessInput(int selection)
+{
+    return XOptions_ProcessInput(16, selection);
+}
+
 static int UNUSED ElevenOptions_ProcessInput(int selection)
 {
     return XOptions_ProcessInput(11, selection);
@@ -1429,47 +1437,36 @@ static void DrawChoices_TitleScreen(int selection, int y)
     DrawOptionMenuChoice(sTitleScreenStrings[selection], 104, y, 1, active);
 }
 
+static const u8 *const sRotomPhoneStrings[] = {
+    gText_RP_Original,
+    gText_RP_Black,
+    gText_RP_Red,
+    gText_RP_Yellow,
+    gText_RP_Green,
+    gText_RP_Purple,
+    gText_RP_Blue,
+    gText_RP_Turquoise,
+    gText_RP_Rose,
+    gText_RP_Brown,
+    gText_RP_DarkGreen,
+    gText_RP_WineRed,
+    gText_RP_DarkBlue,
+    gText_RP_White,
+    gText_RP_Lavender,
+    gText_RP_Gold,
+};
+
 static void DrawChoices_MenuPal(int selection, int y) 
 {
-    bool8 active = CheckConditions(MENUITEM_MENUPAL); 
-    u8 text[16]; 
-
-
-    u8 n = selection + 1; 
-    u16 i;
-
-
-    for (i = 0; gText_MenuColorNumber[i] != EOS && i < 15; i++) 
-        text[i] = gText_MenuColorNumber[i];
-
-
-    if (n / 10 != 0) 
-    {
-        text[i] = (n / 10) + CHAR_0;
-        i++;
-        text[i] = (n % 10) + CHAR_0;
-        i++;
-    }
-    else 
-    {
-        text[i] = (n % 10) + CHAR_0;
-        i++;
-        text[i] = CHAR_SPACER; 
-        i++;
-    }
-
-    text[i] = EOS; 
-
-
-    DrawOptionMenuChoice(gText_MenuColorColor, 104, y, 0, active);
-
-    DrawOptionMenuChoice(text, 134, y, 1, active);
+    bool8 active = CheckConditions(MENUITEM_MENUPAL);
+    // Draw the option string at the desired position
+    DrawOptionMenuChoice(sRotomPhoneStrings[selection], 104, y, 1, active);
 }
-static int ProcessInput_MenuPal(int selection) 
+static int UNUSED ProcessInput_MenuPal(int selection) 
 {
     if (JOY_NEW(DPAD_RIGHT))
     {
-        if (selection < MENU_PAL_COUNT - 1)
+        if (selection < ROTOM_PHONE_COLOUR_COUNT - 1)
         {
             selection++;
         }
@@ -1487,7 +1484,7 @@ static int ProcessInput_MenuPal(int selection)
         }
         else
         {
-            selection = MENU_PAL_COUNT - 1;
+            selection = ROTOM_PHONE_COLOUR_COUNT - 1;
         }
         
     }

@@ -574,7 +574,7 @@ struct SaveBlock2
              u16 optionsBattleSceneOff:1; // whether battle animations are disabled
              u16 regionMapZoom:1; // whether the map is zoomed in
              u16 optionsBattleSpeed:2; // OPTIONS_BATTLE_SPEED_[1x/2x/3x/4x]
-             u16 optionsStartMenuPalette:4; // whether the start menu is in the default palette
+             u16 optionsRotomPhonePalette:4; // whether the start menu is in the default palette
              u16 optionsTitleScreenPokemon:3; // what Pokemon displays on the title screen, must have enough space to contain enum TitleScreenPokemon
              //u16 padding1:1;
              //u16 padding2;

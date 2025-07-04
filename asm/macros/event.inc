@@ -1896,7 +1896,12 @@
 	.byte 0xe5
 	.4byte \text
 	.endm
-
+	
+@ Checks if any party mon can learn or knows the given field move (by item/machine id)
+    .macro checkpartylearnknowsfieldmove machine:req
+    .byte 0xe6
+    .2byte \machine
+    .endm
 
 @ Supplementary
 

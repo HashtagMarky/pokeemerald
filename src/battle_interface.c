@@ -1081,7 +1081,7 @@ void UpdateHpTextInHealthbox(u32 healthboxSpriteId, u32 maxOrCurrent, s16 currHp
         break;
     }
     }
-    }
+    
 }
 
 static u8 *AddTextPrinterAndCreateWindowOnHealthboxWithFontLightText(const u8 *str, u32 x, u32 y, u32 bgColor, u32 *windowId, u32 fontId)

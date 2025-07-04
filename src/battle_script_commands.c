@@ -3188,64 +3188,6 @@ static inline bool32 TrySetLightScreen(u32 battler)
     return FALSE;
 }
 
-void SetNonVolatileStatusCondition(u32 effectBattler, enum MoveEffects effect)
-{
-    if (effect == MOVE_EFFECT_SLEEP
-     || effect == MOVE_EFFECT_FREEZE)
-    {
-        const u8 *cancelMultiTurnMovesResult = NULL;
-        cancelMultiTurnMovesResult = CancelMultiTurnMoves(effectBattler, SKY_DROP_STATUS_FREEZE_SLEEP);
-        if (cancelMultiTurnMovesResult)
-            gBattlescriptCurrInstr = cancelMultiTurnMovesResult;
-    }
-
-    BattleScriptPush(gBattlescriptCurrInstr + 1);
-
-    if (sStatusFlagsForMoveEffects[effect] == STATUS1_SLEEP)
-    {
-        if (B_SLEEP_TURNS >= GEN_5)
-            gBattleMons[effectBattler].status1 |= STATUS1_SLEEP_TURN(1 + RandomUniform(RNG_SLEEP_TURNS, 1, 3));
-        else
-            gBattleMons[effectBattler].status1 |= STATUS1_SLEEP_TURN(1 + RandomUniform(RNG_SLEEP_TURNS, 2, 5));
-
-        TryActivateSleepClause(effectBattler, gBattlerPartyIndexes[effectBattler]);
-    }
-    else
-    {
-        gBattleMons[effectBattler].status1 |= sStatusFlagsForMoveEffects[effect];
-    }
-
-    gBattlescriptCurrInstr = sMoveEffectBS_Ptrs[effect];
-
-    BtlController_EmitSetMonData(effectBattler, BUFFER_A, REQUEST_STATUS_BATTLE, 0, sizeof(gBattleMons[effectBattler].status1), &gBattleMons[effectBattler].status1);
-    MarkBattlerForControllerExec(effectBattler);
-
-    if (gHitMarker & HITMARKER_STATUS_ABILITY_EFFECT)
-    {
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STATUSED_BY_ABILITY;
-        gHitMarker &= ~HITMARKER_STATUS_ABILITY_EFFECT;
-    }
-    else
-    {
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STATUSED;
-    }
-
-    gBattleScripting.moveEffect = MOVE_EFFECT_NONE;
-
-    // for synchronize
-    if (effect == MOVE_EFFECT_POISON
-     || effect == MOVE_EFFECT_TOXIC
-     || effect == MOVE_EFFECT_PARALYSIS
-     || effect == MOVE_EFFECT_BURN)
-     {
-        gBattleStruct->synchronizeMoveEffect = effect;
-        gHitMarker |= HITMARKER_SYNCHRONIZE_EFFECT;
-     }
-
-    if (effect == MOVE_EFFECT_POISON || effect == MOVE_EFFECT_TOXIC)
-        gBattleStruct->poisonPuppeteerConfusion = TRUE;
-}
-
 static void SetNonVolatileStatusCondition(u32 effectBattler, enum MoveEffects effect, enum StatusTrigger trigger)
 {
     gEffectBattler = effectBattler;

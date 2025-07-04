@@ -632,7 +632,7 @@ static bool8 OptionsMenu_LoadGraphics(void) // Load all the tilesets, tilemaps, 
     case 1:
         if (FreeTempTileDataBuffersIfPossible() != TRUE)
         {
-            LZDecompressWram(sOptionsPlusTilemap, sBg2TilemapBuffer);
+            DecompressDataWithHeaderVram(sOptionsPlusTilemap, sBg2TilemapBuffer);
             sOptions->gfxLoadState++;
         }
         break;
@@ -644,7 +644,7 @@ static bool8 OptionsMenu_LoadGraphics(void) // Load all the tilesets, tilemaps, 
     case 3:
         if (FreeTempTileDataBuffersIfPossible() != TRUE)
         {
-            LZDecompressWram(sScrollBgTilemap, sBg3TilemapBuffer);
+            DecompressDataWithHeaderVram(sScrollBgTilemap, sBg3TilemapBuffer);
             sOptions->gfxLoadState++;
         }
         break;

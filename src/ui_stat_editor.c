@@ -441,7 +441,7 @@ static bool8 StatEditor_LoadGraphics(void)
     case 1:
         if (FreeTempTileDataBuffersIfPossible() != TRUE)
         {
-            LZDecompressWram(sStatEditorBgTilemap, sBg1TilemapBuffer);
+            DecompressDataWithHeaderVram(sStatEditorBgTilemap, sBg1TilemapBuffer);
             sStatEditorDataPtr->gfxLoadState++;
         }
         break;

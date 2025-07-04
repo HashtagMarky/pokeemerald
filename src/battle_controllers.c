@@ -3077,11 +3077,6 @@ void BtlController_HandleSwitchInTryShinyAnim(u32 battler)
     }
 }
 
-        return gSpeciesInfo[species].frontAnimId;
-    else
-        return GetSpeciesBackAnimSet(species);
-}
-
 u32 Rogue_GetBattleSpeedScale(bool32 forHealthbar)
 {
     u8 battleSceneOption = VarGet(B_BATTLE_SPEED); // Originally GetBattleSceneOption() with a saveblock stored value;

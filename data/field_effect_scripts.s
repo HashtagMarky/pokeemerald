@@ -86,6 +86,7 @@ gFieldEffectScriptPointers::
     .4byte gFieldEffectScript_UseWaterfallTool          @ FLDEFF_USE_WATERFALL_TOOL 
     .4byte gFieldEffectScript_UseDiveTool               @ FLDEFF_USE_DIVE_TOOL
     .4byte gFieldEffectScript_UseTeleportTool           @ FLDEFF_USE_TELEPORT_TOOL
+	.4byte gFieldEffectScript_PlayRockSmashSE           @ FLDEFF_PLAY_ROCK_SMASH_SOUND
 @ End qol_field_moves
     
 gFieldEffectScript_ExclamationMarkIcon1::
@@ -408,5 +409,10 @@ gFieldEffectScript_UseDiveTool::
 gFieldEffectScript_UseTeleportTool::
     field_eff_callnative FldEff_UseTeleportTool
 	field_eff_end
+
+gFieldEffectScript_PlayRockSmashSE::
+	field_eff_callnative FldEff_PlayRockSmashSound
+	field_eff_end
+
 
 @ End qol_field_moves

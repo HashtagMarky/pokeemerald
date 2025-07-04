@@ -50,6 +50,7 @@ bool8 CheckObjectGraphicsInFrontOfPlayer(u16 graphicsId);
 u8 CreateFieldMoveTask(void);
 bool8 SetUpFieldMove_RockSmash(void);
 bool8 FldEff_UseRockSmash(void);
+bool8 FldEff_PlayRockSmashSound(void);
 
 // defog
 bool8 SetUpFieldMove_Defog(void);

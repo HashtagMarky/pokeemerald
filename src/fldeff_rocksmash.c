@@ -169,3 +169,11 @@ static void FieldMove_RockSmash(void)
     FieldEffectActiveListRemove(FLDEFF_USE_ROCK_SMASH);
     ScriptContext_Enable();
 }
+
+bool8 FldEff_PlayRockSmashSound(void)
+{
+    PlaySE(SE_M_ROCK_THROW);
+    FieldEffectActiveListRemove(FLDEFF_PLAY_ROCK_SMASH_SOUND);
+    ScriptContext_Enable();
+    return FALSE;
+}

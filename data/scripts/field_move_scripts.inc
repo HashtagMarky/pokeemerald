@@ -96,6 +96,7 @@ EventScript_SmashRock:: @ fallthrough
 	call_if_eq VAR_0x8004, TRUE, EventScript_FollowerFieldMove
 	setflag FLAG_SYS_USE_ROCK_SMASH @ qol_field_moves
 	applymovement VAR_LAST_TALKED, Movement_SmashRock
+	dofieldeffect FLDEFF_PLAY_ROCK_SMASH_SOUND
 	waitmovement 0
 	removeobject VAR_LAST_TALKED
 	specialvar VAR_RESULT, TryUpdateRusturfTunnelState

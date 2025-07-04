@@ -41,12 +41,7 @@ struct WildPokemonHeader
 {
     u8 mapGroup;
     u8 mapNum;
-
-#if OW_TIME_OF_DAY_ENCOUNTERS
     const struct WildEncounterTypes encounterTypes[TIMES_OF_DAY_COUNT];
-#else
-    const struct WildEncounterTypes encounterTypes[1];
-#endif
 };
 
 
@@ -59,7 +54,7 @@ void GenerateFollowMon(struct FollowMon *followMon, bool8 inWater);
 u8 ChooseWildMonLevel(const struct WildPokemon *wildPokemon, u8 wildMonIndex, enum WildPokemonArea area);
 void DisableWildEncounters(bool8 disabled);
 u8 PickWildMonNature(void);
-bool8 StandardWildEncounter(u16 currMetaTileBehavior, u16 previousMetaTileBehavior);
+bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior);
 bool8 SweetScentWildEncounter(void);
 bool8 DoesCurrentMapHaveFishingMons(void);
 void FishingWildEncounter(u8 rod);

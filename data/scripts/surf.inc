@@ -1,6 +1,6 @@
 EventScript_UseSurf::
 @ Start qol_field_moves
-	//checkpartymove MOVE_SURF
+	//checkfieldmove FIELD_MOVE_SURF
     checkitem ITEM_SURF_TOOL, 1
     goto_if_eq VAR_RESULT, TRUE, EventScript_UseSurfTool
     checkpartylearnknowsfieldmove ITEM_HM03

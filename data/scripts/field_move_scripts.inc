@@ -2,7 +2,7 @@
 EventScript_CutTree::
 	lockall
 	@ Start qol_field_moves
-	//checkpartymove MOVE_CUT
+	//checkfieldmove FIELD_MOVE_CUT, TRUE
     checkitem ITEM_CUT_TOOL, 1
     goto_if_eq VAR_RESULT, TRUE, EventScript_UseCutTool
     checkpartylearnknowsfieldmove ITEM_HM01
@@ -71,7 +71,7 @@ EventScript_UseRockSmash::
 EventScript_RockSmash::
 	lockall
 @ Start qol_field_moves
-	//checkpartymove MOVE_ROCK_SMASH
+	//	checkfieldmove FIELD_MOVE_ROCK_SMASH, TRUE
     checkitem ITEM_ROCKSMASH_TOOL,1
     goto_if_eq VAR_RESULT, TRUE, EventScript_UseRockSmashTool
     checkpartylearnknowsfieldmove ITEM_HM06
@@ -238,10 +238,9 @@ Text_CantSmash:
 
 EventScript_StrengthBoulder::
 	lockall
-	goto_if_unset FLAG_BADGE04_GET, EventScript_CantStrength
 	goto_if_set FLAG_SYS_USE_STRENGTH, EventScript_CheckActivatedBoulder
 @ Start qol_field_moves
-	//checkpartymove MOVE_STRENGTH
+	//checkfieldmove FIELD_MOVE_STRENGTH, TRUE
     checkitem ITEM_STRENGTH_TOOL,1
     goto_if_eq VAR_RESULT, TRUE, EventScript_UseStrengthTool
     checkpartylearnknowsfieldmove ITEM_HM04
@@ -307,7 +306,7 @@ Text_StrengthActivated:
 EventScript_UseWaterfall::
 	lockall
 @ Start qol_field_moves
-	//checkpartymove MOVE_WATERFALL
+	//	checkfieldmove FIELD_MOVE_WATERFALL
     checkitem ITEM_WATERFALL_TOOL, 1
     goto_if_eq VAR_RESULT, TRUE, EventScript_UseWaterfallTool
     checkpartylearnknowsfieldmove ITEM_HM07
@@ -351,7 +350,7 @@ Text_MonUsedWaterfall:
 EventScript_UseDive::
 	lockall
 @ Start qol_field_moves
-	//checkpartymove MOVE_DIVE
+	//checkfieldmove FIELD_MOVE_DIVE
     call EventScript_CheckDiveToolAndParty
 @ End qol_field_moves
 	goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_CantDive
@@ -381,7 +380,7 @@ EventScript_EndDive::
 EventScript_UseDiveUnderwater::
 	lockall
 @ Start qol_field_moves
-	//checkpartymove MOVE_DIVE
+	//checkfieldmove FIELD_MOVE_DIVE
     call EventScript_CheckDiveToolAndParty
 @ End qol_field_moves
 	goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_CantSurface
@@ -389,7 +388,7 @@ EventScript_UseDiveUnderwater::
 	setfieldeffectargument 0, VAR_RESULT
 	setfieldeffectargument 1, 1
 	msgbox Text_WantToSurface, MSGBOX_YESNO
-	goto_if_eq VAR_RESULT, NO, EventScript_EndSurface
+	goto_if_eq VAR_RESULT, NO, EventScript_NoSurface
 	msgbox Text_MonUsedDive, MSGBOX_DEFAULT
 	hidefollowernpc
 	dofieldeffect FLDEFF_USE_DIVE
@@ -404,6 +403,7 @@ EventScript_CantSurface::
 
 EventScript_EndSurface::
 	callnative SetFollowerNPCSurfSpriteAfterDive
+EventScript_NoSurface::
 	releaseall
 	end
 

@@ -3746,14 +3746,13 @@ static void RotomPhone_StartMenu_CreateRotomFaceSprite(bool32 rotomFade)
 static void RotomPhone_StartMenu_UpdateRotomFaceAnim(bool32 input)
 {
     enum RotomPhone_FaceExpressions rotomFace;
-    u32 randMax;
+    u32 randMax = sRotomPhone_StartMenu->rotomFaceLastLoaded + 1;;
     if (!input)
     {
         if ((Random() % 100) < RP_CONFIG_FACE_UPDATE_PERCENT)
         {
             if (sRotomPhone_StartMenu->rotomFaceLastLoaded != RP_FACE_HAPPY)
             {
-                randMax = sRotomPhone_StartMenu->rotomFaceLastLoaded + 1;
                 do {
                     rotomFace = Random() % randMax;
                 } while (
@@ -3781,8 +3780,11 @@ static void RotomPhone_StartMenu_UpdateRotomFaceAnim(bool32 input)
         else if (sRotomPhone_StartMenu->rotomFaceLastLoaded >= RP_FACE_SHOCKED_WITH)
         {
             do {
-                rotomFace = Random() % RP_FACE_LOOK_UP_ANIMS;
-            } while (rotomFace == gSprites[sRotomPhone_StartMenu->menuRotomFaceSpriteId].animNum);
+                rotomFace = Random() % randMax;
+            } while (
+                    rotomFace == gSprites[sRotomPhone_StartMenu->menuRotomFaceSpriteId].animNum ||
+                    (rotomFace != RP_FACE_HAPPY_UP && rotomFace != RP_FACE_SHOCKED_UP)
+                );
         }
         else if (sRotomPhone_StartMenu->rotomFaceLastLoaded == RP_FACE_HAPPY_WITH)
         {

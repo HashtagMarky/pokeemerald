@@ -165,6 +165,7 @@ static void RotomPhone_RotomRealityMenu_SaveScreen_FreeResources(void);
 
 
 static bool32 RotomPhone_StartMenu_IsRotomReality(void);
+static void RotomPhone_StartMenu_LoadRotomFaceSpritesheet(void);
 static void RotomPhone_StartMenu_CreateRotomFaceSprite(bool32 rotomFade);
 static void RotomPhone_StartMenu_UpdateRotomFaceAnim(bool32 input);
 static void RotomPhone_StartMenu_RotomShutdownPreparation(u8 taskId, bool32 overworld);
@@ -524,16 +525,16 @@ enum RotomPhone_Overworld_Options
 
 enum RotomPhone_FaceExpressions
 {
-    RP_FACE_HAPPY_UP,
-    RP_FACE_SHOCKED_UP,
     RP_FACE_HAPPY,
+    RP_FACE_HAPPY_UP,
+    RP_FACE_HAPPY_WITH,
     RP_FACE_SHOCKED,
+    RP_FACE_SHOCKED_UP,
+    RP_FACE_SHOCKED_WITH,
     RP_FACE_DAZED,
     RP_FACE_AWE,
     RP_FACE_SHEEPISH,
     RP_FACE_CONFUSED,
-    RP_FACE_HAPPY_WITH,
-    RP_FACE_SHOCKED_WITH,
     RP_FACE_COUNT,
 };
 #define RP_FACE_LOOK_UP_ANIMS 2
@@ -759,6 +760,7 @@ struct RotomPhone_StartMenu_State
 {
     u32 menuRotomFaceSpriteId;
     u32 menuRotomFaceFlashSpriteId;
+    enum RotomPhone_FaceExpressions rotomFaceLastLoaded;
 
     // Overworld Menu
     bool32 menuOverworldLoading;
@@ -912,12 +914,6 @@ static const struct SpritePalette sSpritePal_RotomRealityIcons_Two[] =
     {NULL},
 };
 
-static const struct CompressedSpriteSheet sSpriteSheet_RotomFace[] = 
-{
-    {sRotomPhone_StartMenuRotomFaceGfx, 64*640/2 , TAG_ROTOM_FACE_GFX},
-    {NULL},
-};
-
 static const struct CompressedSpriteSheet sSpriteSheet_OverworldIcons[] = 
 {
     {sRotomFlipPhone_OverworldIconsGfx, 32*352/2 , TAG_PHONE_OW_ICON_GFX},
@@ -1038,62 +1034,62 @@ static const union AnimCmd sAnimCmd_RotomFace_Happy[] = {
     ANIMCMD_JUMP(0),
 };
 
-static const union AnimCmd sAnimCmd_RotomFace_Shocked[] = {
+static const union AnimCmd sAnimCmd_RotomFace_HappyUp[] = {
     ANIMCMD_FRAME(64, 0),
     ANIMCMD_JUMP(0),
 };
 
-static const union AnimCmd sAnimCmd_RotomFace_Dazed[] = {
+static const union AnimCmd sAnimCmd_RotomFace_HappyWith[] = {
     ANIMCMD_FRAME(128, 0),
     ANIMCMD_JUMP(0),
 };
 
-static const union AnimCmd sAnimCmd_RotomFace_Awe[] = {
+static const union AnimCmd sAnimCmd_RotomFace_Shocked[] = {
     ANIMCMD_FRAME(192, 0),
     ANIMCMD_JUMP(0),
 };
 
-static const union AnimCmd sAnimCmd_RotomFace_Sheepish[] = {
+static const union AnimCmd sAnimCmd_RotomFace_ShockedUp[] = {
     ANIMCMD_FRAME(256, 0),
     ANIMCMD_JUMP(0),
 };
 
-static const union AnimCmd sAnimCmd_RotomFace_Confused[] = {
+static const union AnimCmd sAnimCmd_RotomFace_ShockedWith[] = {
     ANIMCMD_FRAME(320, 0),
     ANIMCMD_JUMP(0),
 };
 
-static const union AnimCmd sAnimCmd_RotomFace_HappyWith[] = {
+static const union AnimCmd sAnimCmd_RotomFace_Dazed[] = {
     ANIMCMD_FRAME(384, 0),
     ANIMCMD_JUMP(0),
 };
 
-static const union AnimCmd sAnimCmd_RotomFace_ShockedWith[] = {
+static const union AnimCmd sAnimCmd_RotomFace_Awe[] = {
     ANIMCMD_FRAME(448, 0),
     ANIMCMD_JUMP(0),
 };
 
-static const union AnimCmd sAnimCmd_RotomFace_HappyUp[] = {
+static const union AnimCmd sAnimCmd_RotomFace_Sheepish[] = {
     ANIMCMD_FRAME(512, 0),
     ANIMCMD_JUMP(0),
 };
 
-static const union AnimCmd sAnimCmd_RotomFace_ShockedUp[] = {
+static const union AnimCmd sAnimCmd_RotomFace_Confused[] = {
     ANIMCMD_FRAME(576, 0),
     ANIMCMD_JUMP(0),
 };
 
 static const union AnimCmd *const sRotomFaceAnims[RP_FACE_COUNT] = {
-    sAnimCmd_RotomFace_HappyUp,
-    sAnimCmd_RotomFace_ShockedUp,
     sAnimCmd_RotomFace_Happy,
+    sAnimCmd_RotomFace_HappyUp,
+    sAnimCmd_RotomFace_HappyWith,
     sAnimCmd_RotomFace_Shocked,
+    sAnimCmd_RotomFace_ShockedUp,
+    sAnimCmd_RotomFace_ShockedWith,
     sAnimCmd_RotomFace_Dazed,
     sAnimCmd_RotomFace_Awe,
     sAnimCmd_RotomFace_Sheepish,
     sAnimCmd_RotomFace_Confused,
-    sAnimCmd_RotomFace_HappyWith,
-    sAnimCmd_RotomFace_ShockedWith,
 };
 
 static const struct SpritePalette sSpritePal_RotomRealityShortcutIcon[] =
@@ -1562,7 +1558,7 @@ static void RotomPhone_OverworldMenu_LoadSprites(void)
 {
     LoadSpritePalette(sSpritePal_RotomFaceIcons);
     LoadCompressedSpriteSheet(sSpriteSheet_OverworldIcons);
-    LoadCompressedSpriteSheet(sSpriteSheet_RotomFace);
+    RotomPhone_StartMenu_LoadRotomFaceSpritesheet();
 
     RotomPhone_OverworldMenu_LoadIconSpritePalette(TRUE);
 }
@@ -2516,9 +2512,16 @@ static void RotomPhone_StartMenu_RotomShutdownPreparation(u8 taskId, bool32 over
     
     struct Sprite *sprite = &gSprites[sRotomPhone_StartMenu->menuRotomFaceSpriteId];
     sprite->callback = SpriteCB_RotomPhone_OverworldMenu_RotomFace_Unload;
-    StartSpriteAnim(&gSprites[sRotomPhone_StartMenu->menuRotomFaceSpriteId], RP_FACE_HAPPY_WITH);
+
+    enum RotomPhone_FaceExpressions rotomFace;
+    if (sRotomPhone_StartMenu->rotomFaceLastLoaded >= RP_FACE_HAPPY_WITH)
+        rotomFace = RP_FACE_HAPPY_WITH;
+    else
+        rotomFace = RP_FACE_HAPPY;
+    
+    StartSpriteAnim(&gSprites[sRotomPhone_StartMenu->menuRotomFaceSpriteId], rotomFace);
     if (sRotomPhone_StartMenu->menuRotomFaceFlashSpriteId != SPRITE_NONE)
-        StartSpriteAnim(&gSprites[sRotomPhone_StartMenu->menuRotomFaceFlashSpriteId], RP_FACE_HAPPY_WITH);
+        StartSpriteAnim(&gSprites[sRotomPhone_StartMenu->menuRotomFaceFlashSpriteId], rotomFace);
     
     struct ComfyAnimSpringConfig config;
     InitComfyAnimConfig_Spring(&config);
@@ -3417,7 +3420,7 @@ static void RotomPhone_RotomRealityMenu_LoadSprites(void)
     LoadCompressedSpriteSheet(sSpriteSheet_RotomRealityShortcutIcon);
     LoadCompressedSpriteSheet(sSpriteSheet_RotomRealityIcons_One);
     LoadCompressedSpriteSheet(sSpriteSheet_RotomRealityIcons_Two);
-    LoadCompressedSpriteSheet(sSpriteSheet_RotomFace);
+    RotomPhone_StartMenu_LoadRotomFaceSpritesheet();
     
     RotomPhone_RotomRealityMenu_LoadIconSpritePalette();
 }
@@ -3645,6 +3648,40 @@ static void RotomPhone_RotomRealityMenu_TimerUpdates(u8 taskId)
     }
 }
 
+static void RotomPhone_StartMenu_LoadRotomFaceSpritesheet(void)
+{
+    struct CompressedSpriteSheet rotomFace;
+    rotomFace.data = sRotomPhone_StartMenuRotomFaceGfx;
+    rotomFace.size = 64 * 640 / 2;
+    rotomFace.tag = TAG_ROTOM_FACE_GFX;
+    LoadCompressedSpriteSheet(&rotomFace);
+    sRotomPhone_StartMenu->rotomFaceLastLoaded = RP_FACE_COUNT - 1;
+    
+    if (GetSpriteTileStartByTag(rotomFace.tag) == TAG_NONE)
+    {
+        rotomFace.size = 64 * 384 / 2;
+        LoadCompressedSpriteSheet(&rotomFace);
+        sRotomPhone_StartMenu->rotomFaceLastLoaded = RP_FACE_SHOCKED_WITH;
+    }
+    
+    if (GetSpriteTileStartByTag(rotomFace.tag) == TAG_NONE)
+    {
+        rotomFace.size = 64 * 192 / 2;
+        LoadCompressedSpriteSheet(&rotomFace);
+        sRotomPhone_StartMenu->rotomFaceLastLoaded = RP_FACE_HAPPY_WITH;
+    }
+    
+    if (GetSpriteTileStartByTag(rotomFace.tag) == TAG_NONE)
+    {
+        rotomFace.size = 64 * 64 / 2;
+        LoadCompressedSpriteSheet(&rotomFace);
+        sRotomPhone_StartMenu->rotomFaceLastLoaded = RP_FACE_HAPPY;
+    }
+
+    if (GetSpriteTileStartByTag(rotomFace.tag) == TAG_NONE)
+        sRotomPhone_StartMenu->rotomFaceLastLoaded = RP_FACE_COUNT;
+}
+
 static void RotomPhone_StartMenu_CreateRotomFaceSprite(bool32 rotomFade)
 {
     if (!RP_CONFIG_USE_ROTOM_PHONE || sRotomPhone_StartMenu->menuRotomFaceSpriteId != SPRITE_NONE)
@@ -3681,6 +3718,9 @@ static void RotomPhone_StartMenu_CreateRotomFaceSprite(bool32 rotomFade)
         0
     );
 
+    if (sRotomPhone_StartMenu->rotomFaceLastLoaded == RP_FACE_COUNT)
+        gSprites[sRotomPhone_StartMenu->menuRotomFaceSpriteId].invisible = TRUE;
+
     if (rotomFade)
     {
         PlaySE(SE_RG_CARD_FLIP);
@@ -3715,20 +3755,30 @@ static void RotomPhone_StartMenu_CreateRotomFaceSprite(bool32 rotomFade)
             0
         );
         gSprites[sRotomPhone_StartMenu->menuRotomFaceFlashSpriteId].oam.objMode = ST_OAM_OBJ_WINDOW;
+
+        if (sRotomPhone_StartMenu->rotomFaceLastLoaded == RP_FACE_COUNT)
+            gSprites[sRotomPhone_StartMenu->menuRotomFaceFlashSpriteId].invisible = TRUE;
     }
 }
 
 static void RotomPhone_StartMenu_UpdateRotomFaceAnim(bool32 input)
 {
-    enum RotomPhone_FaceExpressions rotomFace;
+    enum RotomPhone_FaceExpressions rotomFace = RP_FACE_HAPPY;
+    u32 randMax = sRotomPhone_StartMenu->rotomFaceLastLoaded + 1;
     if (!input)
     {
         if ((Random() % 100) < RP_CONFIG_FACE_UPDATE_PERCENT)
         {
-            do {
-                rotomFace = Random() % (RP_FACE_COUNT - RP_FACE_LOOK_UP_ANIMS);
-                rotomFace += RP_FACE_LOOK_UP_ANIMS;
-            } while (rotomFace == gSprites[sRotomPhone_StartMenu->menuRotomFaceSpriteId].animNum);
+            if (sRotomPhone_StartMenu->rotomFaceLastLoaded != RP_FACE_HAPPY)
+            {
+                do {
+                    rotomFace = Random() % randMax;
+                } while (
+                    rotomFace == gSprites[sRotomPhone_StartMenu->menuRotomFaceSpriteId].animNum ||
+                    rotomFace == RP_FACE_HAPPY_UP || rotomFace == RP_FACE_SHOCKED_UP
+                );
+            }
+            
             StartSpriteAnim(&gSprites[sRotomPhone_StartMenu->menuRotomFaceSpriteId], rotomFace);
             if (sRotomPhone_StartMenu->menuRotomFaceFlashSpriteId != SPRITE_NONE)
                 StartSpriteAnim(&gSprites[sRotomPhone_StartMenu->menuRotomFaceFlashSpriteId], rotomFace);
@@ -3737,9 +3787,20 @@ static void RotomPhone_StartMenu_UpdateRotomFaceAnim(bool32 input)
     }
     else
     {
-        do {
-            rotomFace = Random() % RP_FACE_LOOK_UP_ANIMS;
-        } while (rotomFace == gSprites[sRotomPhone_StartMenu->menuRotomFaceSpriteId].animNum);
+        if (sRotomPhone_StartMenu->rotomFaceLastLoaded >= RP_FACE_SHOCKED_WITH)
+        {
+            do {
+                rotomFace = Random() % randMax;
+            } while (
+                    rotomFace == gSprites[sRotomPhone_StartMenu->menuRotomFaceSpriteId].animNum ||
+                    (rotomFace != RP_FACE_HAPPY_UP && rotomFace != RP_FACE_SHOCKED_UP)
+                );
+        }
+        else if (sRotomPhone_StartMenu->rotomFaceLastLoaded == RP_FACE_HAPPY_WITH)
+        {
+            rotomFace = RP_FACE_HAPPY_UP;
+        }
+
         StartSpriteAnim(&gSprites[sRotomPhone_StartMenu->menuRotomFaceSpriteId], rotomFace);
         if (sRotomPhone_StartMenu->menuRotomFaceFlashSpriteId != SPRITE_NONE)
             StartSpriteAnim(&gSprites[sRotomPhone_StartMenu->menuRotomFaceFlashSpriteId], rotomFace);

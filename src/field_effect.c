@@ -3223,6 +3223,7 @@ u8 FldEff_UseSurf(void)
 {
     u8 taskId = CreateTask(Task_SurfFieldEffect, 0xff);
     gTasks[taskId].tMonId = gFieldEffectArguments[0];
+    	VarSet(VAR_SURF_MON_SLOT, gFieldEffectArguments[0]);
     Overworld_ClearSavedMusic();
     Overworld_ChangeMusicTo(MUS_SURF);
     return FALSE;

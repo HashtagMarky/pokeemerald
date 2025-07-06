@@ -37,6 +37,7 @@
 #include "sound.h"
 #include "strings.h"
 #include "string_util.h"
+#include "surfable.h"
 #include "task.h"
 #include "text.h"
 #include "vs_seeker.h"
@@ -1693,6 +1694,7 @@ void ItemUseOutOfBattle_SurfTool(u8 taskId)
 void ItemUseOnFieldCB_SurfTool(u8 taskId)
 {
     ScriptContext_SetupScript(EventScript_UseSurfTool);
+    VarSet(VAR_SURF_MON_SLOT, SURF_MON_LAPRAS);
     DestroyTask(taskId);
 }
 void ItemUseOutOfBattle_StrengthTool(u8 taskId)
@@ -1740,7 +1742,7 @@ static void ItemUseOnFieldCB_RockSmashTool(u8 taskId)
 }
 void ItemUseOutOfBattle_WaterfallTool(u8 taskId)
 {
-    if (CanUseWaterfallTool())
+    if (IsPlayerFacingSurfableFishableWater())
     {
         sItemUseOnFieldCB = ItemUseOnFieldCB_WaterfallTool;
         SetUpItemUseOnFieldCallback(taskId);
@@ -1750,8 +1752,8 @@ void ItemUseOutOfBattle_WaterfallTool(u8 taskId)
 }
 void ItemUseOnFieldCB_WaterfallTool(u8 taskId)
 {
-    LockPlayerFieldControls();
     ScriptContext_SetupScript(EventScript_UseWaterfallTool);
+    VarSet(VAR_SURF_MON_SLOT, SURF_MON_SHARPEDO);
     DestroyTask(taskId);
 }
 void ItemUseOutOfBattle_DiveTool(u8 taskId)

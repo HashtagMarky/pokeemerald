@@ -21,6 +21,7 @@
 #include "sound.h"
 #include "sprite.h"
 #include "strings.h"
+#include "surfable.h"
 #include "task.h"
 #include "tv.h"
 #include "wild_encounter.h"
@@ -841,6 +842,7 @@ static void PlayerNotOnBikeMoving(u8 direction, u16 heldKeys)
 
     ResetSpinTimer(); // Everything below will move the player a space, reset the timer.
     gPlayerAvatar.creeping = FALSE;
+
     if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_SURFING)
     {
         if (FlagGet(DN_FLAG_SEARCHING) && (heldKeys & A_BUTTON))
@@ -850,8 +852,16 @@ static void PlayerNotOnBikeMoving(u8 direction, u16 heldKeys)
         }
         else
         {
+            if(VarGet(VAR_SURF_MON_SLOT) == SURF_MON_LAPRAS)
+            {
             // speed 2 is fast, same speed as running
-            PlayerWalkFast(direction);
+                PlayerWalkFast(direction);
+            }
+            else
+            {
+                PlayerWalkFaster(direction);
+            }
+
         }
         return;
     }
@@ -2018,6 +2028,7 @@ static void Task_WaitStopSurfing(u8 taskId)
         // If this is not defined but the player steps into grass from surfing, they will appear over the grass instead of in the grass.
         playerObjEvent->triggerGroundEffectsOnMove = TRUE;
 #endif
+        VarSet(VAR_SURF_MON_SLOT, SURF_MON_LAPRAS);
         DestroyTask(taskId);
     }
 }

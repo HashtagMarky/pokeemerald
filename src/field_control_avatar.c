@@ -207,7 +207,22 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
     {
         return TRUE;
     }
+    
+    if (input->pressedBButton && (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_SURFING) && !ArePlayerFieldControlsLocked())
+    {
 
+        if (VarGet(VAR_SURF_MON_SLOT) == 0)
+        {
+            VarSet(VAR_SURF_MON_SLOT, 1);
+            // PlaySE(SE_POKEMON_SWITCH);
+        }
+        else
+        {
+            VarSet(VAR_SURF_MON_SLOT, 0);
+            // PlaySE(SE_POKEMON_SWITCH);
+        }
+
+    }
     if (input->pressedBButton && TrySetupDiveEmergeScript() == TRUE)
         return TRUE;
     if (input->tookStep)

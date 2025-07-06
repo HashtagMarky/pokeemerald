@@ -30,13 +30,10 @@ EventScript_PushBoulderScript::
     return
 
 EventScript_UseWaterfallTool::
-    lock
     bufferitemname STR_VAR_2, ITEM_WATERFALL_TOOL
     msgbox Text_PlayerUsedFieldTool, MSGBOX_DEFAULT
-    waitmessage
-    setflag FLAG_SYS_USE_WATERFALL
 EventScript_UseWaterfallFieldEffect::
-    dofieldeffect FLDEFF_USE_WATERFALL_TOOL
+    dofieldeffect FLDEFF_USE_SURF_TOOL
     releaseall
     end
 

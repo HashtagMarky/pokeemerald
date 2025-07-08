@@ -2206,8 +2206,8 @@ static void RotomPhone_OverworldMenu_ExitAndClearTilemap(void)
 
     if (sRotomPhone_StartMenu != NULL)
     {
-        //FreeSpriteTilesByTag(TAG_PHONE_OW_ICON_GFX); 
-        //FreeSpriteTilesByTag(TAG_ROTOM_FACE_GFX);  
+        FreeSpriteTilesByTag(TAG_PHONE_OW_ICON_GFX); 
+        FreeSpriteTilesByTag(TAG_ROTOM_FACE_GFX);  
         Free(sRotomPhone_StartMenu);
         sRotomPhone_StartMenu = NULL;
     }

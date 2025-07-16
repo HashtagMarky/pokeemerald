@@ -2242,9 +2242,7 @@ void BtlController_HandleLoadMonSprite(u32 battler)
 
     SetBattlerShadowSpriteCallback(battler, species);
 
-    if (IsControllerOpponent(battler)
-     && IsControllerLinkOpponent(battler)
-     && IsControllerRecordedOpponent(battler))
+    if (IsControllerOpponent(battler) || IsControllerLinkOpponent(battler) || IsControllerRecordedOpponent(battler))
         gBattlerControllerFuncs[battler] = TryShinyAnimAfterMonAnim;
     else
         gBattlerControllerFuncs[battler] = WaitForMonAnimAfterLoad;
@@ -2924,14 +2922,13 @@ void TrySetBattlerShadowSpriteCallback(u32 battler)
 
 void TryShinyAnimAfterMonAnim(u32 battler)
 {
-    if (gSprites[gBattlerSpriteIds[battler]].callback == SpriteCallbackDummy
-     && gSprites[gBattlerSpriteIds[battler]].x2 == 0)
+    if (gSprites[gBattlerSpriteIds[battler]].x2 == 0)
     {
         if (!gBattleSpritesDataPtr->healthBoxesData[battler].triedShinyMonAnim)
         {
             TryShinyAnimation(battler, GetBattlerMon(battler));
         }
-        else if (gBattleSpritesDataPtr->healthBoxesData[battler].finishedShinyMonAnim)
+        if (gBattleSpritesDataPtr->healthBoxesData[battler].finishedShinyMonAnim)
         {
             gBattleSpritesDataPtr->healthBoxesData[battler].triedShinyMonAnim = FALSE;
             gBattleSpritesDataPtr->healthBoxesData[battler].finishedShinyMonAnim = FALSE;

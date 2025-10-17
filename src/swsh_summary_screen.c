@@ -5057,38 +5057,6 @@ static void KeepMoveSelectorVisible(u8 firstSpriteId)
 }
 
 // Helper to get the next narrower font in the chain, returns same fontId if no narrower font exists
-static u8 GetNextNarrowerFont(u8 fontId)
-{
-    // This mimics the logic from sNarrowerFontIds in text.c
-    // We could use GetFontIdToFit with a very small width, but this is clearer
-    switch (fontId)
-    {
-        case FONT_SMALL:
-            return FONT_SMALL_NARROW;
-        case FONT_NORMAL:
-            return FONT_NARROW;
-        case FONT_SHORT:
-        case FONT_SHORT_COPY_1:
-        case FONT_SHORT_COPY_2:
-        case FONT_SHORT_COPY_3:
-            return FONT_SHORT_NARROW;
-        case FONT_NARROW:
-            return FONT_NARROWER;
-        case FONT_SMALL_NARROW:
-            return FONT_SMALL_NARROWER;
-        case FONT_SHORT_NARROW:
-            return FONT_SHORT_NARROWER;
-        // These fonts have no narrower version
-        case FONT_BRAILLE:
-        case FONT_BOLD:
-        case FONT_NARROWER:
-        case FONT_SMALL_NARROWER:
-        case FONT_SHORT_NARROWER:
-        default:
-            return fontId;
-    }
-}
-
 // Shoutout to Vexx for this :)
 // Returns the font ID actually used (may be narrower than requested)
 static u8 FormatTextByWidth(u8 *result, s32 maxWidth, u8 fontId, const u8 *str, s16 letterSpacing)
@@ -5175,10 +5143,12 @@ retry_with_narrower_font:
     // If we have 3+ lines OR the last line doesn't fit, try a narrower font
     if (lineCount >= 3 || !lastLineFits)
     {
-        // Get the next narrower font in the chain
-        u8 narrowerFontId = GetNextNarrowerFont(fontId);
+        // Get the next narrower font based on the font chain
+        u8 narrowerFontId = fontId;
+        if (fontId == FONT_SHORT_NARROW)
+            narrowerFontId = FONT_SHORT_NARROWER;
+        // Add more font chains here if needed
         
-        // If a narrower font exists, retry with it
         if (narrowerFontId != fontId)
         {
             fontId = narrowerFontId;

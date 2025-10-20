@@ -677,7 +677,7 @@
 #define FLAG_UNUSED_0x276  0x276 // Unused Flag
 #define FLAG_DISABLE_FOLLOWERS  0x277 // Follower toggle
 #define FLAG_OW_NO_ENCOUNTER  0x278 // OW_FLAG_NO_ENCOUNTER
-#define FLAG_UNUSED_0x279  0x279 // Unused Flag
+#define FLAG_NO_COLLISON  0x279 // no collision
 #define FLAG_UNUSED_0x27A  0x27A // Unused Flag
 #define FLAG_UNUSED_0x27B  0x27B // Unused Flag
 #define FLAG_UNUSED_0x27C  0x27C // Unused Flag
@@ -1399,6 +1399,7 @@
 
 #define FLAG_SYS_USE_FLASH                          (SYSTEM_FLAGS + 0x28)
 #define FLAG_SYS_USE_STRENGTH                       (SYSTEM_FLAGS + 0x29)
+// Sets abnormal weather on maps that check for it
 #define FLAG_SYS_WEATHER_CTRL                       (SYSTEM_FLAGS + 0x2A)
 #define FLAG_SYS_CYCLING_ROAD                       (SYSTEM_FLAGS + 0x2B)
 #define FLAG_SYS_SAFARI_MODE                        (SYSTEM_FLAGS + 0x2C)

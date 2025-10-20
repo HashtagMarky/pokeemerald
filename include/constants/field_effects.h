@@ -77,12 +77,14 @@
 #define FLDEFF_TRACKS_BUG                72
 #define FLDEFF_CAVE_DUST                 73
 #define FLDEFF_DEFOG                     74
+#define FLDEFF_USE_ROCK_CLIMB            75
+#define FLDEFF_ROCK_CLIMB_DUST           76
 // Start qol_field_moves
-#define FLDEFF_USE_SURF_TOOL             75
-#define FLDEFF_USE_WATERFALL_TOOL        76
-#define FLDEFF_USE_DIVE_TOOL             77
-#define FLDEFF_USE_TELEPORT_TOOL         78
-#define FLDEFF_PLAY_ROCK_SMASH_SOUND     79
+#define FLDEFF_USE_SURF_TOOL             77
+#define FLDEFF_USE_WATERFALL_TOOL        78
+#define FLDEFF_USE_DIVE_TOOL             79
+#define FLDEFF_USE_TELEPORT_TOOL         80
+#define FLDEFF_PLAY_ROCK_SMASH_SOUND     81
 // End qol_field_moves
 
 #define FLDEFFOBJ_SHADOW_S              0
@@ -126,7 +128,9 @@
 #define FLDEFFOBJ_TRACKS_SPOT           38
 #define FLDEFFOBJ_TRACKS_BUG            39
 #define FLDEFFOBJ_CAVE_DUST             40
-#define FLDEFFOBJ_SHINY_SPARKLE         41
+#define FLDEFFOBJ_ROCK_CLIMB_BLOB       41
+#define FLDEFFOBJ_ROCK_CLIMB_DUST       42
+#define FLDEFFOBJ_SHINY_SPARKLE         43
 
 #define FLDEFF_PAL_TAG_CUT_GRASS          0x1000
 #define FLDEFF_PAL_TAG_SECRET_POWER_TREE  0x1003
@@ -141,6 +145,7 @@
 #define FLDEFF_PAL_TAG_HOF_MONITOR        0x1010
 #define FLDEFF_PAL_TAG_UNKNOWN            0x1011
 #define FLDEFF_PAL_TAG_CAVE_DUST          0x1012
+#define FLDEFF_PAL_TAG_DUST_CLOUD         0x1013
 #define FLDEFF_PAL_TAG_FIELD_MOVE_MON     0x8400
 
 // tile tags, for field effects that may have many copies on screen at once

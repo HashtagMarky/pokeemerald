@@ -119,6 +119,7 @@ enum SWSHSkillsPageState
 #define PSS_DATA_WINDOW_MOVE_DESCRIPTION 1
 
 #define MOVE_SELECTOR_SPRITES_COUNT 10
+#define HELD_ITEM_BOX_SPRITES_COUNT 5
 #define TYPE_ICON_SPRITE_COUNT (MAX_MON_MOVES + 1)
 
 // Default font, see PrintTextOnWindow
@@ -150,7 +151,8 @@ enum SwShSummarySprites
     SPRITE_ARR_ID_TYPE, // 2 for mon types, 5 for move types(4 moves and 1 to learn), used interchangeably, because mon types and move types aren't shown on the same screen
     SPRITE_ARR_ID_MOVE_SELECTOR1 = SPRITE_ARR_ID_TYPE + TYPE_ICON_SPRITE_COUNT, // 10 sprites that make up the selector
     SPRITE_ARR_ID_MOVE_SELECTOR2 = SPRITE_ARR_ID_MOVE_SELECTOR1 + MOVE_SELECTOR_SPRITES_COUNT,
-    SPRITE_ARR_ID_COUNT = SPRITE_ARR_ID_MOVE_SELECTOR2 + MOVE_SELECTOR_SPRITES_COUNT
+    SPRITE_ARR_ID_HELD_ITEM_BOX = SPRITE_ARR_ID_MOVE_SELECTOR2 + MOVE_SELECTOR_SPRITES_COUNT,
+    SPRITE_ARR_ID_COUNT = SPRITE_ARR_ID_HELD_ITEM_BOX + HELD_ITEM_BOX_SPRITES_COUNT
 };
 
 static EWRAM_DATA struct PokemonSummaryScreenData
@@ -344,6 +346,8 @@ static void StopPokemonAnimations(void);
 static void CreateMonMarkingsSprite(struct Pokemon *);
 static void RemoveAndCreateMonMarkingsSprite(struct Pokemon *);
 static void CreateCaughtBallSprite(struct Pokemon *);
+static void CreateHeldItemBoxSprites(void);
+static void DestroyHeldItemBoxSprites(void);
 static void CreateHeldItemSprite(void);
 static void DestroyHeldItemIconSprite(void);
 static void CreateStatusSprite(void);
@@ -436,6 +440,8 @@ static const u8 sButtons_Gfx[][4 * TILE_SIZE_4BPP] = {
     #endif
 #endif
 static const u32 sTeraTypes_Gfx[]                   = INCBIN_U32("graphics/types_swsh_summary_screen/tera/tera_types_swsh.4bpp.lz");
+static const u32 sHeldItemBox_Gfx[]                 = INCBIN_U32("graphics/summary_screen/swsh/held_item_box.4bpp.lz");
+static const u16 sHeldItemBox_Pal[]                 = INCBIN_U16("graphics/summary_screen/swsh/held_item_box.gbapal");
 static const u32 sSummaryMoveSelect_Gfx[]           = INCBIN_U32("graphics/summary_screen/swsh/move_select.4bpp.lz");
 static const u16 sSummaryMoveSelect_Pal[]           = INCBIN_U16("graphics/summary_screen/swsh/move_select.gbapal");
 static const u16 sMarkings_Pal[]                    = INCBIN_U16("graphics/summary_screen/swsh/markings.gbapal");
@@ -755,7 +761,8 @@ static void (*const sTextPrinterTasks[])(u8 taskId) =
 #define TAG_RELEARN_PROMPT 30012
 #define TAG_INFO_PROMPT 30013
 #define TAG_GENDER_ICON 30014
-#define TAG_HELD_ITEM_ICON 30015
+#define TAG_HELD_ITEM_BOX 30015
+#define TAG_HELD_ITEM_ICON 30016
 
 enum SwShCategoryIcon
 {
@@ -1352,6 +1359,67 @@ static const struct SpriteTemplate sMoveSelectorSpriteTemplate =
     .images = NULL,
     .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCallbackDummy
+};
+
+static const struct OamData sOamData_HeldItemBox =
+{
+    .y = 0,
+    .affineMode = ST_OAM_AFFINE_OFF,
+    .objMode = ST_OAM_OBJ_NORMAL,
+    .mosaic = FALSE,
+    .bpp = ST_OAM_4BPP,
+    .size = SPRITE_SIZE(32x64),
+    .x = 0,
+    .matrixNum = 0,
+    .shape = SPRITE_SHAPE(32x64),
+    .tileNum = 0,
+    .priority = 1,
+    .paletteNum = 0,
+    .affineParam = 0,
+};
+
+// Animations
+static const union AnimCmd sSpriteAnim_HeldItemBoxLeft[] = {
+    ANIMCMD_FRAME(0, 0, FALSE, FALSE),  // First 32x64 frame (tiles 0-31)
+    ANIMCMD_END
+};
+static const union AnimCmd sSpriteAnim_HeldItemBoxLeftMiddle[] = {
+    ANIMCMD_FRAME(32, 0, FALSE, FALSE),  // Second 32x64 frame (tiles 32-63)
+    ANIMCMD_END
+};
+static const union AnimCmd sSpriteAnim_HeldItemBoxRepeating[] = {
+    ANIMCMD_FRAME(64, 0, FALSE, FALSE),  // Third 32x64 frame (tiles 64-95)
+    ANIMCMD_END
+};
+
+static const union AnimCmd *const sSpriteAnimTable_HeldItemBox[] = {
+    sSpriteAnim_HeldItemBoxLeft,
+    sSpriteAnim_HeldItemBoxLeftMiddle,
+    sSpriteAnim_HeldItemBoxRepeating,
+};
+
+static const struct CompressedSpriteSheet sSpriteSheet_HeldItemBox =
+{
+    .data = sHeldItemBox_Gfx,
+    .size = (32 * 64 * 3) / 2,  // 3072 bytes (only need 3 unique tiles)
+    .tag = TAG_HELD_ITEM_BOX,
+};
+
+static const struct SpritePalette sSpritePal_HeldItemBox =
+{
+    .data = sHeldItemBox_Pal,
+    .tag = TAG_HELD_ITEM_BOX,
+};
+
+static const struct SpriteTemplate sSpriteTemplate_HeldItemBox =
+{
+    .tileTag = TAG_HELD_ITEM_BOX,
+    .paletteTag = TAG_HELD_ITEM_BOX,
+    .oam = &sOamData_HeldItemBox,
+    .anims = sSpriteAnimTable_HeldItemBox,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCallbackDummy,
 };
 
 static const struct OamData sOamData_StatusCondition =
@@ -2052,6 +2120,14 @@ static bool8 DecompressGraphics(void)
     case 22:
         if (P_SUMMARY_SCREEN_MOVE_RELEARNER)
             LoadCompressedSpriteSheet(&sSpriteSheet_RelearnPrompt);
+        sMonSummaryScreen->switchCounter++;
+        break;
+    case 23:
+        LoadCompressedSpriteSheet(&sSpriteSheet_HeldItemBox);
+        sMonSummaryScreen->switchCounter++;
+        break;
+    case 24:
+        LoadSpritePalette(&sSpritePal_HeldItemBox);
         sMonSummaryScreen->switchCounter = 0;
         return TRUE;
     }
@@ -2505,6 +2581,7 @@ static void Task_ChangeSummaryMon(u8 taskId)
                 ShowCancelOrRenamePrompt();
                 PutWindowTilemap(PSS_LABEL_WINDOW_PROMPT_CANCEL);  
             }
+            CreateHeldItemBoxSprites();
             CreateHeldItemSprite();
         } 
         else if (sMonSummaryScreen->currPageIndex == PSS_PAGE_SKILLS)
@@ -3637,7 +3714,6 @@ static void PrintMonDexNumberSpecies(void)
     {
         PrintTextOnWindow(windowId, GetSpeciesName(summary->species2), 0, 3, 0, 0);
         
-        // not printing pokedex number
         if (dexNum != 0xFFFF)
         {
             u8 digitCount = (NATIONAL_DEX_COUNT > 999 && IsNationalPokedexEnabled()) ? 4 : 3;
@@ -3653,7 +3729,7 @@ static void PrintMonDexNumberSpecies(void)
             }
             else
             {
-                PrintTextOnWindow(windowId, gStringVar1, 76, 3, 0, 6);
+                PrintTextOnWindow(windowId, gStringVar1, 76, 3, 0, 2);
             }
         }
     }
@@ -3686,11 +3762,6 @@ static void PrintMonOTID(void)
         ConvertIntToDecimalStringN(gStringVar1, (u16)sMonSummaryScreen->summary.OTID, STR_CONV_MODE_LEADING_ZEROS, 5);
         PrintTextOnWindow(AddWindowFromTemplateList(sPageInfoTemplate, PSS_DATA_WINDOW_INFO_SPECIES), gStringVar1, 71, 37, 0, 0);
     }
-    // else
-    // {
-    //     StringCopy(gStringVar1, gText_FiveMarks);
-    //     PrintTextOnWindow(AddWindowFromTemplateList(sPageInfoTemplate, PSS_DATA_WINDOW_INFO_OT_OTID), gStringVar1, 66, 0, 0, 0);
-    // }
 }
 
 static void PrintMonNature(void)
@@ -4145,8 +4216,8 @@ static void PrintNonHPStats(void)
 static void PrintColoredStatLabel(u8 windowId, s8 statIndex, const u8 *text, u8 x, u8 y, 
                                   u8 natureUpStat, u8 natureDownStat, u8 *coloredLabel)
 {
-    static const u8 sTextNatureDown[] = _("{COLOR}{08}");
-    static const u8 sTextNatureUp[] = _("{COLOR}{05}");
+    static const u8 sTextNatureDown[] = _("{COLOR}{07}{SHADOW}{08}");
+    static const u8 sTextNatureUp[] = _("{COLOR}{05}{SHADOW}{06}");
     static const u8 sTextNatureNeutral[] = _("{COLOR}{01}");
     
     const u8 *color;
@@ -4304,7 +4375,7 @@ static void PrintMoveNameAndPP(u8 moveIndex)
     }
     else
     {
-        PrintTextOnWindow(moveNameWindowId, gText_OneDash, 4, moveIndex * 18 + 4, 0, 4);
+        PrintTextOnWindow(moveNameWindowId, gText_ThreeDashes, 4, moveIndex * 18 + 4, 0, 4);
         text = gText_TwoDashes;
         ppState = 3;
     }
@@ -4315,7 +4386,8 @@ static void PrintMoveNameAndPP(u8 moveIndex)
 static void PrintMovePowerAndAccuracy(u16 moveIndex)
 {
     const u8 *text;
-    FillWindowPixelRect(PSS_LABEL_WINDOW_MOVES_POWER_ACC, PIXEL_FILL(0), 2, 0, 19, 34);
+    u8 xPos;
+    FillWindowPixelRect(PSS_LABEL_WINDOW_MOVES_POWER_ACC, PIXEL_FILL(0), 0, 0, 24, 34);
 
     if (moveIndex != MOVE_NONE)
     {
@@ -4325,11 +4397,11 @@ static void PrintMovePowerAndAccuracy(u16 moveIndex)
         }
         else
         {
-            ConvertIntToDecimalStringN(gStringVar1, gMovesInfo[moveIndex].power, STR_CONV_MODE_RIGHT_ALIGN, 3);
+            ConvertIntToDecimalStringN(gStringVar1, gMovesInfo[moveIndex].power, STR_CONV_MODE_LEFT_ALIGN, 3);
             text = gStringVar1;
         }
-
-        PrintTextOnWindow(PSS_LABEL_WINDOW_MOVES_POWER_ACC, text, 4, 2, 0, 0);
+        xPos = 22 - GetStringWidth(FONT_SHORT_NARROW, text, 0);
+        PrintTextOnWindow(PSS_LABEL_WINDOW_MOVES_POWER_ACC, text, xPos, 2, 0, 0);
 
         if (gMovesInfo[moveIndex].accuracy == 0)
         {
@@ -4337,15 +4409,16 @@ static void PrintMovePowerAndAccuracy(u16 moveIndex)
         }
         else
         {
-            ConvertIntToDecimalStringN(gStringVar1, gMovesInfo[moveIndex].accuracy, STR_CONV_MODE_RIGHT_ALIGN, 3);
+            ConvertIntToDecimalStringN(gStringVar1, gMovesInfo[moveIndex].accuracy, STR_CONV_MODE_LEFT_ALIGN, 3);
             text = gStringVar1;
         }
-
-        PrintTextOnWindow(PSS_LABEL_WINDOW_MOVES_POWER_ACC, text, 4, 22, 0, 0);
+        xPos = 22 - GetStringWidth(FONT_SHORT_NARROW, text, 0);
+        PrintTextOnWindow(PSS_LABEL_WINDOW_MOVES_POWER_ACC, text, xPos, 22, 0, 0);
     } else {
         text = gText_ThreeDashes;
-        PrintTextOnWindow(PSS_LABEL_WINDOW_MOVES_POWER_ACC, text, 4, 2, 0, 0);
-        PrintTextOnWindow(PSS_LABEL_WINDOW_MOVES_POWER_ACC, text, 4, 22, 0, 0);
+        xPos = 22 - GetStringWidth(FONT_SHORT_NARROW, text, 0);
+        PrintTextOnWindow(PSS_LABEL_WINDOW_MOVES_POWER_ACC, text, xPos, 2, 0, 0);
+        PrintTextOnWindow(PSS_LABEL_WINDOW_MOVES_POWER_ACC, text, xPos, 22, 0, 0);
     }
 }
 
@@ -4526,6 +4599,7 @@ static void TrySetInfoPageIcons(void)
     { 
         SetPokerusCuredSprite();
         SetShinySprite();
+        CreateHeldItemBoxSprites();
         CreateHeldItemSprite();
         // // Hold off on printing friendship
         if (SWSH_SUMMARY_SHOW_FRIENDSHIP)
@@ -4846,7 +4920,7 @@ static void SetShinySprite(void)
 {
     struct Pokemon *mon = &sMonSummaryScreen->currentMon;
     if (sMonSummaryScreen->spriteIds[SPRITE_ARR_ID_SHINY] == SPRITE_NONE)
-        sMonSummaryScreen->spriteIds[SPRITE_ARR_ID_SHINY] = CreateSprite(&sSpriteTemplate_ShinyIcon, 127, 35, 6);
+        sMonSummaryScreen->spriteIds[SPRITE_ARR_ID_SHINY] = CreateSprite(&sSpriteTemplate_ShinyIcon, 126, 34, 6);
 
     gSprites[sMonSummaryScreen->spriteIds[SPRITE_ARR_ID_SHINY]].invisible = !IsMonShiny(mon);
 }
@@ -4899,6 +4973,42 @@ static void CreateCaughtBallSprite(struct Pokemon *mon)
     sMonSummaryScreen->spriteIds[SPRITE_ARR_ID_BALL] = CreateSprite(&gBallSpriteTemplates[ball], 95, 16, 6);
     gSprites[sMonSummaryScreen->spriteIds[SPRITE_ARR_ID_BALL]].callback = SpriteCallbackDummy;
     gSprites[sMonSummaryScreen->spriteIds[SPRITE_ARR_ID_BALL]].oam.priority = 1;
+}
+
+static void CreateHeldItemBoxSprites(void)
+{
+    u16 itemId = sMonSummaryScreen->summary.item;
+    u8 i;
+    u8 *spriteIds = &sMonSummaryScreen->spriteIds[SPRITE_ARR_ID_HELD_ITEM_BOX];
+    
+    // Always destroy old sprites first
+    DestroyHeldItemBoxSprites();
+    
+    // Only create sprites if mon has an item
+    if (itemId == ITEM_NONE)
+        return;
+    
+    for (i = 0; i < HELD_ITEM_BOX_SPRITES_COUNT; i++)
+    {
+        spriteIds[i] = CreateSprite(&sSpriteTemplate_HeldItemBox, 16 + (i * 32), 96 + 32, 2);
+        
+        if (spriteIds[i] != MAX_SPRITES)
+        {
+            if (i == 0)
+                StartSpriteAnim(&gSprites[spriteIds[i]], 0);  // First unique
+            else if (i == 1)
+                StartSpriteAnim(&gSprites[spriteIds[i]], 1);  // Second unique
+            else
+                StartSpriteAnim(&gSprites[spriteIds[i]], 2);  // Repeating
+        }
+    }
+}
+
+static void DestroyHeldItemBoxSprites(void)
+{
+    u8 i;    
+    for (i = 0; i < HELD_ITEM_BOX_SPRITES_COUNT; i++)
+        DestroySpriteInArray(SPRITE_ARR_ID_HELD_ITEM_BOX + i);
 }
 
 static void CreateHeldItemSprite(void)

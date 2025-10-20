@@ -72,13 +72,13 @@ enum
 };
 
 // Save status
-// enum
-// {
-//     SAVE_IN_PROGRESS,
-//     SAVE_SUCCESS,
-//     SAVE_CANCELED,
-//     SAVE_ERROR
-// };
+enum
+{
+    SAVE_IN_PROGRESS,
+    SAVE_SUCCESS,
+    SAVE_CANCELED,
+    SAVE_ERROR
+};
 
 // IWRAM common
 COMMON_DATA bool8 (*gMenuCallback)(void) = NULL;
@@ -140,7 +140,7 @@ static u8 BattlePyramidRetireInputCallback(void);
 
 // Task callbacks
 static void StartMenuTask(u8 taskId);
-static void SaveGameTask(u8 taskId);
+// static void SaveGameTask(u8 taskId);
 static void Task_SaveAfterLinkBattle(u8 taskId);
 static void Task_WaitForBattleTowerLinkSave(u8 taskId);
 static bool8 FieldCB_ReturnToFieldStartMenu(void);
@@ -938,11 +938,6 @@ static void InitSave(void)
     sSavingComplete = FALSE;
 }
 
-void InitSave_Global(void)
-{
-    InitSave();
-}
-
 static u8 RunSaveCallback(void)
 {
     // True if text is still printing
@@ -953,11 +948,6 @@ static u8 RunSaveCallback(void)
 
     sSavingComplete = FALSE;
     return sSaveDialogCallback();
-}
-
-u8 RunSaveCallback_Global(void)
-{
-    return RunSaveCallback();
 }
 
 void SaveGame(void)
@@ -975,7 +965,7 @@ static void ShowSaveMessage(const u8 *message, u8 (*saveCallback)(void))
     sSaveDialogCallback = saveCallback;
 }
 
-static void SaveGameTask(u8 taskId)
+void SaveGameTask(u8 taskId)
 {
     u8 status = RunSaveCallback();
 

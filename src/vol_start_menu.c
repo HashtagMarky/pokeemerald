@@ -73,7 +73,7 @@ static void SpriteCB_IconFlag(struct Sprite* sprite);
 
 /* TASKs */
 static void Task_Vol_StartMenu_HandleMainInput(u8 taskId);
-static void Task_HandleSave(u8 taskId);
+static void Task_Vol_StartMenu_WaitSaveGame(u8 taskId);
 
 /* UNLOCKED FUNC */
 static bool32 Vol_UnlockedFunc_Unlocked(void);
@@ -813,10 +813,10 @@ static void Vol_StartMenu_LoadBgGfx(void)
     LoadBgTilemap(0, 0, 0, 0);
     DecompressAndCopyTileDataToVram(0, sStartMenuTiles, 0, 0, 0);
     if (GetSafariZoneFlag() == FALSE)
-        LZDecompressWram(sStartMenuTilemap, buf);
+        DecompressDataWithHeaderWram(sStartMenuTilemap, buf);
 
     else
-        LZDecompressWram(sStartMenuTilemapSafari, buf);
+        DecompressDataWithHeaderWram(sStartMenuTilemapSafari, buf);
     
     LoadPalette(gStandardMenuPalette, BG_PLTT_ID(15), PLTT_SIZE_4BPP);
     LoadPalette(sStartMenuPalette, BG_PLTT_ID(14), PLTT_SIZE_4BPP);
@@ -940,31 +940,6 @@ static void DoCleanUpAndChangeCallback(MainCallback callback)
     }
 }
 
-static void Task_HandleSave(u8 taskId)
-{
-    switch (RunSaveCallback_Global())
-    {
-        case SAVE_IN_PROGRESS:
-            break;
-        case SAVE_SUCCESS:
-        case SAVE_CANCELED: // Back to start menu
-            ClearDialogWindowAndFrameToTransparent(0, TRUE);
-            ScriptUnfreezeObjectEvents();  
-            UnlockPlayerFieldControls();
-            DestroyTask(taskId);
-            break;
-        case SAVE_ERROR:    // Close start menu
-            ClearDialogWindowAndFrameToTransparent(0, TRUE);
-            ScriptUnfreezeObjectEvents();
-            UnlockPlayerFieldControls();
-            SoftResetInBattlePyramid();
-            DestroyTask(taskId);
-            break;
-    }
-}
-
-#define STD_WINDOW_BASE_TILE_NUM 0x214
-#define STD_WINDOW_PALETTE_NUM 14
 
 static bool32 Vol_UnlockedFunc_Unlocked(void)
 {
@@ -1049,9 +1024,8 @@ static void Vol_SelectedFunc_Save(void)
         FreezeObjectEvents();
         LoadUserWindowBorderGfx(sVol_StartMenu->windowIdSaveInfo, STD_WINDOW_BASE_TILE_NUM, BG_PLTT_ID(STD_WINDOW_PALETTE_NUM));
         LockPlayerFieldControls();
-        DestroyTask(FindTaskIdByFunc(Task_Vol_StartMenu_HandleMainInput));
-        InitSave_Global();
-        CreateTask(Task_HandleSave, 0x80);
+        SaveGame();
+        gTasks[FindTaskIdByFunc(Task_Vol_StartMenu_HandleMainInput)].func = Task_Vol_StartMenu_WaitSaveGame;
     }
 }
 
@@ -1143,5 +1117,17 @@ static void Task_Vol_StartMenu_HandleMainInput(u8 taskId)
     else if (sVol_StartMenu->isLoading == TRUE)
     {
         sVolOptions[menuSelected].selectedFunc();
+    }
+}
+
+static void Task_Vol_StartMenu_WaitSaveGame(u8 taskId)
+{
+    if (!FuncIsActiveTask(SaveGameTask))
+    { 
+        ClearDialogWindowAndFrameToTransparent(0, TRUE);
+        ScriptUnfreezeObjectEvents();
+        UnlockPlayerFieldControls();
+        SoftResetInBattlePyramid();
+        DestroyTask(taskId);
     }
 }

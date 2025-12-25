@@ -23,7 +23,7 @@ extern void SynchroniseSurfPosition(struct ObjectEvent *playerObj, struct Sprite
 
 static void CreateOverlaySprite(void);
 static void UpdateSurfMonOverlay(struct Sprite *sprite);
-
+extern void UpdateBobbingEffect(struct ObjectEvent *playerObj, struct Sprite *playerSprite, struct Sprite *sprite);
 
 
 struct RideablePokemon
@@ -158,6 +158,11 @@ static void UpdateSurfMonOverlay(struct Sprite *sprite)
 
     SynchroniseSurfAnim(playerObj, sprite);
     SynchroniseSurfPosition(playerObj, sprite);
+
+    if (VarGet(VAR_FREEZESURFBLOB) == 0)
+	{
+        UpdateBobbingEffect(playerObj, linkedSprite, sprite);
+    }
 
     // Reset the subpriority for the overlay sprite so it shows on top of the player
     // We need this here so the subprio is correct after a screen transition (e.g. after exiting a battle)

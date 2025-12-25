@@ -3258,6 +3258,7 @@ void Task_SurfFieldEffect(u8 taskId)
 //static void SurfFieldEffect_Init(struct Task *task) // qol_field_moves
 void SurfFieldEffect_Init(struct Task *task)
 {
+    VarSet(VAR_FREEZESURFBLOB, 1);
     LockPlayerFieldControls();
     FreezeObjectEvents();
     // Put follower into pokeball before using Surf
@@ -3327,6 +3328,7 @@ void SurfFieldEffect_End(struct Task *task)
         SetSurfBlob_BobState(objectEvent->fieldEffectSpriteId, BOB_PLAYER_AND_MON);
         UnfreezeObjectEvents();
         UnlockPlayerFieldControls();
+        VarSet(VAR_FREEZESURFBLOB, 0);
         RemoveRelevantSurfFieldEffect(); // qol_field_moves
     }
 }

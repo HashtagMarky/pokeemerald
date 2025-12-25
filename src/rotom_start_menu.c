@@ -92,6 +92,8 @@
 #define FADE_COLOUR_MID                     0x80
 #define FADE_COLOUR_MIN                     0x00
 
+#define ROTOM_REALITY_PANEL_BG_TILE         0x16
+
 
 static void RotomPhone_OverworldMenu_Init(bool32 firstInit);
 static void RotomPhone_OverworldMenu_ContinueInit(bool32 firstInit);
@@ -138,6 +140,7 @@ static bool32 RotomPhone_RotomRealityMenu_InitBgs(void);
 static void RotomPhone_RotomRealityMenu_FadeAndBail(void);
 static bool32 RotomPhone_RotomRealityMenu_LoadGraphics(void);
 static void RotomPhone_RotomRealityMenu_InitWindows(void);
+static void RotomPhone_RotomRealityPanel_DestroyAssets(void);
 static void RotomPhone_RotomRealityMenu_PrintTime(void);
 static void RotomPhone_RotomRealityMenu_PrintMenuName(void);
 
@@ -933,8 +936,8 @@ static const struct CompressedSpriteSheet sSpriteSheet_RotomRealityIcons_Two[] =
 };
 
 static const struct OamData sOam_RotomFace = {
-    .size = SPRITE_SIZE(64x64),
-    .shape = SPRITE_SHAPE(64x64),
+    .size = SPRITE_SIZE(64x32),
+    .shape = SPRITE_SHAPE(64x32),
     .priority = 0,
 };
 
@@ -1035,47 +1038,47 @@ static const union AnimCmd sAnimCmd_RotomFace_Happy[] = {
 };
 
 static const union AnimCmd sAnimCmd_RotomFace_HappyUp[] = {
-    ANIMCMD_FRAME(64, 0),
+    ANIMCMD_FRAME(32, 0),
     ANIMCMD_JUMP(0),
 };
 
 static const union AnimCmd sAnimCmd_RotomFace_HappyWith[] = {
-    ANIMCMD_FRAME(128, 0),
+    ANIMCMD_FRAME(64, 0),
     ANIMCMD_JUMP(0),
 };
 
 static const union AnimCmd sAnimCmd_RotomFace_Shocked[] = {
-    ANIMCMD_FRAME(192, 0),
+    ANIMCMD_FRAME(96, 0),
     ANIMCMD_JUMP(0),
 };
 
 static const union AnimCmd sAnimCmd_RotomFace_ShockedUp[] = {
-    ANIMCMD_FRAME(256, 0),
+    ANIMCMD_FRAME(128, 0),
     ANIMCMD_JUMP(0),
 };
 
 static const union AnimCmd sAnimCmd_RotomFace_ShockedWith[] = {
-    ANIMCMD_FRAME(320, 0),
+    ANIMCMD_FRAME(160, 0),
     ANIMCMD_JUMP(0),
 };
 
 static const union AnimCmd sAnimCmd_RotomFace_Dazed[] = {
-    ANIMCMD_FRAME(384, 0),
+    ANIMCMD_FRAME(192, 0),
     ANIMCMD_JUMP(0),
 };
 
 static const union AnimCmd sAnimCmd_RotomFace_Awe[] = {
-    ANIMCMD_FRAME(448, 0),
+    ANIMCMD_FRAME(224, 0),
     ANIMCMD_JUMP(0),
 };
 
 static const union AnimCmd sAnimCmd_RotomFace_Sheepish[] = {
-    ANIMCMD_FRAME(512, 0),
+    ANIMCMD_FRAME(256, 0),
     ANIMCMD_JUMP(0),
 };
 
 static const union AnimCmd sAnimCmd_RotomFace_Confused[] = {
-    ANIMCMD_FRAME(576, 0),
+    ANIMCMD_FRAME(288, 0),
     ANIMCMD_JUMP(0),
 };
 
@@ -3354,6 +3357,40 @@ static void RotomPhone_RotomRealityMenu_InitWindows(void)
     CopyWindowToVram(RP_RR_WIN_MENU_NAME, COPYWIN_FULL);
 }
 
+static void RotomPhone_RotomRealityPanel_DestroyAssets(void)
+{
+    for (enum RotomPhone_RotomReality_SlidingPanelSprites spritePanel = RP_RR_PANEL_SPRITE_ONE; spritePanel < RP_RR_PANEL_SPRITE_COUNT; spritePanel++)
+    {
+        u8 spriteId = sRotomPhone_StartMenu->menuRotomRealityPanelSpriteId[spritePanel];
+        if (spriteId == SPRITE_NONE)
+            continue;
+
+        DestroySpriteAndFreeResources(&gSprites[spriteId]);
+        sRotomPhone_StartMenu->menuRotomRealityPanelSpriteId[spritePanel] = SPRITE_NONE;
+    }
+
+    for (enum RotomPhone_RotomReality_SlidingPanelWindows windowPanel = RP_RR_PANEL_WIN_ONE; windowPanel < RP_RR_PANEL_WIN_COUNT; windowPanel++)
+    {
+        u8 windowId = sRotomPhone_StartMenu->menuRotomRealityPanelWindowId[windowPanel];
+        if (windowId == WINDOW_NONE)
+            continue;
+
+        struct Window windowLocal = gWindows[windowId];
+        FillBgTilemapBufferRect(
+            windowLocal.window.bg,
+            ROTOM_REALITY_PANEL_BG_TILE,
+            windowLocal.window.tilemapLeft,
+            windowLocal.window.tilemapTop,
+            windowLocal.window.width,
+            windowLocal.window.height,
+            windowLocal.window.paletteNum);
+        
+        CopyWindowToVram(windowId, COPYWIN_FULL);
+        RemoveWindow(windowId);
+        sRotomPhone_StartMenu->menuRotomRealityPanelWindowId[windowPanel] = WINDOW_NONE;
+    }
+}
+
 static void RotomPhone_RotomRealityMenu_PrintTime(void)
 {
     u8 time[24];
@@ -3652,7 +3689,7 @@ static void RotomPhone_StartMenu_LoadRotomFaceSpritesheet(void)
 {
     struct CompressedSpriteSheet rotomFace;
     rotomFace.data = sRotomPhone_StartMenuRotomFaceGfx;
-    rotomFace.size = 64 * 640 / 2;
+    rotomFace.size = 64 * 320 / 2;
     rotomFace.tag = TAG_ROTOM_FACE_GFX;
     LoadCompressedSpriteSheet(&rotomFace);
     sRotomPhone_StartMenu->rotomFaceLastLoaded = RP_FACE_COUNT - 1;
@@ -3699,7 +3736,7 @@ static void RotomPhone_StartMenu_CreateRotomFaceSprite(bool32 rotomFade)
     else
     {
         x = 120;
-        y = 134;
+        y = 136;
     }
 
     if ((GetFlashLevel() > 0 || InBattlePyramid_()) && !RotomPhone_StartMenu_IsRotomReality())
@@ -4269,47 +4306,18 @@ static void RotomPhone_StartMenu_SelectedFunc_Daycare(void)
     }
     else if (RotomPhone_StartMenu_IsRotomReality() && sRotomPhone_StartMenu->menuRotomRealityPanelOpen == TRUE)
     {
-        if (GetDaycareState() == DAYCARE_NO_MONS)
-        {
-            windowId = sRotomPhone_StartMenu->menuRotomRealityPanelWindowId[RP_RR_PANEL_WIN_ONE];
-            FillWindowPixelBuffer(windowId, PIXEL_FILL(TEXT_COLOR_TRANSPARENT));
-            CopyWindowToVram(windowId, COPYWIN_FULL);
-            RemoveWindow(windowId);
-            sRotomPhone_StartMenu->menuRotomRealityPanelWindowId[RP_RR_PANEL_WIN_ONE] = WINDOW_NONE;
-            return;
-        }
-
         FreeMonIconPalettes();
-
-        if (GetDaycareState() != DAYCARE_NO_MONS)
+        for (enum RotomPhone_RotomReality_SlidingPanelSprites spritePanel = RP_RR_PANEL_SPRITE_ONE; spritePanel < RP_RR_PANEL_SPRITE_COUNT; spritePanel++)
         {
-            FreeAndDestroyMonIconSprite(&gSprites[sRotomPhone_StartMenu->menuRotomRealityPanelSpriteId[RP_RR_PANEL_SPRITE_ONE]]);
-            sRotomPhone_StartMenu->menuRotomRealityPanelSpriteId[RP_RR_PANEL_SPRITE_ONE] = SPRITE_NONE;
+            u8 spriteId = sRotomPhone_StartMenu->menuRotomRealityPanelSpriteId[spritePanel];
+            if (spriteId == SPRITE_NONE)
+                continue;
 
-            windowId = sRotomPhone_StartMenu->menuRotomRealityPanelWindowId[RP_RR_PANEL_WIN_ONE];
-            FillWindowPixelBuffer(windowId, PIXEL_FILL(TEXT_COLOR_TRANSPARENT));
-            CopyWindowToVram(windowId, COPYWIN_FULL);
-            RemoveWindow(windowId);
-            sRotomPhone_StartMenu->menuRotomRealityPanelWindowId[RP_RR_PANEL_WIN_ONE] = WINDOW_NONE;
+            FreeAndDestroyMonIconSprite(&gSprites[spriteId]);
+            sRotomPhone_StartMenu->menuRotomRealityPanelSpriteId[spritePanel] = SPRITE_NONE;
         }
-
-        if (GetDaycareState() != DAYCARE_NO_MONS && GetDaycareState() != DAYCARE_ONE_MON)
-        {
-            FreeAndDestroyMonIconSprite(&gSprites[sRotomPhone_StartMenu->menuRotomRealityPanelSpriteId[RP_RR_PANEL_SPRITE_TWO]]);
-            sRotomPhone_StartMenu->menuRotomRealityPanelSpriteId[RP_RR_PANEL_SPRITE_TWO] = SPRITE_NONE;
-
-            windowId = sRotomPhone_StartMenu->menuRotomRealityPanelWindowId[RP_RR_PANEL_WIN_TWO];
-            FillWindowPixelBuffer(windowId, PIXEL_FILL(TEXT_COLOR_TRANSPARENT));
-            CopyWindowToVram(windowId, COPYWIN_FULL);
-            RemoveWindow(windowId);
-            sRotomPhone_StartMenu->menuRotomRealityPanelWindowId[RP_RR_PANEL_WIN_TWO] = WINDOW_NONE;
-        }
-
-        if (GetDaycareState() == DAYCARE_TWO_MONS || GetDaycareState() == DAYCARE_EGG_WAITING)
-        {
-            FreeAndDestroyMonIconSprite(&gSprites[sRotomPhone_StartMenu->menuRotomRealityPanelSpriteId[RP_RR_PANEL_SPRITE_THREE]]);
-            sRotomPhone_StartMenu->menuRotomRealityPanelSpriteId[RP_RR_PANEL_SPRITE_THREE] = SPRITE_NONE;
-        }
+        RotomPhone_RotomRealityPanel_DestroyAssets();
+        LoadMonIconPalette(SPECIES_ROTOM);
     }
     #undef MON_ONE
     #undef MON_TWO

@@ -195,6 +195,8 @@ static void DrawChoices_MenuPal(int selection, int y);
 static void DrawChoices_OW_Encounters(int selection, int y);
 static void DrawChoices_TitleScreen(int selection, int y);
 static int BattleSpeed_ProcessInput_New(int selection);
+static void DrawChoices_Options_Four(const u8 *const *const strings, int selection, int y, bool8 active);
+static void DrawChoices_TextSpeed(int selection, int y);
 static void DrawBgWindowFrames(void);
 
 EWRAM_DATA static u8 sCurrPage = 0;
@@ -242,7 +244,7 @@ typedef struct {
 
 static const MenuItemFunctions sItemFunctionsVanilla[MENUITEM_COUNT] =
 {
-    [MENUITEM_TEXTSPEED]  = {TextSpeed_DrawChoicesTwo,   ThreeOptions_ProcessInput},
+    [MENUITEM_TEXTSPEED]  = {DrawChoices_TextSpeed,   FourOptions_ProcessInput},
     [MENUITEM_BATTLESCENE]   = {BattleScene_DrawChoices,    TwoOptions_ProcessInput},
     [MENUITEM_BATTLESTYLE]    = {BattleStyle_DrawChoices,     TwoOptions_ProcessInput},
     [MENUITEM_SOUND]    = {SoundMode_DrawChoices,     Sound_ProcessInput},
@@ -380,14 +382,14 @@ static const u8 sText_Desc_BikeMusicOff[]       = _("Normal route music continue
 static const u8 sText_Desc_SurfMusicOn[]        = _("Surf theme music will play\nwhile on water.");
 static const u8 sText_Desc_SurfMusicOff[]       = _("Normal water route music continues\nwhile surfing.");
 
-static const u8 *const sOptionMenuItemDescriptionsVanilla[MENUITEM_COUNT][3] =
+static const u8 *const sOptionMenuItemDescriptionsVanilla[MENUITEM_COUNT][4] =
 {
-    [MENUITEM_TEXTSPEED] = {sText_Desc_TextSpeedMedium,       sText_Desc_TextSpeedFast, sText_Desc_TextSpeedFaster},
-    [MENUITEM_BATTLESCENE]  = {sText_Desc_BattleScene_On,       sText_Desc_BattleScene_Off,       sText_Empty},
-    [MENUITEM_BATTLESTYLE]  = {sText_Desc_BattleStyle_Shift,    sText_Desc_BattleStyle_Set,       sText_Empty},
-    [MENUITEM_SOUND]     = {sText_Desc_SoundMono,            sText_Desc_SoundStereo,            sText_Empty},
-    [MENUITEM_FRAMETYPE]   = {sText_Desc_FrameType,            sText_Empty,                     sText_Empty},
-    [MENUITEM_CANCEL]      = {sText_Desc_Save,                 sText_Empty,                     sText_Empty},
+    [MENUITEM_TEXTSPEED] = {sText_Desc_TextSpeedSlow, sText_Desc_TextSpeedMedium,  sText_Desc_TextSpeedFast, sText_Desc_TextSpeedFaster},
+    [MENUITEM_BATTLESCENE]  = {sText_Desc_BattleScene_On,       sText_Desc_BattleScene_Off,       sText_Empty, sText_Empty},
+    [MENUITEM_BATTLESTYLE]  = {sText_Desc_BattleStyle_Shift,    sText_Desc_BattleStyle_Set,       sText_Empty, sText_Empty},
+    [MENUITEM_SOUND]     = {sText_Desc_SoundMono,            sText_Desc_SoundStereo,            sText_Empty, sText_Empty},
+    [MENUITEM_FRAMETYPE]   = {sText_Desc_FrameType,            sText_Empty,                     sText_Empty, sText_Empty},
+    [MENUITEM_CANCEL]      = {sText_Desc_Save,                 sText_Empty,                     sText_Empty, sText_Empty},
 };
 
 static const u8 *const sOptionMenuItemDescriptionsCustom[MENUITEM_COUNT_PG2][5] =
@@ -1250,7 +1252,13 @@ static void ReDrawAll(void)
 }
 
 // Process Input functions ****SPECIFIC****
-
+static const u8 sText_Faster[] = _("FASTER");
+static const u8 *const sTextSpeedStrings[] = {gText_TextSpeedSlow ,gText_TextSpeedMid, gText_TextSpeedFast, sText_Faster};
+static void DrawChoices_TextSpeed(int selection, int y)
+{
+    bool8 active = CheckConditions(MENUITEM_TEXTSPEED);
+    DrawChoices_Options_Four(sTextSpeedStrings, selection, y, active);
+}
 
 static void TextSpeed_DrawChoicesTwo(int selection, int y)
 {
@@ -1262,6 +1270,27 @@ static void TextSpeed_DrawChoicesTwo(int selection, int y)
     DrawOptionMenuChoice(gText_TextSpeedMid, 104, y, styles[0], active);
     DrawOptionMenuChoice(gText_TextSpeedFast, xMid, y, styles[1], active);
     DrawOptionMenuChoice(gText_TextSpeedFaster, GetStringRightAlignXOffset(1, gText_TextSpeedFaster, 198), y, styles[2], active);
+}
+
+static void DrawChoices_Options_Four(const u8 *const *const strings, int selection, int y, bool8 active)
+{
+    static const u8 choiceOrders[][3] =
+    {
+        {0, 1, 2},
+        {0, 1, 2},
+        {1, 2, 3},
+        {1, 2, 3},
+    };
+    u8 styles[4] = {0};
+    int xMid;
+    const u8 *order = choiceOrders[selection];
+
+    styles[selection] = 1;
+    xMid = GetMiddleX(strings[order[0]], strings[order[1]], strings[order[2]]);
+
+    DrawOptionMenuChoice(strings[order[0]], 104, y, styles[order[0]], active);
+    DrawOptionMenuChoice(strings[order[1]], xMid, y, styles[order[1]], active);
+    DrawOptionMenuChoice(strings[order[2]], GetStringRightAlignXOffset(1, strings[order[2]], 198), y, styles[order[2]], active);
 }
 
 static void FrameType_DrawChoices(int selection, int y)
@@ -1363,9 +1392,6 @@ static void SoundMode_DrawChoices(int selection, int y)
     DrawOptionMenuChoice(gText_SoundMono, 104, y, styles[0], active);
     DrawOptionMenuChoice(gText_SoundStereo, GetStringRightAlignXOffset(FONT_NORMAL, gText_SoundStereo, 198), y, styles[1], active);
 }
-
-static const u8 sText_Faster[] = _("FASTER");
-static const u8 *const sTextSpeedStrings[] = {gText_TextSpeedMid, gText_TextSpeedFast, sText_Faster};
 
 /* static void  TextSpeed_DrawChoices(int selection, int y)
 {

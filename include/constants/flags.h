@@ -660,7 +660,7 @@
 #define FLAG_SMART_WILD_AI  0x265 // Unused Flag change to toggle Smart Wild AI
 #define FLAG_NO_WILD_CATCHING  0x266 // Unused Flag change to toggle No Catching
 #define FLAG_NO_WILD_RUNNING  0x267 // Unused Flag change to toggle No Running
-#define FLAG_UNUSED_0x268  0x268 // Unused Flag
+#define FLAG_SHINY_RIDE    0x268 // shiny ride mons toggle
 #define FLAG_UNUSED_0x269  0x269 // Unused Flag
 #define FLAG_UNUSED_0x26A  0x26A // Unused Flag
 #define FLAG_UNUSED_0x26B  0x26B // Unused Flag

@@ -6,5 +6,7 @@
 
 u32 CreateSurfablePokemonSprite(void);
 void DestroySurfablePokemonSprite(void);
+void UpdateSurfTransformAnimation(u8 taskId);
+void SwapSurfMonRealTime(void);
 
 #endif

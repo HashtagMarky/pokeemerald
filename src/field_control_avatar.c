@@ -43,7 +43,7 @@
 #include "constants/songs.h"
 #include "constants/trainer_hill.h"
 #include "qol_field_moves.h"
-
+#include "surfable.h"
 #include "followmon.h"
 #include "rotom_start_menu.h"
 
@@ -212,17 +212,10 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
     if (input->pressedBButton && (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_SURFING) && !ArePlayerFieldControlsLocked())
     {
 
-        if (VarGet(VAR_SURF_MON_SLOT) == 0)
+        if (!FuncIsActiveTask(UpdateSurfTransformAnimation))
         {
-            VarSet(VAR_SURF_MON_SLOT, 1);
-            // PlaySE(SE_POKEMON_SWITCH);
+            SwapSurfMonRealTime();
         }
-        else
-        {
-            VarSet(VAR_SURF_MON_SLOT, 0);
-            // PlaySE(SE_POKEMON_SWITCH);
-        }
-
     }
     if (input->pressedBButton && TrySetupDiveEmergeScript() == TRUE)
         return TRUE;

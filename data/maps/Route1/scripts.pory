@@ -21,6 +21,13 @@ end
 script Mailbox{
     lock
     msgbox("{PLAYER}'s House")
+    if(flag(FLAG_SHINY_RIDE))
+    {
+        clearflag(FLAG_SHINY_RIDE)
+    }
+    else{
+        setflag(FLAG_SHINY_RIDE)
+    }
     release
 end
 }

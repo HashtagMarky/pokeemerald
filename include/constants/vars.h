@@ -266,7 +266,7 @@
 #define VAR_RIVAL_RAYQUAZA_CALL_STEP_COUNTER             0x40F6
 #define VAR_SURF_MON_SLOT                                0x40F7 // surfmon
 #define VAR_FREEZESURFBLOB                               0x40F8 // freezesurfmon
-#define VAR_UNUSED_0x40F9                                0x40F9 // Unused Var
+#define VAR_TRANSFORM_MON                                0x40F9 // pokeride mon
 #define VAR_UNUSED_0x40FA                                0x40FA // Unused Var
 #define VAR_BATTLE_SPEED                                 0x40FB // changed from unused to battle speed
 #define VAR_DN_VAR_SPECIES                               0x40FC // DN_VAR_SPECIES 

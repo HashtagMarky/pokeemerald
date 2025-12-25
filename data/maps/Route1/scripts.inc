@@ -40,12 +40,22 @@ Mailbox::
 # 23 "data/maps/Route1/scripts.pory"
 	msgbox Mailbox_Text_0
 # 24 "data/maps/Route1/scripts.pory"
+	goto_if_set FLAG_SHINY_RIDE, Mailbox_2
+# 29 "data/maps/Route1/scripts.pory"
+	setflag FLAG_SHINY_RIDE
+Mailbox_1:
+# 31 "data/maps/Route1/scripts.pory"
 	release
 	end
 
+Mailbox_2:
+# 26 "data/maps/Route1/scripts.pory"
+	clearflag FLAG_SHINY_RIDE
+	goto Mailbox_1
+
 
 Route1LittleBoyNPC::
-# 29 "data/maps/Route1/scripts.pory"
+# 36 "data/maps/Route1/scripts.pory"
 	msgbox Route1LittleBoyNPC_Text_0, MSGBOX_NPC
 	end
 
@@ -69,5 +79,5 @@ Mailbox_Text_0:
 	.string "{PLAYER}'s House$"
 
 Route1LittleBoyNPC_Text_0:
-# 29 "data/maps/Route1/scripts.pory"
+# 36 "data/maps/Route1/scripts.pory"
 	.string "I gotta catch more Pokémon!\nPokémon with cool knees are so neat.$"

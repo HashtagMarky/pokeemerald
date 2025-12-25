@@ -4,16 +4,18 @@
 #include "field_effect.h"
 #include "field_effect_helpers.h"
 #include "field_player_avatar.h"
+#include "gpu_regs.h"
 #include "main.h"
 #include "party_menu.h"
+#include "sound.h"
 #include "sprite.h"
 #include "surfable.h"
 #include "constants/event_object_movement.h"
 #include "constants/event_objects.h"
 #include "constants/field_effects.h"
 #include "constants/moves.h"
+#include "constants/songs.h"
 #include "constants/species.h"
-
 extern const struct OamData gObjectEventBaseOam_32x32;
 extern const struct OamData gObjectEventBaseOam_64x64;
 extern const struct SpriteTemplate *const gFieldEffectObjectTemplatePointers[];
@@ -77,7 +79,7 @@ static void LoadSurfOverworldPalette(void)
 
     // Check if the FIRST Pokémon in the party (gPlayerParty[0]) is shiny.
     // This assumes gPlayerParty[0] always exists and holds a valid Pokémon data structure.
-    if (IsMonShiny(&gPlayerParty[0]) == TRUE)
+    if (FlagGet(FLAG_SHINY_RIDE))
     {
         // If the first Pokémon is shiny, load the shiny palette for the current surf mon
         LoadSpritePalette(&sSurfablePokemonShinyPalettes[sCurrentSurfMon]);
@@ -180,3 +182,139 @@ if (linkedSprite->animNum < MOVEMENT_ACTION_DELAY_16)
         DestroySprite(sprite);
 }
 
+// Store the task data indices for clarity
+#define tFrames      data[0]
+#define tNewSpecies  data[1]
+
+void BeginSurfTransformEffect(u8 newSlot)
+{
+    // Find the sprite ID for the surfing blob/mon
+    // In the surf system, this is usually stored or can be found via field effect
+    u8 taskId = CreateTask(UpdateSurfTransformAnimation, 0xFF);
+    gTasks[taskId].tFrames = 0;
+    gTasks[taskId].tNewSpecies = newSlot;
+}
+
+static void UpdateSurfMonBase(struct Sprite *sprite)
+{
+    struct ObjectEvent *playerObj = &gObjectEvents[gPlayerAvatar.objectEventId];
+    struct Sprite *playerSprite = &gSprites[gPlayerAvatar.spriteId];
+
+    // Follow the player's map movement
+    SynchroniseSurfAnim(playerObj, sprite);
+    SynchroniseSurfPosition(playerObj, sprite);
+
+    // PRIORITY: Keep it behind the player
+    sprite->subpriority = playerSprite->subpriority + 1;
+    sprite->oam.priority = playerSprite->oam.priority;
+
+    // POSITION SYNC: Match player pixel coordinates exactly.
+    // Note: We do NOT add +8 here because this is the base, not the saddle.
+    if (playerSprite->animNum < MOVEMENT_ACTION_DELAY_16)
+    {
+        sprite->x = playerSprite->x;
+        sprite->y = playerSprite->y + 8;
+        sprite->y2 = playerSprite->y2;
+    }
+
+    if (!(gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_SURFING))
+        DestroySprite(sprite);
+}
+
+void UpdateSurfTransformAnimation(u8 taskId)
+{
+    u8 i;
+    u8 stretch;
+    u16 frames = gTasks[taskId].tFrames;
+    struct Sprite *playerSprite = &gSprites[gPlayerAvatar.spriteId];
+    struct ObjectEvent *playerObj = &gObjectEvents[gPlayerAvatar.objectEventId];
+
+    // Mosaic Logic
+    if (frames < 8)
+        stretch = frames >> 1;
+    else if (frames < 16)
+        stretch = (16 - frames) >> 1;
+    else 
+    {
+        playerSprite->oam.mosaic = FALSE;
+        for (i = 0; i < MAX_SPRITES; i++)
+        {
+            if (gSprites[i].inUse && (gSprites[i].callback == UpdateSurfMonOverlay || gSprites[i].callback == UpdateSurfMonBase))
+                gSprites[i].oam.mosaic = FALSE;
+        }
+        SetGpuReg(REG_OFFSET_MOSAIC, 0);
+        DestroyTask(taskId);
+        return;
+    }
+
+    SetGpuReg(REG_OFFSET_MOSAIC, (stretch << 12) | (stretch << 8));
+    playerSprite->oam.mosaic = TRUE;
+
+    // THE SWAP (Frame 8)
+    if (frames == 8)
+    {
+        // A. DESTROY: Targets both potential callbacks
+        for (i = 0; i < MAX_SPRITES; i++)
+        {
+            if (gSprites[i].inUse)
+            {
+                if (gSprites[i].callback == UpdateSurfMonOverlay || 
+                    gSprites[i].callback == UpdateSurfMonBase ||
+                    (gSprites[i].template >= &gSurfablePokemonOverworldSprites[0] && 
+                     gSprites[i].template <= &gSurfablePokemonOverworldSprites[ARRAY_COUNT(gSurfablePokemonOverworldSprites) - 1]))
+                {
+                    FreeSpriteTilesByTag(gSprites[i].template->tileTag);
+                    FreeSpritePaletteByTag(gSprites[i].template->paletteTag);
+                    DestroySprite(&gSprites[i]);
+                }
+            }
+        }
+
+        // B. PREP ARGS: Map coordinates
+        gFieldEffectArguments[0] = playerObj->currentCoords.x;
+        gFieldEffectArguments[1] = playerObj->currentCoords.y;
+        gFieldEffectArguments[2] = gPlayerAvatar.spriteId; 
+
+        // C. CREATE: New sprite
+        sCurrentSurfMon = GetSurfablePokemonSprite();
+        u8 newSpriteId = CreateSurfablePokemonSprite();
+
+        if (newSpriteId != MAX_SPRITES)
+        {
+            struct Sprite *baseMon = &gSprites[newSpriteId];
+            
+            // D. SYNC BASE: Use the correct callback and snap to player
+            baseMon->callback = UpdateSurfMonBase;
+            baseMon->x = playerSprite->x;
+            baseMon->y = playerSprite->y + 8;
+            baseMon->coordOffsetEnabled = TRUE;
+            baseMon->oam.mosaic = TRUE;
+            baseMon->data[2] = gPlayerAvatar.spriteId; 
+
+            // E. SYNC OVERLAYS: Only apply Mosaic, don't change their callback/pos
+            for (i = 0; i < MAX_SPRITES; i++)
+            {
+                if (gSprites[i].inUse && gSprites[i].callback == UpdateSurfMonOverlay && &gSprites[i] != baseMon)
+                {
+                    gSprites[i].oam.mosaic = TRUE;
+                }
+            }
+        }
+    }
+
+    gTasks[taskId].tFrames++;
+}
+
+void SwapSurfMonRealTime(void)
+{
+    if (FuncIsActiveTask(UpdateSurfTransformAnimation))
+        return;
+
+    u8 oldSlot = VarGet(VAR_SURF_MON_SLOT);
+    u8 newSlot = (oldSlot == SURF_MON_LAPRAS) ? SURF_MON_SHARPEDO : SURF_MON_LAPRAS;
+    
+    VarSet(VAR_SURF_MON_SLOT, newSlot);
+    PlaySE(SE_M_TELEPORT);
+
+    BeginSurfTransformEffect(newSlot);
+}

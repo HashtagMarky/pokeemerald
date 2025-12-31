@@ -91,6 +91,15 @@ static void LoadSurfOverworldPalette(void)
     }
 }
 
+void RefreshSurfablePaletteFromFlag(void)
+{
+    // Ensure the current surf index is up to date
+    sCurrentSurfMon = GetSurfablePokemonSprite();
+
+    // This loads either the shiny or normal palette based on FLAG_SHINY_RIDE
+    LoadSurfOverworldPalette();
+}
+
 u32 CreateSurfablePokemonSprite(void)
 {
     u8 spriteId;
@@ -314,6 +323,7 @@ void SwapSurfMonRealTime(void)
     u8 newSlot = (oldSlot == SURF_MON_LAPRAS) ? SURF_MON_SHARPEDO : SURF_MON_LAPRAS;
     
     VarSet(VAR_SURF_MON_SLOT, newSlot);
+    RefreshSurfablePaletteFromFlag();
     PlaySE(SE_M_TELEPORT);
 
     BeginSurfTransformEffect(newSlot);

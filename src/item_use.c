@@ -1669,13 +1669,31 @@ static void Task_OpenRegisteredFlyTool(u8 taskId)
 }
 void ItemUseOutOfBattle_SurfTool(u8 taskId)
 {
-    if (IsPlayerFacingSurfableFishableWater())
+    if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING)
+        && VarGet(VAR_SURF_MON_SLOT) == SURF_MON_SHARPEDO
+        && !FuncIsActiveTask(UpdateSurfTransformAnimation))
     {
+        RefreshSurfablePaletteFromFlag();
+        SwapSurfMonRealTime();
+        
+        // Ensure overworld resumes normally and the item-use task cleans up
+        ScriptUnfreezeObjectEvents();
+        UnlockPlayerFieldControls();
+
+        // Let the task perform the standard "close and destroy" cleanup next frame
+        gTasks[taskId].func = Task_CloseCantUseKeyItemMessage;
+        return;
+    }
+    else if (IsPlayerFacingSurfableFishableWater())
+    {
+        RefreshSurfablePaletteFromFlag();
         sItemUseOnFieldCB = ItemUseOnFieldCB_SurfTool;
         SetUpItemUseOnFieldCallback(taskId);
     }
     else
+    {
         DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
+    }
 }
 void ItemUseOnFieldCB_SurfTool(u8 taskId)
 {
@@ -1728,13 +1746,31 @@ static void ItemUseOnFieldCB_RockSmashTool(u8 taskId)
 }
 void ItemUseOutOfBattle_WaterfallTool(u8 taskId)
 {
-    if (IsPlayerFacingSurfableFishableWater())
+    if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING)
+        && VarGet(VAR_SURF_MON_SLOT) == SURF_MON_LAPRAS
+        && !FuncIsActiveTask(UpdateSurfTransformAnimation))
     {
+        RefreshSurfablePaletteFromFlag();
+        SwapSurfMonRealTime();
+
+        // Ensure overworld resumes normally and the item-use task cleans up
+        ScriptUnfreezeObjectEvents();
+        UnlockPlayerFieldControls();
+
+        // Let the task perform the standard "close and destroy" cleanup next frame
+        gTasks[taskId].func = Task_CloseCantUseKeyItemMessage;
+        return;
+    }
+    else if (IsPlayerFacingSurfableFishableWater())
+    {
+        RefreshSurfablePaletteFromFlag();
         sItemUseOnFieldCB = ItemUseOnFieldCB_WaterfallTool;
         SetUpItemUseOnFieldCallback(taskId);
     }
     else
+    {
         DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
+    }
 }
 void ItemUseOnFieldCB_WaterfallTool(u8 taskId)
 {

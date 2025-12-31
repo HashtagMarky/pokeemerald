@@ -209,11 +209,13 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
         return TRUE;
     }
     
-    if (input->pressedBButton && (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_SURFING) && !ArePlayerFieldControlsLocked())
+    if (input->pressedBButton && (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_SURFING) && !ArePlayerFieldControlsLocked() && CheckBagHasItem(ITEM_WATERFALL_TOOL, 1)
+&& CheckBagHasItem(ITEM_SURF_TOOL, 1))
     {
 
         if (!FuncIsActiveTask(UpdateSurfTransformAnimation))
         {
+            RefreshSurfablePaletteFromFlag();
             SwapSurfMonRealTime();
         }
     }

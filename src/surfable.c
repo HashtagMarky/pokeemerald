@@ -104,7 +104,7 @@ u32 CreateSurfablePokemonSprite(void)
 {
     u8 spriteId;
     struct Sprite *sprite;
-
+    RefreshSurfablePaletteFromFlag();
     SetSpritePosToOffsetMapCoords((s16 *)&gFieldEffectArguments[0], (s16 *)&gFieldEffectArguments[1], 8, 8);
 
     sCurrentSurfMon = GetSurfablePokemonSprite();

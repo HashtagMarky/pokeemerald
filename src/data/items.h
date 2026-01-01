@@ -12687,19 +12687,19 @@ const struct Item gItemsInfo[] =
 
     [ITEM_OLD_ROD] =
     {
-        .name = ITEM_NAME("Old Rod"),
+        .name = ITEM_NAME("Fishing Rod"),
         .price = 0,
         .description = COMPOUND_STRING(
-            "Use by any body of\n"
-            "water to fish for\n"
-            "wild Pokémon."),
+            "Cast a line over piles\n
+            of rocks to fish for\n
+            wild aquatic Pokémon."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
         .type = ITEM_USE_FIELD,
-        .fieldUseFunc = ItemUseOutOfBattle_Rod,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = OLD_ROD,
-        .iconPic = gItemIcon_OldRod,
-        .iconPalette = gItemIconPalette_OldRod,
+        .iconPic = gItemIcon_GoodRod,
+        .iconPalette = gItemIconPalette_GoodRod,
     },
 
     [ITEM_GOOD_ROD] =

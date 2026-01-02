@@ -12721,16 +12721,16 @@ const struct Item gItemsInfo[] =
 
     [ITEM_SUPER_ROD] =
     {
-        .name = ITEM_NAME("Super Rod"),
+        .name = ITEM_NAME("Fishing Rod"),
         .price = 0,
         .description = COMPOUND_STRING(
-            "The best fishing\n"
-            "rod for catching\n"
-            "wild Pokémon."),
+            "Cast a line over piles\n"
+            "of rocks to fish for\n"
+            "wild aquatic Pokémon."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
         .type = ITEM_USE_FIELD,
-        .fieldUseFunc = ItemUseOutOfBattle_Rod,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = SUPER_ROD,
         .iconPic = gItemIcon_SuperRod,
         .iconPalette = gItemIconPalette_SuperRod,

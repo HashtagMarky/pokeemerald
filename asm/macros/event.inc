@@ -2667,3 +2667,7 @@
 	callnative ScriptChangeFollowerNPCBattlePartner
 	.2byte \battlePartner
 	.endm
+
+	.macro startfishing
+		callnative MacroStartFishingSuperRod, requests_effects=1
+	.endm

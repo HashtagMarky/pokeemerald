@@ -2080,9 +2080,9 @@ static void Task_WaitStopSurfing(u8 taskId)
 #define FISHING_STICKY_BOOST    36
 
 #if I_FISHING_BITE_ODDS >= GEN_4
-    #define FISHING_OLD_ROD_ODDS 75
-    #define FISHING_GOOD_ROD_ODDS 50
-    #define FISHING_SUPER_ROD_ODDS 25
+    #define FISHING_OLD_ROD_ODDS 1
+    #define FISHING_GOOD_ROD_ODDS 1
+    #define FISHING_SUPER_ROD_ODDS 1
 #elif I_FISHING_BITE_ODDS >= GEN_3
     #define FISHING_OLD_ROD_ODDS 50
     #define FISHING_GOOD_ROD_ODDS 50
@@ -2142,7 +2142,7 @@ void StartFishing(u8 rod)
     u8 taskId = CreateTask(Task_Fishing, 0xFF);
 
     gTasks[taskId].tFishingRod = rod;
-    Task_Fishing(taskId);
+    //Task_Fishing(taskId);
 }
 
 static void Task_Fishing(u8 taskId)
@@ -2399,6 +2399,7 @@ static bool32 Fishing_StartEncounter(struct Task *task)
     {
         gPlayerAvatar.preventStep = FALSE;
         UnlockPlayerFieldControls();
+        ScriptContext_Enable();
         FishingWildEncounter(task->tFishingRod);
         RecordFishingAttemptForTV(TRUE);
         DestroyTask(FindTaskIdByFunc(Task_Fishing));
@@ -2463,6 +2464,7 @@ static bool32 Fishing_EndNoMon(struct Task *task)
         UnfreezeObjectEvents();
         ClearDialogWindowAndFrame(0, TRUE);
         RecordFishingAttemptForTV(FALSE);
+        ScriptContext_Enable();
         DestroyTask(FindTaskIdByFunc(Task_Fishing));
     }
     return FALSE;

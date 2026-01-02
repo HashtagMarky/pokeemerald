@@ -26,36 +26,38 @@ MomSaysHi::
 # 14 "data/maps/Route1/scripts.pory"
 	setflag FLAG_PORTABLE_PC_TOGGLE
 # 15 "data/maps/Route1/scripts.pory"
-	fadescreenswapbuffers FADE_FROM_BLACK
+	setflag FLAG_RECEIVED_SUPER_ROD
 # 16 "data/maps/Route1/scripts.pory"
-	msgbox MomSaysHi_Text_2
+	fadescreenswapbuffers FADE_FROM_BLACK
 # 17 "data/maps/Route1/scripts.pory"
+	msgbox MomSaysHi_Text_2
+# 18 "data/maps/Route1/scripts.pory"
 	release
 	end
 
 
 Mailbox::
-# 22 "data/maps/Route1/scripts.pory"
-	lock
 # 23 "data/maps/Route1/scripts.pory"
-	msgbox Mailbox_Text_0
+	lock
 # 24 "data/maps/Route1/scripts.pory"
+	msgbox Mailbox_Text_0
+# 25 "data/maps/Route1/scripts.pory"
 	goto_if_set FLAG_SHINY_RIDE, Mailbox_2
-# 29 "data/maps/Route1/scripts.pory"
+# 30 "data/maps/Route1/scripts.pory"
 	setflag FLAG_SHINY_RIDE
 Mailbox_1:
-# 31 "data/maps/Route1/scripts.pory"
+# 32 "data/maps/Route1/scripts.pory"
 	release
 	end
 
 Mailbox_2:
-# 26 "data/maps/Route1/scripts.pory"
+# 27 "data/maps/Route1/scripts.pory"
 	clearflag FLAG_SHINY_RIDE
 	goto Mailbox_1
 
 
 Route1LittleBoyNPC::
-# 36 "data/maps/Route1/scripts.pory"
+# 37 "data/maps/Route1/scripts.pory"
 	msgbox Route1LittleBoyNPC_Text_0, MSGBOX_NPC
 	end
 
@@ -71,13 +73,13 @@ MomSaysHi_Text_1:
 	.string "You should take a rest.$"
 
 MomSaysHi_Text_2:
-# 16 "data/maps/Route1/scripts.pory"
+# 17 "data/maps/Route1/scripts.pory"
 	.string "Take care, honey!$"
 
 Mailbox_Text_0:
-# 23 "data/maps/Route1/scripts.pory"
+# 24 "data/maps/Route1/scripts.pory"
 	.string "{PLAYER}'s House$"
 
 Route1LittleBoyNPC_Text_0:
-# 36 "data/maps/Route1/scripts.pory"
+# 37 "data/maps/Route1/scripts.pory"
 	.string "I gotta catch more Pokémon!\nPokémon with cool knees are so neat.$"

@@ -11757,6 +11757,61 @@
                 "species": "SPECIES_FINNEON"
               }
             ]
+          },
+          "fishing_mons": {
+            "encounter_rate": 30,
+            "mons": [
+              {
+                "min_level": 10,
+                "max_level": 22,
+                "species": "SPECIES_LUVDISC"
+              },
+              {
+                "min_level": 10,
+                "max_level": 22,
+                "species": "SPECIES_CORSOLA"
+              },
+              {
+                "min_level": 10,
+                "max_level": 22,
+                "species": "SPECIES_REMORAID"
+              },
+              {
+                "min_level": 10,
+                "max_level": 22,
+                "species": "SPECIES_CLAMPERL"
+              },
+              {
+                "min_level": 10,
+                "max_level": 22,
+                "species": "SPECIES_WISHIWASHI"
+              },
+              {
+                "min_level": 10,
+                "max_level": 22,
+                "species": "SPECIES_MAGIKARP"
+              },
+              {
+                "min_level": 10,
+                "max_level": 22,
+                "species": "SPECIES_MAREANIE"
+              },
+              {
+                "min_level": 10,
+                "max_level": 22,
+                "species": "SPECIES_GOREBYSS"
+              },
+              {
+                "min_level": 10,
+                "max_level": 22,
+                "species": "SPECIES_HUNTAIL"
+              },
+              {
+                "min_level": 10,
+                "max_level": 22,
+                "species": "SPECIES_GYARADOS"
+              }
+            ]
           }
         },
         {

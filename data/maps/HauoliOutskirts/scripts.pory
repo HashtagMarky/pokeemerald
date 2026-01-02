@@ -44,3 +44,33 @@ script HauoliOutskirtLassNPC{
     msgbox("If you see a Pokémon Trainer, you've\ngotta show off the Pokémon you like!",MSGBOX_NPC)
 end
 }
+
+script HauoliOustkirtsFishingSpot1{
+    lock
+    if(var(VAR_SURF_MON_SLOT)==0)
+    {
+        msgbox("Would you like to fish here?", MSGBOX_YESNO)
+        if (var(VAR_RESULT) == TRUE)
+        {
+            checkitem(ITEM_SUPER_ROD)
+            if(var(VAR_RESULT) == TRUE)
+            {
+                startfishing
+                waitstate
+            }
+            else{
+                msgbox("You don't have a Fishing Rod.")
+            }
+        }
+        else{
+            release
+            end
+        }
+    }
+    else
+    {
+        msgbox("You can't fish while riding a Sharpedo!")
+    }
+    release
+end
+}

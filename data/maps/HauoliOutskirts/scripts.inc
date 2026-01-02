@@ -68,6 +68,47 @@ HauoliOutskirtLassNPC::
 	end
 
 
+HauoliOustkirtsFishingSpot1::
+# 49 "data/maps/HauoliOutskirts/scripts.pory"
+	lock
+# 50 "data/maps/HauoliOutskirts/scripts.pory"
+	compare VAR_SURF_MON_SLOT, 0
+	goto_if_eq HauoliOustkirtsFishingSpot1_2
+# 72 "data/maps/HauoliOutskirts/scripts.pory"
+	msgbox HauoliOustkirtsFishingSpot1_Text_2
+HauoliOustkirtsFishingSpot1_1:
+# 74 "data/maps/HauoliOutskirts/scripts.pory"
+	release
+	end
+
+HauoliOustkirtsFishingSpot1_2:
+# 52 "data/maps/HauoliOutskirts/scripts.pory"
+	msgbox HauoliOustkirtsFishingSpot1_Text_0, MSGBOX_YESNO
+# 53 "data/maps/HauoliOutskirts/scripts.pory"
+	compare VAR_RESULT, TRUE
+	goto_if_eq HauoliOustkirtsFishingSpot1_5
+# 66 "data/maps/HauoliOutskirts/scripts.pory"
+	release
+	end
+
+HauoliOustkirtsFishingSpot1_5:
+# 55 "data/maps/HauoliOutskirts/scripts.pory"
+	checkitem ITEM_SUPER_ROD
+# 56 "data/maps/HauoliOutskirts/scripts.pory"
+	compare VAR_RESULT, TRUE
+	goto_if_eq HauoliOustkirtsFishingSpot1_8
+# 62 "data/maps/HauoliOutskirts/scripts.pory"
+	msgbox HauoliOustkirtsFishingSpot1_Text_1
+	goto HauoliOustkirtsFishingSpot1_1
+
+HauoliOustkirtsFishingSpot1_8:
+# 58 "data/maps/HauoliOutskirts/scripts.pory"
+	startfishing
+# 59 "data/maps/HauoliOutskirts/scripts.pory"
+	waitstate
+	goto HauoliOustkirtsFishingSpot1_1
+
+
 LabSign_Text_0:
 # 5 "data/maps/HauoliOutskirts/scripts.pory"
 	.string "Pokémon Research Lab$"
@@ -108,3 +149,15 @@ HauoliOustkirtsTrainerTipsSign_Text_0:
 HauoliOutskirtLassNPC_Text_0:
 # 44 "data/maps/HauoliOutskirts/scripts.pory"
 	.string "If you see a Pokémon Trainer, you've\ngotta show off the Pokémon you like!$"
+
+HauoliOustkirtsFishingSpot1_Text_0:
+# 52 "data/maps/HauoliOutskirts/scripts.pory"
+	.string "Would you like to fish here?$"
+
+HauoliOustkirtsFishingSpot1_Text_1:
+# 62 "data/maps/HauoliOutskirts/scripts.pory"
+	.string "You don't have a Fishing Rod.$"
+
+HauoliOustkirtsFishingSpot1_Text_2:
+# 72 "data/maps/HauoliOutskirts/scripts.pory"
+	.string "You can't fish while riding a Sharpedo!$"

@@ -4,7 +4,7 @@ littlerootcave_MapScripts::
 
 littlerootcave_eventscript_cyndaquil_gift::
 # 5 "data/maps/littlerootcave/scripts.pory"
-	goto_if_unset FLAG_UNUSED_0x020, littlerootcave_eventscript_cyndaquil_gift_4
+	goto_if_unset FLAG_UNUSED_0x023, littlerootcave_eventscript_cyndaquil_gift_4
 littlerootcave_eventscript_cyndaquil_gift_3:
 # 36 "data/maps/littlerootcave/scripts.pory"
 	msgbox littlerootcave_eventscript_cyndaquil_gift_Text_3
@@ -64,7 +64,7 @@ littlerootcave_eventscript_cyndaquil_gift_12:
 # 14 "data/maps/littlerootcave/scripts.pory"
 	removeobject 1
 # 15 "data/maps/littlerootcave/scripts.pory"
-	setflag FLAG_UNUSED_0x020
+	setflag FLAG_UNUSED_0x023
 # 16 "data/maps/littlerootcave/scripts.pory"
 	call NicknamePartyMon
 	goto littlerootcave_eventscript_cyndaquil_gift_1
@@ -77,7 +77,7 @@ littlerootcave_eventscript_cyndaquil_gift_13:
 # 21 "data/maps/littlerootcave/scripts.pory"
 	removeobject 1
 # 22 "data/maps/littlerootcave/scripts.pory"
-	setflag FLAG_UNUSED_0x020
+	setflag FLAG_UNUSED_0x023
 # 23 "data/maps/littlerootcave/scripts.pory"
 	Call NicknameBoxMon
 	goto littlerootcave_eventscript_cyndaquil_gift_1
@@ -85,7 +85,7 @@ littlerootcave_eventscript_cyndaquil_gift_13:
 
 littlerootcave_eventscript_totodile_gift::
 # 45 "data/maps/littlerootcave/scripts.pory"
-	goto_if_unset FLAG_UNUSED_0x020, littlerootcave_eventscript_totodile_gift_4
+	goto_if_unset FLAG_UNUSED_0x023, littlerootcave_eventscript_totodile_gift_4
 littlerootcave_eventscript_totodile_gift_3:
 # 76 "data/maps/littlerootcave/scripts.pory"
 	msgbox littlerootcave_eventscript_cyndaquil_gift_Text_3
@@ -166,7 +166,7 @@ littlerootcave_eventscript_totodile_gift_13:
 
 littlerootcave_eventscript_chikorita_gift::
 # 85 "data/maps/littlerootcave/scripts.pory"
-	goto_if_unset FLAG_UNUSED_0x020, littlerootcave_eventscript_chikorita_gift_4
+	goto_if_unset FLAG_UNUSED_0x023, littlerootcave_eventscript_chikorita_gift_4
 littlerootcave_eventscript_chikorita_gift_3:
 # 116 "data/maps/littlerootcave/scripts.pory"
 	msgbox littlerootcave_eventscript_cyndaquil_gift_Text_3

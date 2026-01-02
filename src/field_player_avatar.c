@@ -584,21 +584,43 @@ static bool8 ForcedMovement_WalkEast(void)
 
 static bool8 ForcedMovement_PushedSouthByCurrent(void)
 {
+    if (VarGet(VAR_SURF_MON_SLOT) == SURF_MON_SHARPEDO)
+    {
+        if (JOY_HELD(DPAD_UP))
+            return FALSE;
+    }
     return DoForcedMovement(DIR_SOUTH, PlayerRideWaterCurrent);
 }
 
 static bool8 ForcedMovement_PushedNorthByCurrent(void)
 {
+    if (VarGet(VAR_SURF_MON_SLOT) == SURF_MON_SHARPEDO)
+    {
+        if (JOY_HELD(DPAD_DOWN))
+            return FALSE;
+    }
+
     return DoForcedMovement(DIR_NORTH, PlayerRideWaterCurrent);
 }
 
 static bool8 ForcedMovement_PushedWestByCurrent(void)
 {
+    if (VarGet(VAR_SURF_MON_SLOT) == SURF_MON_SHARPEDO)
+    {
+        if (JOY_HELD(DPAD_RIGHT))
+            return FALSE;
+    }
+
     return DoForcedMovement(DIR_WEST, PlayerRideWaterCurrent);
 }
 
 static bool8 ForcedMovement_PushedEastByCurrent(void)
 {
+    if (VarGet(VAR_SURF_MON_SLOT) == SURF_MON_SHARPEDO)
+    {
+        if (JOY_HELD(DPAD_LEFT))
+            return FALSE;
+    }
     return DoForcedMovement(DIR_EAST, PlayerRideWaterCurrent);
 }
 

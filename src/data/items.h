@@ -12690,9 +12690,9 @@ const struct Item gItemsInfo[] =
         .name = ITEM_NAME("Fishing Rod"),
         .price = 0,
         .description = COMPOUND_STRING(
-            "Cast a line over piles\n
-            of rocks to fish for\n
-            wild aquatic Pokémon."),
+            "Cast a line over piles\n"
+            "of rocks to fish for\n"
+            "wild aquatic Pokémon."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
         .type = ITEM_USE_FIELD,

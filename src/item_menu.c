@@ -1200,11 +1200,10 @@ static void BagMenu_ItemPrintCallback(u8 windowId, u32 itemIndex, u8 y)
         }
         else if (itemId && (offset = RegisteredItemIndex(itemId)) >= 0)
         {
-            for (int i = 0; i < ARRAY_COUNT(sRegisteredSelect_Gfx); i++)
-            {
-                // Adjust the X offset so they don't all overlap (24px apart here)
-                BlitBitmapToWindow(windowId, sRegisteredSelect_Gfx[i], 96 + (i * 24), y - 1, 24, 16);
-            }
+            // 'offset' is the specific slot index (0, 1, 2, or 3)
+            // We use it to pick the correct icon graphic from your array
+            // And we keep the X coordinate at 96 so it stays aligned
+            BlitBitmapToWindow(windowId, sRegisteredSelect_Gfx[offset], 96, y - 1, 24, 16);
         }
     }
 }
@@ -1903,8 +1902,11 @@ static void OpenContextMenu(u8 taskId)
                 gBagMenu->contextMenuNumItems = ARRAY_COUNT(sContextMenuItems_BerriesPocket);
                 break;
             case POCKET_POKERIDE:
-                gBagMenu->contextMenuItemsPtr = sContextMenuItems_PokeRidePocket;
+                gBagMenu->contextMenuItemsPtr = gBagMenu->contextMenuItemsBuffer;
                 gBagMenu->contextMenuNumItems = ARRAY_COUNT(sContextMenuItems_PokeRidePocket);
+                memcpy(&gBagMenu->contextMenuItemsBuffer, &sContextMenuItems_PokeRidePocket, sizeof(sContextMenuItems_PokeRidePocket));
+                if (RegisteredItemIndex(gSpecialVar_ItemId) >= 0)
+                    gBagMenu->contextMenuItemsBuffer[1] = ACTION_DESELECT;
                 break;
             }
         }

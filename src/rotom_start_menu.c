@@ -1318,7 +1318,7 @@ static const struct RotomPhone_MenuOptions sRotomPhoneOptions[RP_MENU_COUNT] =
         .rotomSpeech = COMPOUND_STRING("to enter Rotom Reality?"),
         .unlockedFunc = RotomPhone_StartMenu_UnlockedFunc_RotomReality,
         .selectedFunc = RotomPhone_StartMenu_SelectedFunc_RotomReality,
-        .owIconPalSlot = PAL_ICON_MONOCHROME,
+        .owIconPalSlot = PAL_ICON_BLUE,
         .owAnim = RP_ICON_ANIM_ONE,
         .rrSpriteTemplate = &sSpriteTemplate_RotomRealityIcons_One,
     },

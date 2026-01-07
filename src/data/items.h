@@ -12687,7 +12687,7 @@ const struct Item gItemsInfo[] =
 
     [ITEM_OLD_ROD] =
     {
-        .name = ITEM_NAME("Fishing Rod"),
+        .name = ITEM_NAME("Old Rod"),
         .price = 0,
         .description = COMPOUND_STRING(
             "Cast a line over piles\n"
@@ -12724,9 +12724,9 @@ const struct Item gItemsInfo[] =
         .name = ITEM_NAME("Fishing Rod"),
         .price = 0,
         .description = COMPOUND_STRING(
-            "Cast a line over piles\n"
-            "of rocks to fish for\n"
-            "wild aquatic Pokémon."),
+            "Cast a line over\n"
+            "rocks to fish for\n"
+            "wild Pokémon."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
         .type = ITEM_USE_FIELD,
@@ -14652,7 +14652,7 @@ const struct Item gItemsInfo[] =
         .price = 0,
         .importance = 1,
         .description = sCutToolDesc,
-        .pocket = POCKET_KEY_ITEMS,
+        .pocket = POCKET_POKERIDE,
         .type = ITEM_USE_FIELD,
         .fieldUseFunc = ItemUseOutOfBattle_CutTool,
         .iconPic = gItemIcon_PokeRideMudsdale,
@@ -14665,7 +14665,7 @@ const struct Item gItemsInfo[] =
         .price = 0,
         .importance = 1,
         .description = sFlyToolDesc,
-        .pocket = POCKET_KEY_ITEMS,
+        .pocket = POCKET_POKERIDE,
         .type = ITEM_USE_FIELD,
         .fieldUseFunc = ItemUseOutOfBattle_FlyTool,
         .iconPic = gItemIcon_PokeRideCharizard,
@@ -14678,7 +14678,7 @@ const struct Item gItemsInfo[] =
         .price = 0,
         .importance = 1,
         .description = sSurfToolDesc,
-        .pocket = POCKET_KEY_ITEMS,
+        .pocket = POCKET_POKERIDE,
         .type = ITEM_USE_FIELD,
         .fieldUseFunc = ItemUseOutOfBattle_SurfTool,
         .iconPic = gItemIcon_PokeRideLapras,
@@ -14691,7 +14691,7 @@ const struct Item gItemsInfo[] =
         .price = 0,
         .importance = 1,
         .description = sStrengthToolDesc,
-        .pocket = POCKET_KEY_ITEMS,
+        .pocket = POCKET_POKERIDE,
         .type = ITEM_USE_FIELD,
         .fieldUseFunc = ItemUseOutOfBattle_StrengthTool,
         .iconPic = gItemIcon_PokeRideMachamp,
@@ -14717,7 +14717,7 @@ const struct Item gItemsInfo[] =
         .price = 0,
         .importance = 1,
         .description = sRockSmashToolDesc,
-        .pocket = POCKET_KEY_ITEMS,
+        .pocket = POCKET_POKERIDE,
         .type = ITEM_USE_FIELD,
         .fieldUseFunc = ItemUseOutOfBattle_RockSmashTool,
         .iconPic = gItemIcon_PokeRideTauros,
@@ -14730,7 +14730,7 @@ const struct Item gItemsInfo[] =
         .price = 0,
         .importance = 1,
         .description = sWaterfallToolDesc,
-        .pocket = POCKET_KEY_ITEMS,
+        .pocket = POCKET_POKERIDE,
         .type = ITEM_USE_FIELD,
         .fieldUseFunc = ItemUseOutOfBattle_WaterfallTool,
         .iconPic = gItemIcon_PokeRideSharpedo,

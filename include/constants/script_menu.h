@@ -166,6 +166,8 @@
 #define STDSTRING_BATTLE_PIKE      28
 #define STDSTRING_BATTLE_PYRAMID   29
 
+#define STDSTRING_POKERIDE         30
+
 // Dynamic Multichoice Callbacks
 
 #define DYN_MULTICHOICE_CB_DEBUG      0

@@ -378,18 +378,10 @@ static void ItemUseOnFieldCB_Rod(u8 taskId)
 
 void MacroStartFishingSuperRod(u8 taskId)
 {
-    if (FlagSet(FLAG_RECEIVED_SUPER_ROD))
-    {
-        StartFishing(SUPER_ROD);
+
+        StartFishing(OLD_ROD);
         ScriptContext_Stop();
         DestroyTask(taskId);
-    }
-    else
-    {
-        StartFishing(GetItemSecondaryId(gSpecialVar_ItemId));
-        ScriptContext_Stop();
-        DestroyTask(taskId);
-    }
 }
 
 void ItemUseOutOfBattle_Itemfinder(u8 var)

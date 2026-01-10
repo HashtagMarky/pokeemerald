@@ -133,6 +133,16 @@ u32 CreateSurfablePokemonSprite(void)
         sprite->data[7] = -1;
     }
     FieldEffectActiveListRemove(FLDEFF_SURF_BLOB);
+    if(IsCryPlaying())
+        StopCry();
+    if(VarGet(VAR_SURF_MON_SLOT) == SURF_MON_SHARPEDO)
+    {
+        PlayCry_Normal(SPECIES_SHARPEDO, 0);
+    }
+    else
+    {
+        PlayCry_Normal(SPECIES_LAPRAS, 0);
+    }
     return spriteId;
 }
 

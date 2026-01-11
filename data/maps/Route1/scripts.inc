@@ -47,6 +47,11 @@ Mailbox::
 	setflag FLAG_SHINY_RIDE
 Mailbox_1:
 # 32 "data/maps/Route1/scripts.pory"
+	goto_if_set FLAG_ENABLE_ROTOM_PHONE, Mailbox_6
+# 37 "data/maps/Route1/scripts.pory"
+	setflag FLAG_ENABLE_ROTOM_PHONE
+Mailbox_5:
+# 39 "data/maps/Route1/scripts.pory"
 	release
 	end
 
@@ -55,9 +60,14 @@ Mailbox_2:
 	clearflag FLAG_SHINY_RIDE
 	goto Mailbox_1
 
+Mailbox_6:
+# 34 "data/maps/Route1/scripts.pory"
+	clearflag FLAG_ENABLE_ROTOM_PHONE
+	goto Mailbox_5
+
 
 Route1LittleBoyNPC::
-# 37 "data/maps/Route1/scripts.pory"
+# 44 "data/maps/Route1/scripts.pory"
 	msgbox Route1LittleBoyNPC_Text_0, MSGBOX_NPC
 	end
 
@@ -81,5 +91,5 @@ Mailbox_Text_0:
 	.string "{PLAYER}'s House$"
 
 Route1LittleBoyNPC_Text_0:
-# 37 "data/maps/Route1/scripts.pory"
+# 44 "data/maps/Route1/scripts.pory"
 	.string "I gotta catch more Pokémon!\nPokémon with cool knees are so neat.$"

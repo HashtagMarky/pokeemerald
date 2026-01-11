@@ -661,7 +661,7 @@
 #define FLAG_NO_WILD_CATCHING  0x266 // Unused Flag change to toggle No Catching
 #define FLAG_NO_WILD_RUNNING  0x267 // Unused Flag change to toggle No Running
 #define FLAG_SHINY_RIDE    0x268 // shiny ride mons toggle
-#define FLAG_UNUSED_0x269  0x269 // Unused Flag
+#define FLAG_ENABLE_ROTOM_PHONE  0x269 // enables rotom phone when true
 #define FLAG_UNUSED_0x26A  0x26A // Unused Flag
 #define FLAG_UNUSED_0x26B  0x26B // Unused Flag
 #define FLAG_UNUSED_0x26C  0x26C // Unused Flag

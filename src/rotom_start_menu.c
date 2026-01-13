@@ -78,7 +78,7 @@
 #define ROTOM_REALITY_ROW_TWO_Y             80
 #define ROTOM_REALITY_ROW_THREE_Y           120
 
-#define PHONE_COMFY_SLIDE_DURATION          15
+#define PHONE_COMFY_SLIDE_DURATION          20
 #define FACE_ICON_COMFY_SPRING_MASS         200
 #define FACE_ICON_COMFY_SPRING_TENSION      25
 #define FACE_ICON_COMFY_SPRING_FRICTION     800
@@ -1625,27 +1625,77 @@ static void RotomPhone_OverworldMenu_CreateAllIconSprites(void)
     enum RotomPhone_Overworld_Options drawn = RP_OW_OPTION_1;
     u32 drawnCount = RP_OW_OPTION_COUNT;
     if (!RP_CONFIG_USE_ROTOM_PHONE)
-        drawnCount -= 2;
-    
+        drawnCount = 4; // flip-phone shows 4 icons
 
-    for (enum RotomPhone_MenuItems menuId = RP_MENU_FIRST_OPTION; menuId < RP_MENU_COUNT && drawn < drawnCount; menuId++)
+    if (!RP_CONFIG_USE_ROTOM_PHONE)
     {
-        const struct RotomPhone_MenuOptions *menuOption = &sRotomPhoneOptions[menuId];
+        // If Party is unlocked, normal order: Party, Bag, Save, Options.
+        // If Party is locked, put Clock at the beginning: Clock, Bag, Save, Options.
+        enum RotomPhone_MenuItems desiredOrder[4];
 
-        if (menuOption->unlockedFunc && menuOption->unlockedFunc())
+        if (sRotomPhoneOptions[RP_MENU_PARTY].unlockedFunc && sRotomPhoneOptions[RP_MENU_PARTY].unlockedFunc())
         {
-            enum RotomPhone_Overworld_Options optionSlot = RP_OW_OPTION_1 + drawn;
+            desiredOrder[0] = RP_MENU_PARTY;
+            desiredOrder[1] = RP_MENU_BAG;
+            desiredOrder[2] = RP_MENU_SAVE;
+            desiredOrder[3] = RP_MENU_OPTIONS;
+        }
+        else
+        {
+            desiredOrder[0] = RP_MENU_CLOCK;
+            desiredOrder[1] = RP_MENU_BAG;
+            desiredOrder[2] = RP_MENU_SAVE;
+            desiredOrder[3] = RP_MENU_OPTIONS;
+        }
 
-            RotomPhone_OverworldMenu_CreateIconSprite(menuId, optionSlot);
-            sRotomPhone_StartMenu->menuOverworldOptions[optionSlot] = menuId;
-            drawn++;
+        for (u32 i = 0; i < 4 && drawn < drawnCount; ++i)
+        {
+            enum RotomPhone_MenuItems menuId = desiredOrder[i];
+            const struct RotomPhone_MenuOptions *menuOption = &sRotomPhoneOptions[menuId];
+
+            if (menuOption->unlockedFunc && menuOption->unlockedFunc())
+            {
+                enum RotomPhone_Overworld_Options optionSlot = RP_OW_OPTION_1 + drawn;
+                RotomPhone_OverworldMenu_CreateIconSprite(menuId, optionSlot);
+                sRotomPhone_StartMenu->menuOverworldOptions[optionSlot] = menuId;
+                drawn++;
+            }
+        }
+
+        /* If fewer than 4 unlocked, fill remaining slots with first unlocked options in table order */
+        if (drawn < drawnCount)
+        {
+            for (enum RotomPhone_MenuItems menuId = RP_MENU_FIRST_OPTION; menuId < RP_MENU_COUNT && drawn < drawnCount; ++menuId)
+            {
+                const struct RotomPhone_MenuOptions *menuOption = &sRotomPhoneOptions[menuId];
+                if (menuOption->unlockedFunc && menuOption->unlockedFunc())
+                {
+                    enum RotomPhone_Overworld_Options optionSlot = RP_OW_OPTION_1 + drawn;
+                    RotomPhone_OverworldMenu_CreateIconSprite(menuId, optionSlot);
+                    sRotomPhone_StartMenu->menuOverworldOptions[optionSlot] = menuId;
+                    drawn++;
+                }
+            }
+        }
+    }
+    else
+    {
+        for (enum RotomPhone_MenuItems menuId = RP_MENU_FIRST_OPTION; menuId < RP_MENU_COUNT && drawn < drawnCount; menuId++)
+        {
+            const struct RotomPhone_MenuOptions *menuOption = &sRotomPhoneOptions[menuId];
+
+            if (menuOption->unlockedFunc && menuOption->unlockedFunc())
+            {
+                enum RotomPhone_Overworld_Options optionSlot = RP_OW_OPTION_1 + drawn;
+                RotomPhone_OverworldMenu_CreateIconSprite(menuId, optionSlot);
+                sRotomPhone_StartMenu->menuOverworldOptions[optionSlot] = menuId;
+                drawn++;
+            }
         }
     }
 
     for (; drawn < RP_OW_OPTION_COUNT; drawn++)
-    {
         sRotomPhone_StartMenu->menuOverworldOptions[drawn] = RP_MENU_COUNT;
-    }
 }
 
 static void RotomPhone_OverworldMenu_LoadBgPalette(bool32 firstLoad)

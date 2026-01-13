@@ -29,12 +29,12 @@ script Mailbox{
     else{
         setflag(FLAG_SHINY_RIDE)
     }
-    if(flag(FLAG_ENABLE_ROTOM_PHONE))
+    if(var(VAR_ROTOM_PHONE_ENABLE)<1)
     {
-        clearflag(FLAG_ENABLE_ROTOM_PHONE)
+        setvar(VAR_ROTOM_PHONE_ENABLE, 1)
     }
     else{
-        setflag(FLAG_ENABLE_ROTOM_PHONE)
+        setvar(VAR_ROTOM_PHONE_ENABLE, 0)
     }
     release
 end

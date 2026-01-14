@@ -54,6 +54,8 @@
 #include "fldeff.h"
 // End qol_field_moves
 
+#include "transform.h"
+
 static void SetUpItemUseCallback(u8);
 static void FieldCB_UseItemOnField(void);
 static void Task_CallItemUseOnFieldCallback(u8);
@@ -97,6 +99,10 @@ static void AskPlayerTeleportTool(u8 taskId);
 static void CB2_OpenFlyToolFromBag(void);
 static void Task_OpenRegisteredFlyTool(u8 taskId);
 static void ItemUseOnFieldCB_RockSmashTool(u8 taskId);
+static void ItemUseOnFieldCB_RockSmashToolNoRock(u8 taskId);
+static void ItemUseOnFieldCB_StrengthToolNoRock(u8 taskId);
+static void ItemUseOnFieldCB_SurfToolTransform(u8 taskId);
+static void ItemUseOnFieldCB_WaterfallToolTransform(u8 taskId);
 // End qol_field_moves
 
 static const u8 sText_CantDismountBike[] = _("You can't dismount your BIKE here.{PAUSE_UNTIL_PRESS}");
@@ -1692,10 +1698,17 @@ void ItemUseOutOfBattle_SurfTool(u8 taskId)
         gTasks[taskId].func = Task_CloseCantUseKeyItemMessage;
         return;
     }
-    else if (IsPlayerFacingSurfableFishableWater())
+    else if (IsPlayerFacingSurfableFishableWater() && VarGet(VAR_TRANSFORM_MON) == SPECIES_NONE)
     {
         RefreshSurfablePaletteFromFlag();
         sItemUseOnFieldCB = ItemUseOnFieldCB_SurfTool;
+        SetUpItemUseOnFieldCallback(taskId);
+    }
+    else if (IsPlayerFacingSurfableFishableWater() && VarGet(VAR_TRANSFORM_MON) != SPECIES_NONE)
+    {
+        
+        RefreshSurfablePaletteFromFlag();
+        sItemUseOnFieldCB = ItemUseOnFieldCB_SurfToolTransform;
         SetUpItemUseOnFieldCallback(taskId);
     }
     else
@@ -1709,17 +1722,60 @@ void ItemUseOnFieldCB_SurfTool(u8 taskId)
     VarSet(VAR_SURF_MON_SLOT, SURF_MON_LAPRAS);
     DestroyTask(taskId);
 }
+void ItemUseOnFieldCB_SurfToolTransform(u8 taskId)
+{
+    VarSet(VAR_0x8004, 1);
+    VarSet(VAR_TRANSFORM_MON, SPECIES_NONE);
+    ChooseMonForTransform();
+    ScriptContext_SetupScript(EventScript_UseSurfTool);
+    VarSet(VAR_SURF_MON_SLOT, SURF_MON_LAPRAS);
+    DestroyTask(taskId);
+}
+
 void ItemUseOutOfBattle_StrengthTool(u8 taskId)
 {
-    sItemUseOnFieldCB = ItemUseOnFieldCB_StrengthTool;
-    SetUpItemUseOnFieldCallback(taskId);
+    if (CheckObjectGraphicsInFrontOfPlayer(OBJ_EVENT_GFX_PUSHABLE_BOULDER))
+    {
+        sItemUseOnFieldCB = ItemUseOnFieldCB_StrengthTool;
+        SetUpItemUseOnFieldCallback(taskId);
+    }
+    else
+    {
+        sItemUseOnFieldCB = ItemUseOnFieldCB_StrengthToolNoRock;
+        SetUpItemUseOnFieldCallback(taskId);
+    }
 }
 void ItemUseOnFieldCB_StrengthTool(u8 taskId)
 {
     LockPlayerFieldControls();
+    VarSet(VAR_TRANSFORM_MON, SPECIES_MACHAMP);
+    ChooseMonForTransform();
+    PlayCry_Normal(SPECIES_MACHAMP, 0);
     ScriptContext_SetupScript(EventScript_UseStrengthTool);
     DestroyTask(taskId);
 }
+static void ItemUseOnFieldCB_StrengthToolNoRock(u8 taskId)
+{
+    LockPlayerFieldControls();
+    if (VarGet(VAR_TRANSFORM_MON) == SPECIES_MACHAMP)
+    {
+        VarSet(VAR_TRANSFORM_MON, SPECIES_NONE);
+        ChooseMonForTransform();
+        UnlockPlayerFieldControls();
+        UnfreezeObjectEvents();
+        DestroyTask(taskId);
+    }
+    else
+    {
+        VarSet(VAR_TRANSFORM_MON, SPECIES_MACHAMP);
+        ChooseMonForTransform();
+        PlayCry_Normal(SPECIES_MACHAMP, 0);
+        UnlockPlayerFieldControls();
+        UnfreezeObjectEvents();
+        DestroyTask(taskId);
+    }
+}
+
 void ItemUseOutOfBattle_FlashTool(u8 taskId)
 {
     if (CanUseFlash())
@@ -1744,13 +1800,41 @@ void ItemUseOutOfBattle_RockSmashTool(u8 taskId)
         SetUpItemUseOnFieldCallback(taskId);
     }
     else
-        DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
+    {
+        sItemUseOnFieldCB = ItemUseOnFieldCB_RockSmashToolNoRock;
+        SetUpItemUseOnFieldCallback(taskId);
+    }
 }
 static void ItemUseOnFieldCB_RockSmashTool(u8 taskId)
 {
     LockPlayerFieldControls();
+    VarSet(VAR_TRANSFORM_MON, SPECIES_TAUROS);
+    ChooseMonForTransform();
+    PlayCry_Normal(SPECIES_TAUROS, 0);
     ScriptContext_SetupScript(EventScript_UseRockSmashTool);
     DestroyTask(taskId);
+}
+
+static void ItemUseOnFieldCB_RockSmashToolNoRock(u8 taskId)
+{
+    LockPlayerFieldControls();
+    if (VarGet(VAR_TRANSFORM_MON) == SPECIES_TAUROS)
+    {
+        VarSet(VAR_TRANSFORM_MON, SPECIES_NONE);
+        ChooseMonForTransform();
+        UnlockPlayerFieldControls();
+        UnfreezeObjectEvents();
+        DestroyTask(taskId);
+    }
+    else
+    {
+        VarSet(VAR_TRANSFORM_MON, SPECIES_TAUROS);
+        ChooseMonForTransform();
+        PlayCry_Normal(SPECIES_TAUROS, 0);
+        UnlockPlayerFieldControls();
+        UnfreezeObjectEvents();
+        DestroyTask(taskId);
+    }
 }
 void ItemUseOutOfBattle_WaterfallTool(u8 taskId)
 {
@@ -1769,10 +1853,16 @@ void ItemUseOutOfBattle_WaterfallTool(u8 taskId)
         gTasks[taskId].func = Task_CloseCantUseKeyItemMessage;
         return;
     }
-    else if (IsPlayerFacingSurfableFishableWater())
+    else if (IsPlayerFacingSurfableFishableWater() && VarGet(VAR_TRANSFORM_MON) == SPECIES_NONE)
     {
         RefreshSurfablePaletteFromFlag();
         sItemUseOnFieldCB = ItemUseOnFieldCB_WaterfallTool;
+        SetUpItemUseOnFieldCallback(taskId);
+    }
+    else if (IsPlayerFacingSurfableFishableWater() && VarGet(VAR_TRANSFORM_MON) != SPECIES_NONE)
+    {
+        RefreshSurfablePaletteFromFlag();
+        sItemUseOnFieldCB = ItemUseOnFieldCB_WaterfallToolTransform;
         SetUpItemUseOnFieldCallback(taskId);
     }
     else
@@ -1785,6 +1875,14 @@ void ItemUseOnFieldCB_WaterfallTool(u8 taskId)
     ScriptContext_SetupScript(EventScript_UseWaterfallTool);
     VarSet(VAR_SURF_MON_SLOT, SURF_MON_SHARPEDO);
     DestroyTask(taskId);
+}
+void ItemUseOnFieldCB_WaterfallToolTransform(u8 taskId)
+{
+    VarSet(VAR_0x8004, 1);
+    VarSet(VAR_TRANSFORM_MON, SPECIES_NONE);
+    ChooseMonForTransform();
+    ScriptContext_SetupScript(EventScript_UseWaterfallTool);
+    VarSet(VAR_SURF_MON_SLOT, SURF_MON_SHARPEDO);
 }
 void ItemUseOutOfBattle_DiveTool(u8 taskId)
 {

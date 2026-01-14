@@ -36,6 +36,8 @@
 #include "constants/trainer_types.h"
 #include "qol_field_moves.h" // qol_field_moves
 
+#include "transform.h"
+
 #define NUM_FORCED_MOVEMENTS 18
 #define NUM_ACRO_BIKE_COLLISIONS 5
 
@@ -698,7 +700,10 @@ static u8 CheckMovementInputNotOnBike(u8 direction)
 
 static void PlayerNotOnBikeNotMoving(u8 direction, u16 heldKeys)
 {
-    PlayerFaceDirection(GetPlayerFacingDirection());
+    if (FlagGet(FLAG_PLAYER_IS_POKEMON) && !FlagGet(FLAG_DEFER_TRANSFORM))
+        PlayerSetAnimId(GetWalkInPlaceNormalMovementAction(GetPlayerFacingDirection()), COPY_MOVE_FACE);
+    else
+        PlayerFaceDirection(GetPlayerFacingDirection());
 }
 
 void UpdateSpinData(void)
@@ -1344,7 +1349,11 @@ void PlayerWalkFaster(u8 direction)
 
 static void PlayerRun(u8 direction)
 {
+  if(FlagGet(FLAG_PLAYER_IS_POKEMON))
+    PlayerSetAnimId(GetWalkFastMovementAction(direction), COPY_MOVE_WALK);
+  else
     PlayerSetAnimId(GetPlayerRunMovementAction(direction), COPY_MOVE_WALK);
+
 }
 
 void PlayerOnBikeCollide(u8 direction)
@@ -1615,6 +1624,9 @@ u16 GetRivalAvatarGraphicsIdByStateIdAndGender(u8 state, u8 gender)
 
 u16 GetPlayerAvatarGraphicsIdByStateIdAndGender(u8 state, u8 gender)
 {
+    if (IsPlayerTransformed())
+        return GetPlayerTransformGraphicsId();
+
     return sPlayerAvatarGfxIds[state][gender];
 }
 
@@ -1630,7 +1642,12 @@ u16 GetRSAvatarGraphicsIdByGender(u8 gender)
 
 u16 GetPlayerAvatarGraphicsIdByStateId(u8 state)
 {
-    return GetPlayerAvatarGraphicsIdByStateIdAndGender(state, gPlayerAvatar.gender);
+    if (FlagGet(FLAG_PLAYER_IS_POKEMON))
+        return GetPlayerAvatarGraphicsIdByStateIdAndGender(
+            state, gSaveBlock2Ptr->playerGender);
+
+    return GetPlayerAvatarGraphicsIdByStateIdAndGender(
+        state, gPlayerAvatar.gender);
 }
 
 u8 GetPlayerAvatarGenderByGraphicsId(u16 gfxId)
@@ -1755,10 +1772,9 @@ void InitPlayerAvatar(s16 x, s16 y, u8 direction, u8 gender)
     struct ObjectEventTemplate playerObjEventTemplate;
     u8 objectEventId;
     struct ObjectEvent *objectEvent;
-
+    SanitizePlayerTransformOnLoad();
     playerObjEventTemplate.localId = LOCALID_PLAYER;
-    playerObjEventTemplate.graphicsId = GetPlayerAvatarGraphicsIdByStateIdAndGender(PLAYER_AVATAR_STATE_NORMAL, gender);
-    playerObjEventTemplate.x = x - MAP_OFFSET;
+    playerObjEventTemplate.graphicsId = GetPlayerAvatarGraphicsIdByStateIdAndGender(PLAYER_AVATAR_STATE_NORMAL, gender);    playerObjEventTemplate.x = x - MAP_OFFSET;
     playerObjEventTemplate.y = y - MAP_OFFSET;
     playerObjEventTemplate.elevation = 0;
     playerObjEventTemplate.movementType = MOVEMENT_TYPE_PLAYER;
@@ -1781,6 +1797,7 @@ void InitPlayerAvatar(s16 x, s16 y, u8 direction, u8 gender)
     gPlayerAvatar.gender = gender;
     SetPlayerAvatarStateMask(PLAYER_AVATAR_FLAG_CONTROLLABLE | PLAYER_AVATAR_FLAG_ON_FOOT);
     CreateFollowerNPCAvatar();
+    FlagClear(FLAG_DEFER_TRANSFORM);
 }
 
 void SetPlayerInvisibility(bool8 invisible)

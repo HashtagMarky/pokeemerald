@@ -662,12 +662,12 @@
 #define FLAG_NO_WILD_RUNNING  0x267 // Unused Flag change to toggle No Running
 #define FLAG_SHINY_RIDE    0x268 // shiny ride mons toggle
 #define FLAG_ENABLE_ROTOM_PHONE  0x269 // enables rotom phone when true
-#define FLAG_UNUSED_0x26A  0x26A // Unused Flag
-#define FLAG_UNUSED_0x26B  0x26B // Unused Flag
-#define FLAG_UNUSED_0x26C  0x26C // Unused Flag
-#define FLAG_UNUSED_0x26D  0x26D // Unused Flag
-#define FLAG_UNUSED_0x26E  0x26E // Unused Flag
-#define FLAG_UNUSED_0x26F  0x26F // Unused Flag
+#define FLAG_RIDE_TAUROS  0x26A // Unused Flag
+#define FLAG_RIDE_MACHAMP  0x26B // Unused Flag
+#define FLAG_RIDE_MUDSDALE  0x26C // Unused Flag
+#define FLAG_RIDE_STOUTLAND  0x26D // Unused Flag
+#define FLAG_PLAYER_IS_POKEMON 0x26E // Unused Flag
+#define FLAG_DEFER_TRANSFORM 0x26F // Unused Flag
 #define FLAG_UNUSED_0x270  0x270 // Unused Flag
 #define FLAG_UNUSED_0x271  0x271 // Unused Flag
 #define FLAG_UNUSED_0x272  0x272 // Unused Flag
@@ -1230,7 +1230,7 @@
 #define FLAG_FORCE_SHINY                                            0x498 // Unused Flag changed to force shiny
 #define FLAG_AUTORUN_MENU_TOGGLE                                    0x499 // Unused Flag changed to running shoes menu toggle so i can turn of press b to run toggle in menu.
 #define FLAG_PORTABLE_PC_TOGGLE                                     0x49A // Unused Flag changed to portable pc toggle
-#define FLAG_UNUSED_0x49B                                           0x49B // Unused Flag
+#define FLAG_FOLLOWERS_MENU_TOGGLE                                  0x49B // Unused Flag
 #define FLAG_UNUSED_0x49C                                           0x49C // Unused Flag
 #define FLAG_UNUSED_0x49D                                           0x49D // Unused Flag
 #define FLAG_UNUSED_0x49E                                           0x49E // Unused Flag

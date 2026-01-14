@@ -2671,3 +2671,25 @@
 	.macro startfishing
 		callnative MacroStartFishingSuperRod, requests_effects=1
 	.endm
+
+
+@ Player Transform
+  .macro transformplayer defer=0
+  callnative TransformPlayer, requests_effects=1
+  .byte \defer
+  .endm
+
+  .macro autotransformplayer
+  callnative TransformPlayerFromParty, requests_effects=1
+  .endm
+
+  .macro transformplayerto slot:req defer=0
+  callnative TransformPlayerFromScriptByIndex requests_effects=1
+  .byte \slot
+  .byte \defer
+  .endm
+
+  .macro detransformplayer defer=0
+  callnative DetransformPlayer, requests_effects=1
+  .byte \defer
+  .endm

@@ -741,7 +741,7 @@ void CB2_InitOptionPlusMenu(void)
         sOptions->sel_vanilla[MENUITEM_FRAMETYPE]   = gSaveBlock2Ptr->optionsWindowFrameType;
     
         sOptions->sel_custom[MENUITEM_MENUPAL]       = gSaveBlock2Ptr->optionsRotomPhonePalette;
-        sOptions->sel_custom[MENUITEM_FOLLOWER]     = FlagGet(FLAG_DISABLE_FOLLOWERS);
+        sOptions->sel_custom[MENUITEM_FOLLOWER]     = FlagGet(FLAG_FOLLOWERS_MENU_TOGGLE);
         sOptions->sel_custom[MENUITEM_BATTLESPEED]  = gSaveBlock2Ptr->optionsBattleSpeed;
         sOptions->sel_custom[MENUITEM_OW_ENCOUNTERS] = !(FlagGet(OW_FLAG_SPAWN_OVERWORLD_MON) && FlagGet(FLAG_OW_NO_ENCOUNTER));
         sOptions->sel_custom[MENUITEM_AUTORUN]      = FlagGet(FLAG_AUTORUN_MENU_TOGGLE) ? 0 : 1;
@@ -974,10 +974,12 @@ static void Task_OptionMenuSave(u8 taskId)
     // If it's 1 (OFF), set the disable flag.
     if (sOptions->sel_custom[MENUITEM_FOLLOWER] == 0) // Assuming 0 means Followers are ON
     {
+        FlagSet(FLAG_FOLLOWERS_MENU_TOGGLE);
         FlagClear(FLAG_DISABLE_FOLLOWERS); // Enable followers
     }
     else // sOptions->sel_custom[MENUITEM_FOLLOWER] == 1, meaning OFF
     {
+        FlagClear(FLAG_FOLLOWERS_MENU_TOGGLE); 
         FlagSet(FLAG_DISABLE_FOLLOWERS);   // Disable followers
     }
 

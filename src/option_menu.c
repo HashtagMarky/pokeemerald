@@ -214,7 +214,7 @@ static void ReadAllCurrentSettings(u8 taskId)
     gTasks[taskId].tSound = gSaveBlock2Ptr->optionsSound;
     gTasks[taskId].tButtonMode = gSaveBlock2Ptr->optionsButtonMode;
     gTasks[taskId].tWindowFrameType = gSaveBlock2Ptr->optionsWindowFrameType;
-    gTasks[taskId].tFollowers = FlagGet(FLAG_DISABLE_FOLLOWERS);
+    gTasks[taskId].tFollowers = FlagGet(FLAG_FOLLOWERS_MENU_TOGGLE);
     gTasks[taskId].tBattleSpeed = gSaveBlock2Ptr->optionsBattleSpeed;
     gTasks[taskId].tAutorun = FlagGet(FLAG_AUTORUN_MENU_TOGGLE);
     gTasks[taskId].tStartMenuPalette = gSaveBlock2Ptr->optionsRotomPhonePalette;
@@ -638,10 +638,12 @@ static void Follower_DrawChoices(u8 selection)
 
     if (selection == 0) 
     {
+        FlagSet(FLAG_FOLLOWERS_MENU_TOGGLE);
         FlagClear(FLAG_DISABLE_FOLLOWERS);
     }
     else
     {
+        FlagClear(FLAG_FOLLOWERS_MENU_TOGGLE);
         FlagSet(FLAG_DISABLE_FOLLOWERS);
     }
 

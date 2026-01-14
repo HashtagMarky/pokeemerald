@@ -12745,7 +12745,7 @@ const struct Item gItemsInfo[] =
             "can search for\n"
             "buried items."),
         .importance = 1,
-        .pocket = POCKET_KEY_ITEMS,
+        .pocket = POCKET_POKERIDE,
         .type = ITEM_USE_FIELD,
         .fieldUseFunc = ItemUseOutOfBattle_Itemfinder,
         .iconPic = gItemIcon_PokeRideStoutland,

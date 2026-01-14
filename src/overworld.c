@@ -79,6 +79,7 @@
 #include "qol_field_moves.h" // qol_field_moves
 
 #include "followmon.h"
+#include "transform.h"
 
 STATIC_ASSERT((B_FLAG_FOLLOWERS_DISABLED == 0 || OW_FOLLOWERS_ENABLED), FollowersFlagAssignedWithoutEnablingThem);
 
@@ -1736,6 +1737,7 @@ static void OverworldBasic(void)
            ApplyWeatherColorMapIfIdle(gWeatherPtr->colorMapIndex);
         }
     }
+    PlayerAvatarHandleBob();
 }
 
 // This CB2 is used when starting

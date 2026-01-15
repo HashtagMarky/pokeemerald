@@ -718,6 +718,18 @@ static const struct SpriteFrameImage sPicTable_SeleneNormal[] = {
     overworld_ascending_frames(gObjectEventPic_SeleneNormalRunning, 2, 4),
 };
 
+static const struct SpriteFrameImage sPicTable_ElioRiding[] = {
+    overworld_frame(gObjectEventPic_ElioRiding, 2, 4, 0),
+    overworld_frame(gObjectEventPic_ElioRiding, 2, 4, 1),
+    overworld_frame(gObjectEventPic_ElioRiding, 2, 4, 2),
+    overworld_frame(gObjectEventPic_ElioRiding, 2, 4, 0),
+    overworld_frame(gObjectEventPic_ElioRiding, 2, 4, 0),
+    overworld_frame(gObjectEventPic_ElioRiding, 2, 4, 1),
+    overworld_frame(gObjectEventPic_ElioRiding, 2, 4, 1),
+    overworld_frame(gObjectEventPic_ElioRiding, 2, 4, 2),
+    overworld_frame(gObjectEventPic_ElioRiding, 2, 4, 2),
+};
+
 static const struct SpriteFrameImage sPicTable_SSTidal[] = {
     obj_frame_tiles(gObjectEventPic_SSTidal),
     obj_frame_tiles(gObjectEventPic_SSTidal),

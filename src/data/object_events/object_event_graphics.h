@@ -395,7 +395,7 @@ const u16 gObjectEventPalette_Elio[] = INCBIN_U16("graphics/object_events/pics/p
 const u32 gObjectEventPic_ElioRunning[] = INCBIN_U32("graphics/object_events/pics/people/elio/running.4bpp");
 const u32 gObjectEventPic_SeleneNormalRunning[] = INCBIN_U32("graphics/object_events/pics/people/selene/walking.4bpp", "graphics/object_events/pics/people/selene/running.4bpp");
 const u16 gObjectEventPalette_Selene[] = INCBIN_U16("graphics/object_events/pics/people/selene/walking.gbapal");
-
+const u32 gObjectEventPic_ElioRiding[] = INCBIN_U32("graphics/object_events/pics/people/elio/riding.4bpp");
 
 
 const u32 gObjectEventPic_DeoxysOld[] = INCBIN_U32("graphics/object_events/pics/pokemon_old/deoxys.4bpp");

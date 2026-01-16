@@ -282,19 +282,9 @@ u16 GetPlayerTransformGraphicsId(void)
 
 void SanitizePlayerTransformOnLoad(void)
 {
-    // If the flag isn't set, ensure species is NONE
     if (!FlagGet(FLAG_PLAYER_IS_POKEMON))
-    {
         gPlayerTransformSpecies = SPECIES_NONE;
-        sPlayerMountSpriteId = -1;
-    }
-    else if (gPlayerTransformSpecies != SPECIES_NONE)
-    {
-        // If we ARE transformed, the sprite ID was lost in the menu transition.
-        // We force a recreation here.
-        sPlayerMountSpriteId = -1; 
-        CreatePlayerMountSprite(gPlayerTransformSpecies);
-    }
+    sPlayerMountSpriteId = -1;
 }
 
 /*

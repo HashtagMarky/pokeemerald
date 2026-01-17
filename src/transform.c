@@ -125,7 +125,6 @@ static void ResetPlayerAvatar(void);
 static void SetPlayerTransformFlags(void);
 static void ClearPlayerTransformFlags(void);
 
-static void CreatePlayerMountSprite(u16 gfxId);
 static void DestroyPlayerMountSprite(void);
 static void UpdatePlayerMountSpritePosition(struct Sprite *sprite);
 
@@ -283,8 +282,10 @@ u16 GetPlayerTransformGraphicsId(void)
 void SanitizePlayerTransformOnLoad(void)
 {
     if (!FlagGet(FLAG_PLAYER_IS_POKEMON))
+    {
         gPlayerTransformSpecies = SPECIES_NONE;
-    sPlayerMountSpriteId = -1;
+        sPlayerMountSpriteId = -1; // Only reset if not transformed
+    }
 }
 
 /*
@@ -416,7 +417,7 @@ void DetransformPlayer(struct ScriptContext *ctx)
     }
 }
 
-static void CreatePlayerMountSprite(u16 species)
+void CreatePlayerMountSprite(u16 species)
 {
     s16 spriteId;
     struct Sprite *playerSpr;
@@ -570,4 +571,28 @@ void PlayerAvatarHandleBob(void)
     // Only update graphics (anim frames) here. 
     // The position is handled automatically by the sprite's callback.
     UpdateRiderGraphics();
+}
+
+bool32 PlayerHasMountSprite(void)
+{
+    return sPlayerMountSpriteId >= 0
+        && sPlayerMountSpriteId < MAX_SPRITES
+        && gSprites[sPlayerMountSpriteId].inUse;
+}
+
+void UpdatePlayerMountSprite(void)
+{
+    struct Sprite *player = &gSprites[gPlayerAvatar.spriteId];
+    struct Sprite *mount  = &gSprites[sPlayerMountSpriteId];
+
+    // Position sync
+    mount->x = player->x;
+    mount->y = player->y;
+
+    // Direction / anim sync
+    if (mount->animNum != player->animNum)
+        StartSpriteAnim(mount, player->animNum);
+
+    // Advance frames (THIS fixes your frozen animation)
+    AnimateSprite(mount);
 }

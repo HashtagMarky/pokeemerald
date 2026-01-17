@@ -1738,6 +1738,12 @@ static void OverworldBasic(void)
         }
     }
     PlayerAvatarHandleBob();
+    if (FlagGet(FLAG_PLAYER_IS_POKEMON) && !FlagGet(FLAG_DEFER_TRANSFORM)
+ && gSaveBlock2Ptr->pokemonAvatarSpecies != SPECIES_NONE
+ && !PlayerHasMountSprite())
+    {
+        CreatePlayerMountSprite(gSaveBlock2Ptr->pokemonAvatarSpecies);
+    }
 }
 
 // This CB2 is used when starting
@@ -2250,6 +2256,12 @@ static bool32 ReturnToFieldLocal(u8 *state)
         else
             UpdateFollowingPokemon();
         SetCameraToTrackPlayer();
+        if (FlagGet(FLAG_PLAYER_IS_POKEMON) && !FlagGet(FLAG_DEFER_TRANSFORM)
+    && gSaveBlock2Ptr->pokemonAvatarSpecies != SPECIES_NONE
+    && !PlayerHasMountSprite())
+        {
+            CreatePlayerMountSprite(gSaveBlock2Ptr->pokemonAvatarSpecies);
+        }
         (*state)++;
         break;
     case 1:
@@ -2451,6 +2463,12 @@ static void InitObjectEventsLocal(void)
     GetCameraFocusCoords(&x, &y);
     player = GetInitialPlayerAvatarState();
     InitPlayerAvatar(x, y, player->direction, gSaveBlock2Ptr->playerGender);
+    if (FlagGet(FLAG_PLAYER_IS_POKEMON) && !FlagGet(FLAG_DEFER_TRANSFORM)
+ && gSaveBlock2Ptr->pokemonAvatarSpecies != SPECIES_NONE
+ && !PlayerHasMountSprite())
+    {
+        CreatePlayerMountSprite(gSaveBlock2Ptr->pokemonAvatarSpecies);
+    }
     SetPlayerAvatarTransitionFlags(player->transitionFlags);
     ResetInitialPlayerAvatarState();
     TrySpawnObjectEvents(0, 0);

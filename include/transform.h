@@ -29,8 +29,7 @@ bool32 IsPlayerTransformed(void);
 
 /* Returns the overworld graphicsId for the current transformed species */
 u16 GetPlayerTransformGraphicsId(void);
-
-
+extern u16 gPlayerTransformSpecies;
 void TransformPlayerToSpeciesSimple(u16 species);
 /*
  * ============================================================================
@@ -43,7 +42,10 @@ void TransformPlayerToSpeciesSimple(u16 species);
  *  - SPECIES_NONE → detransform
  *  - otherwise → transform into species
  */
-void ChooseMonForTransform(void);
+void ChooseMonForTransform(void);\
+void CreatePlayerMountSprite(u16 gfxId);
+bool32 PlayerHasMountSprite(void);
+void UpdatePlayerMountSprite(void);
 
 /*
  * Script command with optional defer flag

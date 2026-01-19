@@ -2427,6 +2427,7 @@ static void ResumeMap(bool32 a1)
 {
     ResetTasks();
     ResetSpriteData();
+    OnResetSpriteData();
     ResetPaletteFade();
     ScanlineEffect_Clear();
     ResetAllPicSprites();

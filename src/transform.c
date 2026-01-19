@@ -596,3 +596,8 @@ void UpdatePlayerMountSprite(void)
     // Advance frames (THIS fixes your frozen animation)
     AnimateSprite(mount);
 }
+
+void OnResetSpriteData(void)
+{
+    sPlayerMountSpriteId = -1;
+}

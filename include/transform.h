@@ -67,4 +67,6 @@ void TransformPlayerToSpeciesSimple(u16 species);
 void SanitizePlayerTransformOnLoad(void);
 void PlayerAvatarHandleBob(void);
 
+void OnResetSpriteData(void);
+
 #endif // GUARD_TRANSFORM_H

@@ -266,6 +266,7 @@ extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Kukui;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_ElioNormal;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_SeleneNormal;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_ElioRiding;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_SeleneRiding;
 
 const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM_OBJ_EVENT_GFX] = {
     [OBJ_EVENT_GFX_BRENDAN_NORMAL] =           &gObjectEventGraphicsInfo_BrendanNormal,
@@ -526,6 +527,7 @@ const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM
     [OBJ_EVENT_GFX_ELIO_NORMAL] =              &gObjectEventGraphicsInfo_ElioNormal,
     [OBJ_EVENT_GFX_SELENE_NORMAL] =            &gObjectEventGraphicsInfo_SeleneNormal,
     [OBJ_EVENT_GFX_ELIO_RIDING] =              &gObjectEventGraphicsInfo_ElioRiding,
+    [OBJ_EVENT_GFX_SELENE_RIDING] =            &gObjectEventGraphicsInfo_SeleneRiding,
     
 };
 

@@ -399,10 +399,29 @@ void ItemUseOutOfBattle_Itemfinder(u8 var)
 
 static void ItemUseOnFieldCB_Itemfinder(u8 taskId)
 {
-    if (ItemfinderCheckForHiddenItems(gMapHeader.events, taskId) == TRUE)
-        gTasks[taskId].func = Task_UseItemfinder;
+    LockPlayerFieldControls();
+    if (VarGet(VAR_TRANSFORM_MON) == SPECIES_STOUTLAND)
+    {
+        VarSet(VAR_TRANSFORM_MON, SPECIES_NONE);
+        ChooseMonForTransform();
+        ScriptUnfreezeObjectEvents();
+        UnlockPlayerFieldControls();
+        DestroyTask(taskId);
+    }
     else
-        DisplayItemMessageOnField(taskId, sText_ItemFinderNothing, Task_CloseItemfinderMessage);
+    {
+        VarSet(VAR_TRANSFORM_MON, SPECIES_STOUTLAND);
+        ChooseMonForTransform();
+        PlayCry_Normal(SPECIES_STOUTLAND, 0);
+        if (ItemfinderCheckForHiddenItems(gMapHeader.events, taskId) == TRUE)
+        {    
+            gTasks[taskId].func = Task_UseItemfinder;
+        }
+        else
+        {
+            DisplayItemMessageOnField(taskId, sText_ItemFinderNothing, Task_CloseItemfinderMessage);
+        }
+    }
 }
 
 // Define itemfinder task data
@@ -1634,19 +1653,29 @@ void ItemUseOutOfBattle_TownMap(u8 taskId)
 // Start qol_field_moves
 void ItemUseOutOfBattle_CutTool(u8 taskId)
 {
-    if (CheckObjectGraphicsInFrontOfPlayer(OBJ_EVENT_GFX_CUTTABLE_TREE))
-    {
         sItemUseOnFieldCB = ItemUseOnFieldCB_CutTool;
 		SetUpItemUseOnFieldCallback(taskId);
-    }
-    else
-        DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
 }
 void ItemUseOnFieldCB_CutTool(u8 taskId)
 {
     LockPlayerFieldControls();
-    ScriptContext_SetupScript(EventScript_UseCutTool);
-    DestroyTask(taskId);
+    if (VarGet(VAR_TRANSFORM_MON) == SPECIES_MUDSDALE)
+    {
+        VarSet(VAR_TRANSFORM_MON, SPECIES_NONE);
+        ChooseMonForTransform();
+        UnlockPlayerFieldControls();
+        UnfreezeObjectEvents();
+        DestroyTask(taskId);
+    }
+    else
+    {
+        VarSet(VAR_TRANSFORM_MON, SPECIES_MUDSDALE);
+        ChooseMonForTransform();
+        PlayCry_Normal(SPECIES_MUDSDALE, 0);
+        UnlockPlayerFieldControls();
+        UnfreezeObjectEvents();
+        DestroyTask(taskId);
+    }
 }
 void ItemUseOutOfBattle_FlyTool(u8 taskId)
 {

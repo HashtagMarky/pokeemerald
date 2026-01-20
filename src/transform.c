@@ -43,13 +43,13 @@ struct RideSpriteInfo
 
 struct RideMonInfo
 {
-    u16 riderGfxId; 
+    u16 riderGfxId[GENDER_COUNT];
     struct RideSpriteInfo spriteInfo[RIDE_SPRITE_DIR_COUNT];
 };
 
 static const struct RideMonInfo sRideMonInfo[NUM_SPECIES] = {
     [SPECIES_TAUROS] = {
-        .riderGfxId = OBJ_EVENT_GFX_ELIO_RIDING,
+        .riderGfxId = { [MALE] = OBJ_EVENT_GFX_ELIO_RIDING, [FEMALE] = OBJ_EVENT_GFX_SELENE_RIDING },
         .spriteInfo = {
             [RIDE_SPRITE_DIR_DOWN] = { .playerX=0,  .playerY=-10, .playerRendersInFront=RIDER_SHOW_INFRONT },
             [RIDE_SPRITE_DIR_UP]   = { .playerX=0,  .playerY=-7,  .playerRendersInFront=RIDER_SHOW_INFRONT },
@@ -58,7 +58,7 @@ static const struct RideMonInfo sRideMonInfo[NUM_SPECIES] = {
         },
     },
     [SPECIES_STOUTLAND] = {
-        .riderGfxId = OBJ_EVENT_GFX_ELIO_RIDING,
+        .riderGfxId = { [MALE] = OBJ_EVENT_GFX_ELIO_RIDING, [FEMALE] = OBJ_EVENT_GFX_SELENE_RIDING },
         .spriteInfo = {
             [RIDE_SPRITE_DIR_DOWN] = { .playerX=0,  .playerY=-8,  .playerRendersInFront=RIDER_SHOW_INFRONT },
             [RIDE_SPRITE_DIR_UP]   = { .playerX=0,  .playerY=-7,  .playerRendersInFront=RIDER_SHOW_INFRONT },
@@ -67,7 +67,7 @@ static const struct RideMonInfo sRideMonInfo[NUM_SPECIES] = {
         }
     },
     [SPECIES_MUDSDALE] = {
-        .riderGfxId = OBJ_EVENT_GFX_ELIO_RIDING,
+        .riderGfxId = { [MALE] = OBJ_EVENT_GFX_ELIO_RIDING, [FEMALE] = OBJ_EVENT_GFX_SELENE_RIDING },
         .spriteInfo = {
             [RIDE_SPRITE_DIR_DOWN] = { .playerX=0,  .playerY=-8,  .playerRendersInFront=RIDER_SHOW_BEHIND },
             [RIDE_SPRITE_DIR_UP]   = { .playerX=0,  .playerY=-8,  .playerRendersInFront=RIDER_SHOW_INFRONT },
@@ -76,7 +76,7 @@ static const struct RideMonInfo sRideMonInfo[NUM_SPECIES] = {
         }
     },
     [SPECIES_MACHAMP] = {
-        .riderGfxId = OBJ_EVENT_GFX_ELIO_RIDING,
+        .riderGfxId = { [MALE] = OBJ_EVENT_GFX_ELIO_RIDING, [FEMALE] = OBJ_EVENT_GFX_SELENE_RIDING },
         .spriteInfo = {
             [RIDE_SPRITE_DIR_DOWN] = { .playerX=0,  .playerY=-6,  .playerRendersInFront=RIDER_SHOW_BEHIND },
             [RIDE_SPRITE_DIR_UP]   = { .playerX=0,  .playerY=-6,  .playerRendersInFront=RIDER_SHOW_INFRONT },
@@ -423,15 +423,16 @@ void CreatePlayerMountSprite(u16 species)
     struct Sprite *playerSpr;
     struct Sprite *mountSpr;
     const struct RideMonInfo *info;
+    u8 gender = gSaveBlock2Ptr->playerGender;
 
     DestroyPlayerMountSprite();
 
     info = &sRideMonInfo[species];
-    if (info->riderGfxId == 0)
+    if (info->riderGfxId[gender] == 0)
         return;
 
     spriteId = CreateObjectGraphicsSpriteWithTag(
-        info->riderGfxId,
+        info->riderGfxId[gender],
         UpdatePlayerMountSpritePosition, // The callback
         0, 0,
         0,
@@ -448,7 +449,7 @@ void CreatePlayerMountSprite(u16 species)
 
     mountSpr->coordOffsetEnabled = TRUE;
     mountSpr->oam.priority = playerSpr->oam.priority;
-    mountSpr->images = GetObjectEventGraphicsInfo(info->riderGfxId)->images;
+    mountSpr->images = GetObjectEventGraphicsInfo(info->riderGfxId[gender])->images;
     
     // Set initial visibility
     mountSpr->invisible = playerSpr->invisible;

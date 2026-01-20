@@ -252,12 +252,24 @@ static void Task_TransformMosaic(u8 taskId)
 static u8 GetRideSpriteDir(void)
 {
     u8 direction = GetPlayerFacingDirection();
+    
     switch (direction)
     {
-        case DIR_NORTH: return RIDE_SPRITE_DIR_UP;
-        case DIR_SOUTH: return RIDE_SPRITE_DIR_DOWN;
-        case DIR_WEST:  return RIDE_SPRITE_DIR_WEST;
-        case DIR_EAST:  return RIDE_SPRITE_DIR_EAST;
+        case DIR_NORTH:
+            return RIDE_SPRITE_DIR_UP;
+
+        case DIR_SOUTH:
+            return RIDE_SPRITE_DIR_DOWN;
+
+        case DIR_WEST:
+        case DIR_NORTHWEST: // Stair diagonal
+        case DIR_SOUTHWEST: // Stair diagonal
+            return RIDE_SPRITE_DIR_WEST;
+
+        case DIR_EAST:
+        case DIR_NORTHEAST: // Stair diagonal
+        case DIR_SOUTHEAST: // Stair diagonal
+            return RIDE_SPRITE_DIR_EAST;
     }
     return RIDE_SPRITE_DIR_DOWN;
 }

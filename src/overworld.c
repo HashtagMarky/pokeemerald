@@ -2251,17 +2251,17 @@ static bool32 ReturnToFieldLocal(u8 *state)
         ResetScreenForMapLoad();
         ResumeMap(FALSE);
         InitObjectEventsReturnToField();
-        if (gFieldCallback == FieldCallback_UseFly)
-            RemoveFollowingPokemon();
-        else
-            UpdateFollowingPokemon();
-        SetCameraToTrackPlayer();
         if (FlagGet(FLAG_PLAYER_IS_POKEMON) && !FlagGet(FLAG_DEFER_TRANSFORM)
     && gSaveBlock2Ptr->pokemonAvatarSpecies != SPECIES_NONE
     && !PlayerHasMountSprite())
         {
             CreatePlayerMountSprite(gSaveBlock2Ptr->pokemonAvatarSpecies);
         }
+        if (gFieldCallback == FieldCallback_UseFly)
+            RemoveFollowingPokemon();
+        else
+            UpdateFollowingPokemon();
+        SetCameraToTrackPlayer();
         (*state)++;
         break;
     case 1:

@@ -326,6 +326,7 @@ static void SetPlayerTransformFlags(void)
 static void ClearPlayerTransformFlags(void)
 {
     FlagClear(FLAG_PLAYER_IS_POKEMON);
+    FlagClear(FLAG_DISABLE_FOLLOWERS);
     FlagClear(FLAG_DEFER_TRANSFORM);
     gPlayerTransformSpecies = SPECIES_NONE;
 

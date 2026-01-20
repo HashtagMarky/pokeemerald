@@ -510,23 +510,32 @@ static void UpdatePlayerMountSpritePosition(struct Sprite *mountSpr)
     playerSpr = &gSprites[gPlayerAvatar.spriteId];
     if (!playerSpr->inUse) return;
 
+    // 1. Sync basic visibility and Priority
     mountSpr->invisible = playerSpr->invisible;
-    dir = GetRideSpriteDir();
     
+    // CRITICAL: Sync the OAM priority (0-3) which changes with elevation
+    mountSpr->oam.priority = playerSpr->oam.priority;
+
+    dir = GetRideSpriteDir();
     info = &sRideMonInfo[gPlayerTransformSpecies];
     dirInfo = &info->spriteInfo[dir];
 
     mountSpr->x = playerSpr->x;
     mountSpr->y = playerSpr->y;
 
-    // Direct offset application. 
-    // West will use the negative value, East will use the positive value from your table.
     mountSpr->x2 = playerSpr->x2 + dirInfo->playerX;
     mountSpr->y2 = playerSpr->y2 + dirInfo->playerY;
 
-    mountSpr->subpriority = (dirInfo->playerRendersInFront == RIDER_SHOW_INFRONT) 
-                            ? playerSpr->subpriority - 1 
-                            : playerSpr->subpriority + 1;
+    // 2. Handle Subpriority (Z-index within the same priority level)
+    // We use a slightly larger offset to ensure it's definitely above/below
+    if (dirInfo->playerRendersInFront == RIDER_SHOW_INFRONT)
+    {
+        mountSpr->subpriority = (playerSpr->subpriority > 0) ? playerSpr->subpriority - 1 : 0;
+    }
+    else
+    {
+        mountSpr->subpriority = playerSpr->subpriority + 1;
+    }
 }
 
 

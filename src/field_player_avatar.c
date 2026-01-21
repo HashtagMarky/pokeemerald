@@ -834,6 +834,7 @@ static void PlayerNotOnBikeTurningInPlace(u8 direction, u16 heldKeys)
 static void PlayerNotOnBikeMoving(u8 direction, u16 heldKeys)
 {
     u8 collision = CheckForPlayerAvatarCollision(direction);
+    u16 rideSpecies = VarGet(VAR_TRANSFORM_MON);
 
     if (collision)
     {
@@ -907,12 +908,21 @@ static void PlayerNotOnBikeMoving(u8 direction, u16 heldKeys)
     if (!(gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_UNDERWATER) && (gRunToggleBtnSet || (FlagGet(FLAG_RUNNING_SHOES_TOGGLE) && !FlagGet(FLAG_AUTORUN_MENU_TOGGLE)) || (heldKeys & B_BUTTON))
     && FlagGet(FLAG_SYS_B_DASH) && IsRunningDisallowed(gObjectEvents[gPlayerAvatar.objectEventId].currentMetatileBehavior) == 0)
     {
-        if (FlagGet(DN_FLAG_SEARCHING) && (heldKeys & A_BUTTON))
+        // Stoutland: if press A, walk slow
+        if (rideSpecies == SPECIES_STOUTLAND && (heldKeys & A_BUTTON))
         {
             gPlayerAvatar.creeping = TRUE;
             PlayerWalkSlow(direction);
+            return;
         }
-        
+
+        if (ObjectMovingOnRockStairs(&gObjectEvents[gPlayerAvatar.objectEventId], direction))
+        {
+            PlayerRunSlow(direction);
+            gPlayerAvatar.flags |= PLAYER_AVATAR_FLAG_DASH;
+            return;
+        }
+
         if (gRunToggleBtnSet)
         {
             gRunToggleBtnSet = FALSE;
@@ -946,34 +956,39 @@ static void PlayerNotOnBikeMoving(u8 direction, u16 heldKeys)
      else
      {
         gRunToggleBtnSet = FALSE;
-                // Not running, so check for creeping
-        if (FlagGet(DN_FLAG_SEARCHING) && (heldKeys & A_BUTTON))
+
+        // Stoutland: if press A, walk slow
+        if (rideSpecies == SPECIES_STOUTLAND && (heldKeys & A_BUTTON))
         {
             gPlayerAvatar.creeping = TRUE;
             PlayerWalkSlow(direction);
         }
+        // Tauros: if walking, use walk fast speed
+        else if (rideSpecies == SPECIES_TAUROS)
+        {
+            PlayerWalkFast(direction);
+        }
         else
         {
-            gPlayerAvatar.creeping = FALSE;
-            PlayerWalkNormal(direction);
+            // Not running, so check for creeping
+            if (FlagGet(DN_FLAG_SEARCHING) && (heldKeys & A_BUTTON))
+            {
+                gPlayerAvatar.creeping = TRUE;
+                PlayerWalkSlow(direction);
+            }
+            else
+            {
+                gPlayerAvatar.creeping = FALSE;
+                PlayerWalkNormal(direction);
+            }
+            
+            // Check for Rock Stairs walking
+            if (ObjectMovingOnRockStairs(&gObjectEvents[gPlayerAvatar.objectEventId], direction))
+                PlayerWalkSlowStairs(direction);
+            else
+                PlayerWalkNormal(direction);
         }
-        PlayerWalkNormal(direction);
      }
-
-    if (ObjectMovingOnRockStairs(&gObjectEvents[gPlayerAvatar.objectEventId], direction))
-    {
-        PlayerRunSlow(direction);
-        gPlayerAvatar.flags |= PLAYER_AVATAR_FLAG_DASH;
-        return;
-    }
-    // creeping stuff was here
-    else
-    {
-        if (ObjectMovingOnRockStairs(&gObjectEvents[gPlayerAvatar.objectEventId], direction))
-            PlayerWalkSlowStairs(direction);
-        else
-            PlayerWalkNormal(direction);
-    }
 }
 
 static u8 CheckForPlayerAvatarCollision(u8 direction)
@@ -1349,11 +1364,28 @@ void PlayerWalkFaster(u8 direction)
 
 static void PlayerRun(u8 direction)
 {
-  if(FlagGet(FLAG_PLAYER_IS_POKEMON))
-    PlayerSetAnimId(GetWalkFastMovementAction(direction), COPY_MOVE_WALK);
-  else
-    PlayerSetAnimId(GetPlayerRunMovementAction(direction), COPY_MOVE_WALK);
+    u16 rideSpecies = VarGet(VAR_TRANSFORM_MON);
 
+    if (rideSpecies == SPECIES_TAUROS)
+    {
+        // Tauros uses Mach Bike speed (Fastest)
+        PlayerSetAnimId(GetWalkFastMovementAction(direction), COPY_MOVE_WALK);
+    }
+    else if (rideSpecies == SPECIES_MUDSDALE)
+    {
+        // Mudsdale runs at "Walk Faster" speed
+        PlayerSetAnimId(GetWalkFastMovementAction(direction), COPY_MOVE_WALK);
+    }
+    else if (FlagGet(FLAG_PLAYER_IS_POKEMON))
+    {
+        // Default behavior for other Pokémon forms
+        PlayerSetAnimId(GetWalkFastMovementAction(direction), COPY_MOVE_WALK);
+    }
+    else
+    {
+        // Normal human running
+        PlayerSetAnimId(GetPlayerRunMovementAction(direction), COPY_MOVE_WALK);
+    }
 }
 
 void PlayerOnBikeCollide(u8 direction)

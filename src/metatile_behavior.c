@@ -1,6 +1,8 @@
 #include "global.h"
 #include "metatile_behavior.h"
 #include "constants/metatile_behaviors.h"
+#include "constants/vars.h"
+#include "event_data.h"
 
 #define TILE_FLAG_HAS_ENCOUNTERS (1 << 0)
 #define TILE_FLAG_SURFABLE       (1 << 1)
@@ -123,6 +125,7 @@ static const u8 sTileBitAttributes[NUM_METATILE_BEHAVIORS] =
     [MB_ISOLATED_HORIZONTAL_RAIL]           = TILE_FLAG_UNUSED,
     [MB_VERTICAL_RAIL]                      = TILE_FLAG_UNUSED,
     [MB_HORIZONTAL_RAIL]                    = TILE_FLAG_UNUSED,
+    [MB_ROCKY_PATH]                         = TILE_FLAG_UNUSED,
     [MB_SIGNPOST]                           = TILE_FLAG_UNUSED,
     [MB_POKEMON_CENTER_SIGN]                = TILE_FLAG_UNUSED,
     [MB_POKEMART_SIGN]                      = TILE_FLAG_UNUSED,
@@ -134,6 +137,7 @@ static const u8 sTileBitAttributes[NUM_METATILE_BEHAVIORS] =
     [MB_SIDEWAYS_STAIRS_LEFT_SIDE_BOTTOM]   = TILE_FLAG_UNUSED,
     [MB_ROCK_STAIRS]                        = TILE_FLAG_UNUSED,
     [MB_ROCK_CLIMB]                         = TILE_FLAG_UNUSED,
+    
 };
 
 bool8 MetatileBehavior_IsATile(u8 metatileBehavior)
@@ -940,6 +944,14 @@ bool8 MetatileBehavior_IsSurfableAndNotWaterfall(u8 metatileBehavior)
 
 bool8 MetatileBehavior_IsEastBlocked(u8 metatileBehavior)
 {
+    if (metatileBehavior == MB_ROCKY_PATH)
+    {
+        if (MetatileBehavior_IsRockyPathPassable(metatileBehavior))
+            return FALSE;
+        else
+            return TRUE;
+    }
+
     if (metatileBehavior == MB_IMPASSABLE_EAST
      || metatileBehavior == MB_IMPASSABLE_NORTHEAST
      || metatileBehavior == MB_IMPASSABLE_SOUTHEAST
@@ -952,6 +964,14 @@ bool8 MetatileBehavior_IsEastBlocked(u8 metatileBehavior)
 
 bool8 MetatileBehavior_IsWestBlocked(u8 metatileBehavior)
 {
+    if (metatileBehavior == MB_ROCKY_PATH)
+    {
+        if (MetatileBehavior_IsRockyPathPassable(metatileBehavior))
+            return FALSE;
+        else
+            return TRUE;
+    }
+
     if (metatileBehavior == MB_IMPASSABLE_WEST
      || metatileBehavior == MB_IMPASSABLE_NORTHWEST
      || metatileBehavior == MB_IMPASSABLE_SOUTHWEST
@@ -964,6 +984,14 @@ bool8 MetatileBehavior_IsWestBlocked(u8 metatileBehavior)
 
 bool8 MetatileBehavior_IsNorthBlocked(u8 metatileBehavior)
 {
+    if (metatileBehavior == MB_ROCKY_PATH)
+    {
+        if (MetatileBehavior_IsRockyPathPassable(metatileBehavior))
+            return FALSE;
+        else
+            return TRUE;
+    }
+
     if (metatileBehavior == MB_IMPASSABLE_NORTH
      || metatileBehavior == MB_IMPASSABLE_NORTHEAST
      || metatileBehavior == MB_IMPASSABLE_NORTHWEST
@@ -975,6 +1003,14 @@ bool8 MetatileBehavior_IsNorthBlocked(u8 metatileBehavior)
 
 bool8 MetatileBehavior_IsSouthBlocked(u8 metatileBehavior)
 {
+    if (metatileBehavior == MB_ROCKY_PATH)
+    {
+        if (MetatileBehavior_IsRockyPathPassable(metatileBehavior))
+            return FALSE;
+        else
+            return TRUE;
+    }
+
     if (metatileBehavior == MB_IMPASSABLE_SOUTH
      || metatileBehavior == MB_IMPASSABLE_SOUTHEAST
      || metatileBehavior == MB_IMPASSABLE_SOUTHWEST
@@ -1549,4 +1585,16 @@ bool8 MetatileBehavior_IsRockClimbable(u8 metatileBehavior)
         return TRUE;
     else
         return FALSE;
+}
+
+
+bool8 MetatileBehavior_IsRockyPathPassable(u8 metatileBehavior)
+{
+    if (metatileBehavior == MB_ROCKY_PATH)
+    {
+
+        if (VarGet(VAR_TRANSFORM_MON) == SPECIES_MUDSDALE)
+            return TRUE;
+    }
+    return FALSE; 
 }

@@ -3324,7 +3324,15 @@ void SurfFieldEffect_End(struct Task *task)
         gPlayerAvatar.flags &= ~PLAYER_AVATAR_FLAG_CONTROLLABLE;
         ObjectEventSetHeldMovement(objectEvent, GetFaceDirectionMovementAction(objectEvent->movementDirection));
         if (followerObject)
-            ObjectEventClearHeldMovementIfFinished(followerObject);
+        {
+            ObjectEventClearHeldMovementIfFinished(followerObject); 
+        }
+        if (FlagGet(FLAG_DETRANSFORM_NO_FOLLOWER) && FlagGet(FLAG_FOLLOWERS_MENU_TOGGLE))
+        {
+            FlagClear(FLAG_DETRANSFORM_NO_FOLLOWER);
+            FlagClear(FLAG_DISABLE_FOLLOWERS);
+            UpdateFollowingPokemon();
+        }  
         SetSurfBlob_BobState(objectEvent->fieldEffectSpriteId, BOB_PLAYER_AND_MON);
         UnfreezeObjectEvents();
         UnlockPlayerFieldControls();

@@ -3,6 +3,7 @@
 #include "constants/species.h"
 #include "constants/event_objects.h"
 #include "event_data.h"
+#include "field_effect.h"
 #include "field_player_avatar.h"
 #include "fieldmap.h"
 #include "overworld.h"
@@ -235,7 +236,9 @@ static void Task_TransformMosaic(u8 taskId)
             ResetPlayerAvatar();
 
             if (!FlagGet(FLAG_DISABLE_FOLLOWERS))
+            {
                 UpdateFollowingPokemon();
+            }
         }
         else
         {
@@ -338,7 +341,8 @@ static void SetPlayerTransformFlags(void)
 static void ClearPlayerTransformFlags(void)
 {
     FlagClear(FLAG_PLAYER_IS_POKEMON);
-    FlagClear(FLAG_DISABLE_FOLLOWERS);
+    if (!FlagGet(FLAG_DETRANSFORM_NO_FOLLOWER))
+        FlagClear(FLAG_DISABLE_FOLLOWERS);
     FlagClear(FLAG_DEFER_TRANSFORM);
     gPlayerTransformSpecies = SPECIES_NONE;
 
@@ -363,10 +367,15 @@ void ChooseMonForTransform(void)
 
     struct ObjectEvent *follower = GetFollowerObject();
     if (follower)
-        RemoveObjectEvent(follower);
+    {
+        if (VarGet(VAR_0x8004)) // surf-initiated detransform
+            HideFollowerForFieldEffect();
+        else
+            RemoveObjectEvent(follower);
+    }
 
     taskId = CreateTask(Task_TransformMosaic, 0);
-    gTasks[taskId].tCounter = 0; // This is our frame tracker now
+    gTasks[taskId].tCounter = 0; // frame tracker
     gTasks[taskId].tSpecies = (species >= NUM_SPECIES) ? SPECIES_NONE : species;
 }
 
@@ -422,8 +431,11 @@ void DetransformPlayer(struct ScriptContext *ctx)
         ResetPlayerAvatar();
 
         // Respect the menu toggle
-        if (!FlagGet(FLAG_DISABLE_FOLLOWERS))
+        if (!FlagGet(FLAG_DISABLE_FOLLOWERS)
+            && !FlagGet(FLAG_DETRANSFORM_NO_FOLLOWER))
+        {
             UpdateFollowingPokemon();
+        }
 
         /* Ensure any mount sprite is removed */
         DestroyPlayerMountSprite();
@@ -561,38 +573,51 @@ static void UpdatePlayerMountSpritePosition(struct Sprite *mountSpr)
 
 void PlayerAvatarHandleBob(void)
 {
-    struct Sprite *sprite;
-
-    if (!IsPlayerTransformed() || gObjectEvents[gPlayerAvatar.objectEventId].graphicsId < OBJ_EVENT_MON)
+    struct ObjectEvent *playerObj = &gObjectEvents[gPlayerAvatar.objectEventId];
+    struct Sprite *playerSprite = &gSprites[playerObj->spriteId];
+    
+    if (!IsPlayerTransformed())
     {
-        if (gPlayerAvatar.spriteId < MAX_SPRITES)
-            gSprites[gPlayerAvatar.spriteId].y2 = 0;
-
+        playerSprite->y2 = 0;
         gPlayerAvatarBobState.frameCounter = 0;
-        gPlayerAvatarBobState.spriteOffset = 0;
         return;
     }
 
-    sprite = &gSprites[gPlayerAvatar.spriteId];
+    // Check if player is actually in a walking movement action
+    switch (playerObj->movementActionId)
+    {
+        case MOVEMENT_ACTION_WALK_NORMAL_DOWN:
+        case MOVEMENT_ACTION_WALK_NORMAL_UP:
+        case MOVEMENT_ACTION_WALK_NORMAL_LEFT:
+        case MOVEMENT_ACTION_WALK_NORMAL_RIGHT:
+        case MOVEMENT_ACTION_WALK_FAST_DOWN:
+        case MOVEMENT_ACTION_WALK_FAST_UP:
+        case MOVEMENT_ACTION_WALK_FAST_LEFT:
+        case MOVEMENT_ACTION_WALK_FAST_RIGHT:
+            // Continue to bobbing logic below
+            break;
+        default:
+            // Idle state: reset to a slight natural sink (optional)
+            playerSprite->y2 = 0;
+            gPlayerAvatarBobState.frameCounter = 0;
+            UpdateRiderGraphics();
+            return;
+    }
 
+    // Your logic translated to the global state variable
     if (gPlayerAvatarBobState.frameCounter == 0)
-        gPlayerAvatarBobState.spriteOffset = Q_4_12(1.0);
-
-    if (gPlayerAvatarBobState.frameCounter == STEP_FRAME_DURATION)
-        gPlayerAvatarBobState.spriteOffset -= Q_4_12(0.5);
-
-    if (gPlayerAvatarBobState.frameCounter == STEP_FRAME_DURATION * 2)
+        playerSprite->y2 = 1;
+    else if (gPlayerAvatarBobState.frameCounter == STEP_FRAME_DURATION)
+        playerSprite->y2 = 0; // Sink
+    else if (gPlayerAvatarBobState.frameCounter >= (STEP_FRAME_DURATION * 2))
     {
-        gPlayerAvatarBobState.spriteOffset += Q_4_12(0.5);
+        playerSprite->y2 = 1; // Rise back
         gPlayerAvatarBobState.frameCounter = 0;
+        UpdateRiderGraphics();
         return;
     }
 
-    sprite->y2 = Q_4_12_TO_INT(gPlayerAvatarBobState.spriteOffset);
     gPlayerAvatarBobState.frameCounter++;
-
-    // Only update graphics (anim frames) here. 
-    // The position is handled automatically by the sprite's callback.
     UpdateRiderGraphics();
 }
 

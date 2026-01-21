@@ -1755,6 +1755,7 @@ void ItemUseOnFieldCB_SurfToolTransform(u8 taskId)
 {
     VarSet(VAR_0x8004, 1);
     VarSet(VAR_TRANSFORM_MON, SPECIES_NONE);
+    FlagSet(FLAG_DETRANSFORM_NO_FOLLOWER);
     ChooseMonForTransform();
     ScriptContext_SetupScript(EventScript_UseSurfTool);
     VarSet(VAR_SURF_MON_SLOT, SURF_MON_LAPRAS);

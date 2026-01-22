@@ -2,7 +2,7 @@
   "id": "MAP_TAPU_KOKO_BATTLE",
   "name": "TapuKokoBattle",
   "layout": "LAYOUT_TAPU_KOKO_BATTLE",
-  "music": "MUS_DUMMY",
+  "music": "MUS_USUM_IKITOWN_DAY",
   "region_map_section": "MAPSEC_ABANDONED_SHIP",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -12,10 +12,8 @@
   "allow_running": true,
   "show_map_name": false,
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
-  "connections": 0,
-  "object_events": [
-
-  ],
+  "connections": null,
+  "object_events": [],
   "warp_events": [
     {
       "x": 9,
@@ -39,10 +37,6 @@
       "dest_warp_id": "5"
     }
   ],
-  "coord_events": [
-
-  ],
-  "bg_events": [
-
-  ]
+  "coord_events": [],
+  "bg_events": []
 }

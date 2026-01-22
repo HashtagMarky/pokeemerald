@@ -2,7 +2,7 @@
   "id": "MAP_TAPU_KOKO_SHRINE",
   "name": "TapuKokoShrine",
   "layout": "LAYOUT_TAPU_KOKO_SHRINE",
-  "music": "MUS_DUMMY",
+  "music": "MUS_USUM_IKITOWN_DAY",
   "region_map_section": "MAPSEC_ROUTE_106",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -10,12 +10,10 @@
   "allow_cycling": true,
   "allow_escaping": false,
   "allow_running": true,
-  "show_map_name": true,
+  "show_map_name": false,
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
-  "connections": 0,
-  "object_events": [
-
-  ],
+  "connections": null,
+  "object_events": [],
   "warp_events": [
     {
       "x": 12,
@@ -46,10 +44,6 @@
       "dest_warp_id": "1"
     }
   ],
-  "coord_events": [
-
-  ],
-  "bg_events": [
-
-  ]
+  "coord_events": [],
+  "bg_events": []
 }

@@ -54,8 +54,8 @@ static const struct RideMonInfo sRideMonInfo[NUM_SPECIES] = {
         .spriteInfo = {
             [RIDE_SPRITE_DIR_DOWN] = { .playerX=0,  .playerY=-10, .playerRendersInFront=RIDER_SHOW_INFRONT },
             [RIDE_SPRITE_DIR_UP]   = { .playerX=0,  .playerY=-7,  .playerRendersInFront=RIDER_SHOW_INFRONT },
-            [RIDE_SPRITE_DIR_WEST] = { .playerX=1, .playerY=-6,  .playerRendersInFront=RIDER_SHOW_INFRONT },
-            [RIDE_SPRITE_DIR_EAST] = { .playerX=-1,  .playerY=-6,  .playerRendersInFront=RIDER_SHOW_INFRONT },
+            [RIDE_SPRITE_DIR_WEST] = { .playerX=3, .playerY=-6,  .playerRendersInFront=RIDER_SHOW_INFRONT },
+            [RIDE_SPRITE_DIR_EAST] = { .playerX=-3,  .playerY=-6,  .playerRendersInFront=RIDER_SHOW_INFRONT },
         },
     },
     [SPECIES_STOUTLAND] = {

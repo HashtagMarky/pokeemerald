@@ -700,10 +700,7 @@ static u8 CheckMovementInputNotOnBike(u8 direction)
 
 static void PlayerNotOnBikeNotMoving(u8 direction, u16 heldKeys)
 {
-    if (FlagGet(FLAG_PLAYER_IS_POKEMON) && !FlagGet(FLAG_DEFER_TRANSFORM))
-        PlayerSetAnimId(GetWalkInPlaceNormalMovementAction(GetPlayerFacingDirection()), COPY_MOVE_FACE);
-    else
-        PlayerFaceDirection(GetPlayerFacingDirection());
+    PlayerFaceDirection(GetPlayerFacingDirection());
 }
 
 void UpdateSpinData(void)

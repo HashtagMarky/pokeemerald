@@ -58,7 +58,7 @@
     },
     {
       "id": "MAPSEC_PETALBURG_CITY",
-      "name": "PETALBURG CITY",
+      "name": "HAOULI CITY",
       "x": 1,
       "y": 9,
       "width": 1,
@@ -490,7 +490,7 @@
     },
     {
       "id": "MAPSEC_ABANDONED_SHIP",
-      "name": "Iki Town",
+      "name": "IKI TOWN",
       "x": 6,
       "y": 14,
       "width": 1,

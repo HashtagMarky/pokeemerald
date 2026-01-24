@@ -959,11 +959,13 @@ static void PlayerNotOnBikeMoving(u8 direction, u16 heldKeys)
         {
             gPlayerAvatar.creeping = TRUE;
             PlayerWalkSlow(direction);
+            return;
         }
         // Tauros: if walking, use walk fast speed
         else if (rideSpecies == SPECIES_TAUROS)
         {
             PlayerWalkFast(direction);
+            return;
         }
         else
         {
@@ -971,19 +973,19 @@ static void PlayerNotOnBikeMoving(u8 direction, u16 heldKeys)
             if (FlagGet(DN_FLAG_SEARCHING) && (heldKeys & A_BUTTON))
             {
                 gPlayerAvatar.creeping = TRUE;
-                PlayerWalkSlow(direction);
+                if (ObjectMovingOnRockStairs(&gObjectEvents[gPlayerAvatar.objectEventId], direction))
+                    PlayerWalkSlowStairs(direction);
+                else
+                    PlayerWalkSlow(direction);
             }
             else
             {
                 gPlayerAvatar.creeping = FALSE;
-                PlayerWalkNormal(direction);
+                if (ObjectMovingOnRockStairs(&gObjectEvents[gPlayerAvatar.objectEventId], direction))
+                    PlayerWalkSlowStairs(direction);
+                else
+                    PlayerWalkNormal(direction);
             }
-            
-            // Check for Rock Stairs walking
-            if (ObjectMovingOnRockStairs(&gObjectEvents[gPlayerAvatar.objectEventId], direction))
-                PlayerWalkSlowStairs(direction);
-            else
-                PlayerWalkNormal(direction);
         }
      }
 }
@@ -1335,7 +1337,29 @@ static void UNUSED PlayerWalkSlow(u8 direction)
 
 static void PlayerRunSlow(u8 direction)
 {
-    PlayerSetAnimId(GetPlayerRunSlowMovementAction(direction), COPY_MOVE_WALK);
+    u16 rideSpecies = VarGet(VAR_TRANSFORM_MON);
+
+    if (rideSpecies == SPECIES_TAUROS)
+    {
+        // Tauros uses custom speed
+        PlayerSetAnimId(GetWalkFastMovementAction(direction), COPY_MOVE_WALK);
+    }
+    else if (rideSpecies == SPECIES_MUDSDALE)
+    {
+        // Mudsdale runs at different speed
+        PlayerSetAnimId(GetWalkFastMovementAction(direction), COPY_MOVE_WALK);
+    }
+    else if (FlagGet(FLAG_PLAYER_IS_POKEMON))
+    {
+        // Default behavior for other Pokémon forms
+        PlayerSetAnimId(GetWalkFastMovementAction(direction), COPY_MOVE_WALK);
+    }
+    else
+    {
+        // Normal human running - can use diagonal directions
+        PlayerSetAnimId(GetPlayerRunSlowMovementAction(direction), COPY_MOVE_WALK);
+    }
+
 }
 
 // normal speed (1 speed)
@@ -1365,12 +1389,12 @@ static void PlayerRun(u8 direction)
 
     if (rideSpecies == SPECIES_TAUROS)
     {
-        // Tauros uses Mach Bike speed (Fastest)
+        // Tauros uses custom speed
         PlayerSetAnimId(GetWalkFastMovementAction(direction), COPY_MOVE_WALK);
     }
     else if (rideSpecies == SPECIES_MUDSDALE)
     {
-        // Mudsdale runs at "Walk Faster" speed
+        // Mudsdale runs at different speed
         PlayerSetAnimId(GetWalkFastMovementAction(direction), COPY_MOVE_WALK);
     }
     else if (FlagGet(FLAG_PLAYER_IS_POKEMON))
@@ -1380,11 +1404,10 @@ static void PlayerRun(u8 direction)
     }
     else
     {
-        // Normal human running
+        // Normal human running - can use diagonal directions
         PlayerSetAnimId(GetPlayerRunMovementAction(direction), COPY_MOVE_WALK);
     }
 }
-
 void PlayerOnBikeCollide(u8 direction)
 {
     PlayCollisionSoundIfNotFacingWarp(direction);

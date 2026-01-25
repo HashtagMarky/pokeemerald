@@ -96,17 +96,19 @@ static const struct RideMonInfo sRideMonInfo[NUM_SPECIES] = {
 #define MOSAIC_MAX 8
 #define MOSAIC_FRAMES_PER_STEP 1
 
-#define tMosaic      data[0]
-#define tCounter     data[1]
-#define tState       data[2]
-#define tSpecies     data[3]
-
 #define STEP_FRAME_DURATION 8
 
 #define RIDER_CENTER_X_OFFSET   0   // (32 - 16) / 2
 #define RIDER_CENTER_Y_OFFSET  -10 // sits slightly above center
 
+// Transform animation configuration
+#define TRANSFORM_TOTAL_FRAMES 20  // 16 for animation + 4 safety frames
+#define TRANSFORM_MIDPOINT 8
 
+// Task data indices for transform animation
+#define tFrame          data[0]
+#define tSpecies        data[1]
+#define tUnlockControls data[2]
 /*
  * ============================================================================
  *  STATE
@@ -176,81 +178,197 @@ static void ResetPlayerMosaic(void)
     SetGpuReg(REG_OFFSET_MOSAIC, GetGpuReg(REG_OFFSET_MOSAIC) & 0x00FF);
 }
 
+static void Task_UpdatePlayerTransformAnimation(u8 taskId)
+{
+    struct Task *task = &gTasks[taskId];
+    struct Sprite *playerSprite = NULL;
+    u8 frames = task->tFrame;
+    u8 stretch;
+    
+    // Get player sprite
+    if (gPlayerAvatar.spriteId < MAX_SPRITES &&
+        gSprites[gPlayerAvatar.spriteId].inUse)
+    {
+        playerSprite = &gSprites[gPlayerAvatar.spriteId];
+    }
+    
+    // Enforce locks EVERY frame
+    gPlayerAvatar.preventStep = TRUE;
+    gPlayerAvatar.flags &= ~PLAYER_AVATAR_FLAG_CONTROLLABLE;
+    
+    // Check if animation is complete
+    if (frames >= TRANSFORM_TOTAL_FRAMES)
+    {
+        EndPlayerTransformAnimation(playerSprite, taskId);
+        return;
+    }
+    
+    // Apply mosaic effect (only during frames 0-15)
+    if (frames < 16)
+    {
+        if (frames < TRANSFORM_MIDPOINT)
+            stretch = frames >> 1;
+        else
+            stretch = (16 - frames) >> 1;
+        
+        if (playerSprite)
+            playerSprite->oam.mosaic = TRUE;
+        
+        u16 mosaic = GetGpuReg(REG_OFFSET_MOSAIC) & 0x00FF;
+        mosaic |= (stretch << 12) | (stretch << 8);
+        SetGpuReg(REG_OFFSET_MOSAIC, mosaic);
+    }
+    else
+    {
+        // Frames 16-19: Animation done, clear mosaic but stay locked
+        if (playerSprite)
+            playerSprite->oam.mosaic = FALSE;
+        SetGpuReg(REG_OFFSET_MOSAIC, GetGpuReg(REG_OFFSET_MOSAIC) & 0x00FF);
+    }
+    
+    // Midpoint: Perform the actual transformation
+    if (frames == TRANSFORM_MIDPOINT)
+    {
+        ExecutePlayerTransformation(task->tSpecies);
+    }
+    
+    task->tFrame++;
+}
+static void ExecutePlayerTransformation(u16 species)
+{
+    PlaySE(SE_M_TELEPORT);
+    gPlayerTransformSpecies = species;
+    DestroyPlayerMountSprite();
+    
+    if (species == SPECIES_NONE)
+    {
+        // Detransforming back to player
+        ClearPlayerTransformFlags();
+        ResetPlayerAvatar();
+        
+        // Restore follower if appropriate
+        if (!FlagGet(FLAG_DISABLE_FOLLOWERS) && !FlagGet(FLAG_DETRANSFORM_NO_FOLLOWER))
+        {
+            UpdateFollowingPokemon();
+        }
+    }
+    else
+    {
+        // Transforming into a Pokémon
+        SetPlayerTransformFlags();
+        ResetPlayerAvatar();
+        CreatePlayerMountSprite(species);
+    }
+    
+    // CRITICAL: Re-lock after ResetPlayerAvatar
+    gPlayerAvatar.preventStep = TRUE;
+    gPlayerAvatar.flags &= ~PLAYER_AVATAR_FLAG_CONTROLLABLE;
+    LockPlayerFieldControls();
+    FreezeObjectEvents();
+}
+
+static void EndPlayerTransformAnimation(struct Sprite *playerSprite, u8 taskId)
+{
+    struct Task *task = &gTasks[taskId];
+    
+    // Clear mosaic
+    if (playerSprite)
+        playerSprite->oam.mosaic = FALSE;
+    SetGpuReg(REG_OFFSET_MOSAIC, GetGpuReg(REG_OFFSET_MOSAIC) & 0x00FF);
+    
+    // Unlock controls if requested
+    if (task->tUnlockControls)
+    {
+        gPlayerAvatar.preventStep = FALSE;
+        gPlayerAvatar.flags |= PLAYER_AVATAR_FLAG_CONTROLLABLE;
+        UnlockPlayerFieldControls();
+        UnfreezeObjectEvents();
+    }
+    
+    DestroyTask(taskId);
+}
+
+
+/*
 static void Task_TransformMosaic(u8 taskId)
 {
     struct Task *task = &gTasks[taskId];
     u8 frames = task->tCounter;
     u8 stretch;
     struct Sprite *playerSprite = NULL;
-
+    
     if (gPlayerAvatar.spriteId < MAX_SPRITES &&
         gSprites[gPlayerAvatar.spriteId].inUse)
     {
         playerSprite = &gSprites[gPlayerAvatar.spriteId];
     }
-
-    /* End condition */
+    
+    // end condition
     if (frames >= 16)
     {
         if (playerSprite)
             playerSprite->oam.mosaic = FALSE;
-
-        /* Clear OBJ mosaic bits only */
+        
+        // Clear OBJ mosaic bits only 
         SetGpuReg(REG_OFFSET_MOSAIC, GetGpuReg(REG_OFFSET_MOSAIC) & 0x00FF);
-
+        
+        // Unlock controls after transformation completes
+        UnlockPlayerFieldControls();
+        UnfreezeObjectEvents();
+        
         DestroyTask(taskId);
         return;
     }
-
-    /* Compute mosaic stretch */
+    
+    // Compute mosaic stretch
     if (frames < 8)
         stretch = frames >> 1;
     else
         stretch = (16 - frames) >> 1;
-
+    
     if (playerSprite)
         playerSprite->oam.mosaic = TRUE;
-
-    /* Apply OBJ mosaic safely */
+    
+    // Apply OBJ mosaic safely
     {
         u16 mosaic = GetGpuReg(REG_OFFSET_MOSAIC) & 0x00FF;
         mosaic |= (stretch << 12) | (stretch << 8);
         SetGpuReg(REG_OFFSET_MOSAIC, mosaic);
     }
-
-    /* Midpoint: ACTUAL transform */
+    
+    // Midpoint: ACTUAL transform 
     if (frames == 8)
     {
         PlaySE(SE_M_TELEPORT);
-
-        /* Prevent movement for ONE frame only */
+        //Prevent movement for ONE frame only
         gPlayerAvatar.preventStep = TRUE;
-
         gPlayerTransformSpecies = task->tSpecies;
-
         DestroyPlayerMountSprite();
-
+        
         if (task->tSpecies == SPECIES_NONE)
         {
+            // Detransforming back to player
             ClearPlayerTransformFlags();
             ResetPlayerAvatar();
-
-            if (!FlagGet(FLAG_DISABLE_FOLLOWERS))
+            
+            // Restore follower if appropriate
+            if (!FlagGet(FLAG_DISABLE_FOLLOWERS) && !FlagGet(FLAG_DETRANSFORM_NO_FOLLOWER))
             {
                 UpdateFollowingPokemon();
             }
         }
         else
         {
+            // Transforming into a Pokémon
             SetPlayerTransformFlags();
             ResetPlayerAvatar();
             CreatePlayerMountSprite(task->tSpecies);
         }
     }
-
-
+    
     task->tCounter++;
-}
+}*/
+
 
 static u8 GetRideSpriteDir(void)
 {
@@ -341,12 +459,15 @@ static void SetPlayerTransformFlags(void)
 static void ClearPlayerTransformFlags(void)
 {
     FlagClear(FLAG_PLAYER_IS_POKEMON);
-    if (!FlagGet(FLAG_DETRANSFORM_NO_FOLLOWER))
+    
+    if (!FlagGet(FLAG_DETRANSFORM_NO_FOLLOWER) && FlagGet(FLAG_FOLLOWERS_MENU_TOGGLE))
+    {
         FlagClear(FLAG_DISABLE_FOLLOWERS);
+    }
+    
     FlagClear(FLAG_DEFER_TRANSFORM);
     gPlayerTransformSpecies = SPECIES_NONE;
-
-    /* Cleanup mount sprite if present */
+    
     DestroyPlayerMountSprite();
 }
 /*
@@ -363,9 +484,24 @@ static void ClearPlayerTransformFlags(void)
 void ChooseMonForTransform(void)
 {
     u16 species = VarGet(VAR_TRANSFORM_MON);
-    u8 taskId;
-
     struct ObjectEvent *follower = GetFollowerObject();
+    struct ObjectEvent *playerObj = &gObjectEvents[gPlayerAvatar.objectEventId];
+    u8 taskId;
+    
+    // Lock controls HARD
+    LockPlayerFieldControls();
+    FreezeObjectEvents();
+    
+    // Force player to stop
+    if (playerObj)
+    {
+        ObjectEventClearHeldMovementIfFinished(playerObj);
+    }
+    
+    gPlayerAvatar.preventStep = TRUE;
+    gPlayerAvatar.flags &= ~PLAYER_AVATAR_FLAG_CONTROLLABLE;
+    
+    // Handle follower
     if (follower)
     {
         if (VarGet(VAR_0x8004)) // surf-initiated detransform
@@ -373,10 +509,12 @@ void ChooseMonForTransform(void)
         else
             RemoveObjectEvent(follower);
     }
-
-    taskId = CreateTask(Task_TransformMosaic, 0);
-    gTasks[taskId].tCounter = 0; // frame tracker
+    
+    // Create the animation task
+    taskId = CreateTask(Task_UpdatePlayerTransformAnimation, 0);
+    gTasks[taskId].tFrame = 0;
     gTasks[taskId].tSpecies = (species >= NUM_SPECIES) ? SPECIES_NONE : species;
+    gTasks[taskId].tUnlockControls = TRUE;
 }
 
 /*
@@ -404,7 +542,7 @@ void TransformPlayer(struct ScriptContext *ctx)
         ResetPlayerAvatar();
     }
 }
-
+/*
 void TransformPlayerToSpeciesSimple(u16 species)
 {
     u8 taskId;
@@ -416,7 +554,7 @@ void TransformPlayerToSpeciesSimple(u16 species)
     taskId = CreateTask(Task_TransformMosaic, 0);
     gTasks[taskId].tCounter = 0;
     gTasks[taskId].tSpecies = species;
-}
+}*/
 void DetransformPlayer(struct ScriptContext *ctx)
 {
     bool32 defer = ScriptReadByte(ctx);
@@ -649,3 +787,8 @@ void OnResetSpriteData(void)
 {
     sPlayerMountSpriteId = -1;
 }
+
+// Clean up the task data macros
+#undef tFrame
+#undef tSpecies
+#undef tUnlockControls

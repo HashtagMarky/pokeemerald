@@ -399,6 +399,11 @@ void ItemUseOutOfBattle_Itemfinder(u8 var)
 
 static void ItemUseOnFieldCB_Itemfinder(u8 taskId)
 {
+    if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
+    {
+        DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
+        return;
+    }
     LockPlayerFieldControls();
     if (VarGet(VAR_TRANSFORM_MON) == SPECIES_STOUTLAND)
     {
@@ -1658,6 +1663,11 @@ void ItemUseOutOfBattle_CutTool(u8 taskId)
 }
 void ItemUseOnFieldCB_CutTool(u8 taskId)
 {
+    if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
+    {
+        DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
+        return;
+    }
     LockPlayerFieldControls();
     if (VarGet(VAR_TRANSFORM_MON) == SPECIES_MUDSDALE)
     {
@@ -1764,6 +1774,7 @@ void ItemUseOnFieldCB_SurfToolTransform(u8 taskId)
 
 void ItemUseOutOfBattle_StrengthTool(u8 taskId)
 {
+
     if (CheckObjectGraphicsInFrontOfPlayer(OBJ_EVENT_GFX_PUSHABLE_BOULDER))
     {
         sItemUseOnFieldCB = ItemUseOnFieldCB_StrengthTool;
@@ -1777,6 +1788,12 @@ void ItemUseOutOfBattle_StrengthTool(u8 taskId)
 }
 void ItemUseOnFieldCB_StrengthTool(u8 taskId)
 {
+    if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
+    {
+        DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
+        return;
+    }
+
     LockPlayerFieldControls();
     VarSet(VAR_TRANSFORM_MON, SPECIES_MACHAMP);
     ChooseMonForTransform();
@@ -1786,6 +1803,12 @@ void ItemUseOnFieldCB_StrengthTool(u8 taskId)
 }
 static void ItemUseOnFieldCB_StrengthToolNoRock(u8 taskId)
 {
+    if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
+    {
+        DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
+        return;
+    }
+
     LockPlayerFieldControls();
     if (VarGet(VAR_TRANSFORM_MON) == SPECIES_MACHAMP)
     {
@@ -1837,6 +1860,11 @@ void ItemUseOutOfBattle_RockSmashTool(u8 taskId)
 }
 static void ItemUseOnFieldCB_RockSmashTool(u8 taskId)
 {
+    if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
+    {
+        DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
+        return;
+    }
     LockPlayerFieldControls();
     VarSet(VAR_TRANSFORM_MON, SPECIES_TAUROS);
     ChooseMonForTransform();
@@ -1847,6 +1875,11 @@ static void ItemUseOnFieldCB_RockSmashTool(u8 taskId)
 
 static void ItemUseOnFieldCB_RockSmashToolNoRock(u8 taskId)
 {
+    if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
+    {
+        DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
+        return;
+    }    
     LockPlayerFieldControls();
     if (VarGet(VAR_TRANSFORM_MON) == SPECIES_TAUROS)
     {

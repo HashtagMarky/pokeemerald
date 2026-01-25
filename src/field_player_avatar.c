@@ -1849,13 +1849,17 @@ void InitPlayerAvatar(s16 x, s16 y, u8 direction, u8 gender)
     gPlayerAvatar.spriteId = objectEvent->spriteId;
     gPlayerAvatar.gender = gender;
     SetPlayerAvatarStateMask(PLAYER_AVATAR_FLAG_CONTROLLABLE | PLAYER_AVATAR_FLAG_ON_FOOT);
-    if (!FlagGet(FLAG_PLAYER_IS_POKEMON))
+    // Create follower if not transformed and not disabled
+    if (!FlagGet(FLAG_PLAYER_IS_POKEMON) && !FlagGet(FLAG_DISABLE_FOLLOWERS))
+    {
         CreateFollowerNPCAvatar();
+    }
+    
     FlagClear(FLAG_DEFER_TRANSFORM);
-
+    
     if (FlagGet(FLAG_PLAYER_IS_POKEMON) && !FlagGet(FLAG_DEFER_TRANSFORM)
- && gSaveBlock2Ptr->pokemonAvatarSpecies != SPECIES_NONE
- && !PlayerHasMountSprite())
+        && gSaveBlock2Ptr->pokemonAvatarSpecies != SPECIES_NONE
+        && !PlayerHasMountSprite())
     {
         CreatePlayerMountSprite(gSaveBlock2Ptr->pokemonAvatarSpecies);
     }

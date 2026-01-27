@@ -409,7 +409,7 @@ u32 CanUseRockSmash(s16 x, s16 y)
     if (
             CheckObjectGraphicsInFrontOfPlayer(OBJ_EVENT_GFX_BREAKABLE_ROCK)
             && GetObjectEventIdByPosition(x, y, 1) == OBJECT_EVENTS_COUNT
-            && ((monHasMove && playerHasBadge) || bagHasItem)
+            && (bagHasItem)
        )
 
     {

@@ -61,7 +61,7 @@
 #include "constants/event_objects.h"
 #include "constants/map_types.h"
 #include "qol_field_moves.h" // qol_field_moves
-
+#include "transform.h"
 typedef u16 (*SpecialFunc)(void);
 typedef void (*NativeFunc)(struct ScriptContext *ctx);
 
@@ -3276,3 +3276,37 @@ bool8 ScrCmd_checkpartylearnknowsfieldmove(struct ScriptContext *ctx)
     return FALSE;
 }
 // End qol_field_moves
+
+
+bool8 ScrCmd_TransformPlayerAndWait(struct ScriptContext *ctx)
+{
+    u16 species = VarGet(VAR_TRANSFORM_MON);
+    
+    if (!ctx->data[0])  // First call
+    {
+        ctx->data[0] = 1;  // Mark as initiated
+        TransformPlayerToSpeciesScript(species, FALSE);  // Don't unlock controls yet
+        return FALSE;  // Keep script waiting
+    }
+    
+    // Check if transform animation is still running
+    u8 i;
+    for (i = 0; i < NUM_TASKS; i++)
+    {
+        if (gTasks[i].func == Task_UpdatePlayerTransformAnimation)
+        {
+            return FALSE;  // Still animating, keep waiting
+        }
+    }
+    
+    // Transform complete - DON'T unlock here, let the script system handle it
+    ctx->data[0] = 0;  // Reset for next use
+    
+    // Remove the manual unlocking - the script's lockall/releaseall will handle it
+    // gPlayerAvatar.preventStep = FALSE;
+    // gPlayerAvatar.flags |= PLAYER_AVATAR_FLAG_CONTROLLABLE;
+    // UnlockPlayerFieldControls();
+    // UnfreezeObjectEvents();
+    
+    return TRUE;  // Continue script
+}

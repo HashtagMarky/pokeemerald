@@ -103,6 +103,7 @@ static void ItemUseOnFieldCB_RockSmashToolNoRock(u8 taskId);
 static void ItemUseOnFieldCB_StrengthToolNoRock(u8 taskId);
 static void ItemUseOnFieldCB_SurfToolTransform(u8 taskId);
 static void ItemUseOnFieldCB_WaterfallToolTransform(u8 taskId);
+static void Task_DelayedRockSmashScript(u8 taskId);
 // End qol_field_moves
 
 static const u8 sText_CantDismountBike[] = _("You can't dismount your BIKE here.{PAUSE_UNTIL_PRESS}");
@@ -1869,8 +1870,17 @@ static void ItemUseOnFieldCB_RockSmashTool(u8 taskId)
     VarSet(VAR_TRANSFORM_MON, SPECIES_TAUROS);
     ChooseMonForTransform();
     PlayCry_Normal(SPECIES_TAUROS, 0);
-    ScriptContext_SetupScript(EventScript_UseRockSmashTool);
+    CreateTask(Task_DelayedRockSmashScript, 0);
     DestroyTask(taskId);
+}
+
+static void Task_DelayedRockSmashScript(u8 taskId)
+{
+    if (gTasks[taskId].data[0]++ >= 20)  // Wait for transform animation (20 frames)
+    {
+        ScriptContext_SetupScript(EventScript_UseRockSmashTool);
+        DestroyTask(taskId);
+    }
 }
 
 static void ItemUseOnFieldCB_RockSmashToolNoRock(u8 taskId)

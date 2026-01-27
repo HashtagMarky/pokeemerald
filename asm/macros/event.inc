@@ -2693,3 +2693,7 @@
   callnative DetransformPlayer, requests_effects=1
   .byte \defer
   .endm
+
+  .macro transformplayerandwait
+  .byte SCR_OP_TRANSFORM
+  .endm

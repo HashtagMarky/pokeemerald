@@ -46,7 +46,7 @@ void ChooseMonForTransform(void);
 void CreatePlayerMountSprite(u16 gfxId);
 bool32 PlayerHasMountSprite(void);
 void UpdatePlayerMountSprite(void);
-static void Task_UpdatePlayerTransformAnimation(u8 taskId);
+void Task_UpdatePlayerTransformAnimation(u8 taskId);
 static void ExecutePlayerTransformation(u16 species);
 static void EndPlayerTransformAnimation(struct Sprite *playerSprite, u8 taskId);
 
@@ -60,7 +60,7 @@ void DetransformPlayer(struct ScriptContext *ctx);
  * Simple helper for items:
  *  immediately transform into a species
  */
-void TransformPlayerToSpeciesSimple(u16 species);
+void TransformPlayerToSpeciesScript(u16 species, bool8 unlockControls);
 
 /*
  * ============================================================================

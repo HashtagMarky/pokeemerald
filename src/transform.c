@@ -178,7 +178,7 @@ static void ResetPlayerMosaic(void)
     SetGpuReg(REG_OFFSET_MOSAIC, GetGpuReg(REG_OFFSET_MOSAIC) & 0x00FF);
 }
 
-static void Task_UpdatePlayerTransformAnimation(u8 taskId)
+void Task_UpdatePlayerTransformAnimation(u8 taskId)
 {
     struct Task *task = &gTasks[taskId];
     struct Sprite *playerSprite = NULL;
@@ -481,6 +481,41 @@ static void ClearPlayerTransformFlags(void)
  *  - VAR_TRANSFORM_MON holds species
  *  - SPECIES_NONE = detransform
  */
+void TransformPlayerToSpeciesScript(u16 species, bool8 unlockControls)
+{
+    struct ObjectEvent *follower = GetFollowerObject();
+    struct ObjectEvent *playerObj = &gObjectEvents[gPlayerAvatar.objectEventId];
+    u8 taskId;
+    
+    // Lock controls HARD
+    LockPlayerFieldControls();
+    FreezeObjectEvents();
+    
+    // Force player to stop
+    if (playerObj)
+    {
+        ObjectEventClearHeldMovementIfFinished(playerObj);
+    }
+    
+    gPlayerAvatar.preventStep = TRUE;
+    gPlayerAvatar.flags &= ~PLAYER_AVATAR_FLAG_CONTROLLABLE;
+    
+    // Handle follower
+    if (follower)
+    {
+        if (VarGet(VAR_0x8004)) // surf-initiated detransform
+            HideFollowerForFieldEffect();  // CHANGED THIS LINE
+        else
+            RemoveObjectEvent(follower);
+    }
+    
+    // Create the animation task
+    taskId = CreateTask(Task_UpdatePlayerTransformAnimation, 0);
+    gTasks[taskId].tFrame = 0;
+    gTasks[taskId].tSpecies = (species >= NUM_SPECIES) ? SPECIES_NONE : species;
+    gTasks[taskId].tUnlockControls = unlockControls;
+}
+
 void ChooseMonForTransform(void)
 {
     u16 species = VarGet(VAR_TRANSFORM_MON);

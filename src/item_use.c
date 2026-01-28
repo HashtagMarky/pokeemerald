@@ -1867,11 +1867,19 @@ static void ItemUseOnFieldCB_RockSmashTool(u8 taskId)
         return;
     }
     LockPlayerFieldControls();
-    VarSet(VAR_TRANSFORM_MON, SPECIES_TAUROS);
-    ChooseMonForTransform();
-    PlayCry_Normal(SPECIES_TAUROS, 0);
-    CreateTask(Task_DelayedRockSmashScript, 0);
-    DestroyTask(taskId);
+    if (VarGet(VAR_TRANSFORM_MON) != SPECIES_TAUROS)
+    {
+        VarSet(VAR_TRANSFORM_MON, SPECIES_TAUROS);
+        ChooseMonForTransform();
+        PlayCry_Normal(SPECIES_TAUROS, 0);
+        CreateTask(Task_DelayedRockSmashScript, 0);
+        DestroyTask(taskId);
+    }
+    else
+    {
+        ScriptContext_SetupScript(EventScript_UseRockSmashTool);
+        DestroyTask(taskId);
+    }
 }
 
 static void Task_DelayedRockSmashScript(u8 taskId)

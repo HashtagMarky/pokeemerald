@@ -35,6 +35,8 @@
 #include "constants/map_types.h"
 #include "constants/party_menu.h"
 
+#include "transform.h"
+
 static u8 CreateUseToolTask(void);
 static void Task_UseTool_Init(u8);
 static void LockPlayerAndLoadMon(void);
@@ -419,21 +421,60 @@ u32 CanUseRockSmash(s16 x, s16 y)
     return FIELD_MOVE_FAIL;
 }
 
+static void Task_DelayedAutoRockSmash(u8 taskId)
+{
+    // Wait for transform animation to complete (20 frames)
+    if (gTasks[taskId].data[0]++ >= 20)
+    {
+        // Now execute the rock smash script
+        ScriptContext_SetupScript(EventScript_SmashRock);
+        DestroyTask(taskId);
+    }
+}
+
 u32 UseRockSmash(u32 fieldMoveStatus)
 {
     HideMapNamePopUpWindow();
+    
+    // If using tool, transform first
+    if (fieldMoveStatus == FIELD_MOVE_TOOL)
+    {
+        if (VarGet(VAR_TRANSFORM_MON) != SPECIES_TAUROS)
+        {
+            LockPlayerFieldControls();
+            VarSet(VAR_TRANSFORM_MON, SPECIES_TAUROS);
+            ChooseMonForTransform();
+            PlayCry_Normal(SPECIES_TAUROS, 0);
+            
+            // Set flag to indicate we need to smash after transform
+            FlagSet(FLAG_SYS_USE_ROCK_SMASH);
+            
+            // Create delayed task to execute smash after transform
+            CreateTask(Task_DelayedAutoRockSmash, 0);
+            return COLLISION_START_ROCK_SMASH;
+        }
+        else
+        {
+            LockPlayerFieldControls();
+            FlagSet(FLAG_SYS_USE_ROCK_SMASH);
+            
+            // Create delayed task to execute smash after transform
+            CreateTask(Task_DelayedAutoRockSmash, 0);
+            return COLLISION_START_ROCK_SMASH;
+        }
+        
+    }
+    
+    // Original logic for Pokemon/non-tool cases
     LockPlayerAndLoadMon();
 #ifdef QOL_NO_MESSAGING
     FlagSet(FLAG_SYS_USE_ROCK_SMASH);
-#endif //QOL_NO_MESSAGING
-
+#endif
     if (FlagGet(FLAG_SYS_USE_ROCK_SMASH))
         ScriptContext_SetupScript(EventScript_SmashRock);
     else if(fieldMoveStatus == FIELD_MOVE_POKEMON)
         ScriptContext_SetupScript(EventScript_UseRockSmash);
-    else if(fieldMoveStatus == FIELD_MOVE_TOOL)
-        ScriptContext_SetupScript(EventScript_UseRockSmashTool);
-
+    
     FlagSet(FLAG_SYS_USE_ROCK_SMASH);
     return COLLISION_START_ROCK_SMASH;
 }

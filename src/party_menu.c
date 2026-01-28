@@ -139,7 +139,8 @@ enum {
     TAG_POKEBALL_SMALL,
     TAG_STATUS_ICONS,
     TAG_HELD_ITEM = 55120,
-    TAG_CURSOR
+    TAG_CURSOR,
+    TAG_R_BUTTON_BOXES = 55130,
 };
 
 enum {
@@ -209,6 +210,7 @@ struct PartyMenuInternal
     // bin2c, the utility used to encode the compressed palette data.
     u16 palBuffer[BG_PLTT_SIZE / sizeof(u16)];
     s16 data[16];
+    u8 rButtonToBoxesSpriteId;
 };
 
 struct PartyMenuBox
@@ -264,6 +266,8 @@ static void LoadPartyMenuWindows(void);
 static void InitPartyMenuBoxes(u8);
 static void LoadPartyMenuBoxes(u8);
 static void LoadPartyMenuPokeballGfx(void);
+static void LoadRButtonToBoxesSpriteGfx(void);
+static void CreateRButtonToBoxesSprite(void);
 static bool8 CreatePartyMonSpritesLoop(void);
 static bool8 RenderPartyMenuBoxes(void);
 static void CreateCancelConfirmPokeballSprites(void);
@@ -540,6 +544,7 @@ static void InitPartyMenu(u8 menuType, u8 layout, u8 partyAction, bool8 keepCurs
         sPartyMenuInternal->exitCallback = NULL;
         sPartyMenuInternal->lastSelectedSlot = 0;
         sPartyMenuInternal->cursorSpriteId = 0x3fff;
+        sPartyMenuInternal->rButtonToBoxesSpriteId = SPRITE_NONE;
 
         if (menuType == PARTY_MENU_TYPE_CHOOSE_HALF)
             sPartyMenuInternal->chooseHalf = TRUE;
@@ -687,10 +692,14 @@ static bool8 ShowPartyMenu(void)
         gMain.state++;
         break;
     case 14:
-        LoadMonIconPalettes();
+        LoadRButtonToBoxesSpriteGfx();
         gMain.state++;
         break;
     case 15:
+        LoadMonIconPalettes();
+        gMain.state++;
+        break;
+    case 16:
         if (CreatePartyMonSpritesLoop())
         {
             if (CalculatePlayerPartyCount() != 0
@@ -705,35 +714,39 @@ static bool8 ShowPartyMenu(void)
             gMain.state++;
         }
         break;
-    case 16:
+    case 17:
         if (RenderPartyMenuBoxes())
         {
             sPartyMenuInternal->data[0] = 0;
             gMain.state++;
         }
         break;
-    case 17:
+    case 18:
         CreateCancelConfirmPokeballSprites();
         gMain.state++;
         break;
-    case 18:
-        CreateCancelConfirmWindows(sPartyMenuInternal->chooseHalf);
-        gMain.state++;
-        break;
     case 19:
+        CreateRButtonToBoxesSprite();
         gMain.state++;
         break;
     case 20:
+        CreateCancelConfirmWindows(sPartyMenuInternal->chooseHalf);
+        gMain.state++;
+        break;
+    case 21:
+        gMain.state++;
+        break;
+    case 22:
         CreateTask(sPartyMenuInternal->task, 0);
         DisplayPartyMenuStdMessage(sPartyMenuInternal->messageId);
         gMain.state++;
         break;
-    case 21:
+    case 23:
         BlendPalettes(PALETTES_ALL, 16, 0);
         gPaletteFade.bufferTransferDisabled = FALSE;
         gMain.state++;
         break;
-    case 22:
+    case 24:
         BeginNormalPaletteFade(PALETTES_ALL, 0, 16, 0, RGB_BLACK);
         gMain.state++;
         break;
@@ -801,37 +814,45 @@ static bool8 ReloadPartyMenu(void)
         gMain.state++;
         break;
     case 12:
-        LoadMonIconPalettes();
+        LoadRButtonToBoxesSpriteGfx();
         gMain.state++;
         break;
     case 13:
+        LoadMonIconPalettes();
+        gMain.state++;
+        break;
+    case 14:
         if (CreatePartyMonSpritesLoop())
         {
             sPartyMenuInternal->data[0] = 0;
             gMain.state++;
         }
         break;
-    case 14:
+    case 15:
         if (RenderPartyMenuBoxes())
         {
             sPartyMenuInternal->data[0] = 0;
             gMain.state++;
         }
         break;
-    case 15:
+    case 16:
         CreateCancelConfirmPokeballSprites();
         gMain.state++;
         break;
-    case 16:
+    case 17:
+        CreateRButtonToBoxesSprite();
+        gMain.state++;
+        break;
+    case 18:
         CreateCancelConfirmWindows(sPartyMenuInternal->chooseHalf);
         gMain.state++;
         break;
-    case 17:
+    case 19:
         BlendPalettes(PALETTES_ALL, 16, RGB_WHITEALPHA);
         gPaletteFade.bufferTransferDisabled = FALSE;
         gMain.state++;
         break;
-    case 18:
+    case 20:
         BeginNormalPaletteFade(PALETTES_ALL, 0, 16, 0, RGB_WHITEALPHA);
         gMain.state++;
         break;
@@ -4681,6 +4702,27 @@ static void LoadPartyMenuPokeballGfx(void)
     LoadCompressedSpriteSheet(&sSpriteSheet_MenuPokeball);
     LoadCompressedSpriteSheet(&sSpriteSheet_MenuPokeballSmall);
     LoadSpritePalette(&sSpritePalette_MenuPokeball);
+}
+
+static void LoadRButtonToBoxesSpriteGfx(void)
+{
+    LoadCompressedSpriteSheet(&sSpriteSheet_RButtonBoxes);
+}
+
+static void CreateRButtonToBoxesSprite(void)
+{
+    if (PARTY_MENU_PC_ACCESS
+     && gPartyMenu.action == PARTY_ACTION_CHOOSE_MON
+     && gPartyMenu.layout == PARTY_LAYOUT_SINGLE
+     && (gPartyMenu.menuType == PARTY_MENU_TYPE_FIELD
+      || gPartyMenu.menuType == PARTY_MENU_TYPE_DAYCARE))
+    {
+        sPartyMenuInternal->rButtonToBoxesSpriteId = CreateSprite(&sSpriteTemplate_RButtonBoxes, 165, 164, 0);
+    }
+    else
+    {
+        sPartyMenuInternal->rButtonToBoxesSpriteId = SPRITE_NONE;
+    }
 }
 
 static void CreatePartyMonStatusSprite(struct Pokemon *mon, struct PartyMenuBox *menuBox)

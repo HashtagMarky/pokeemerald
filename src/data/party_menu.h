@@ -1141,6 +1141,43 @@ static const struct SpriteTemplate sSpriteTemplate_Cursor =
     .callback = SpriteCB_Cursor,
 };
 
+static const u32 sRButtonBoxes_Gfx[] = INCBIN_U32("graphics/party_menu/new/r_button_boxes.4bpp.smol");
+
+static const struct OamData sOamData_RButtonBoxes =
+{
+    .y = 0,
+    .affineMode = ST_OAM_AFFINE_OFF,
+    .objMode = ST_OAM_OBJ_NORMAL,
+    .mosaic = FALSE,
+    .bpp = ST_OAM_4BPP,
+    .shape = SPRITE_SHAPE(64x32),
+    .x = 0,
+    .matrixNum = 0,
+    .size = SPRITE_SIZE(64x32),
+    .tileNum = 0,
+    .priority = 1,
+    .paletteNum = 0,
+    .affineParam = 0,
+};
+
+static const struct CompressedSpriteSheet sSpriteSheet_RButtonBoxes =
+{
+    .data = sRButtonBoxes_Gfx, 
+    .size = (64 * 32) / 2, 
+    .tag = TAG_R_BUTTON_BOXES
+};
+
+static const struct SpriteTemplate sSpriteTemplate_RButtonBoxes =
+{
+    .tileTag = TAG_R_BUTTON_BOXES,
+    .paletteTag = TAG_CURSOR,
+    .oam = &sOamData_RButtonBoxes,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCallbackDummy
+};
+
 static const struct OamData sOamData_MenuPokeball =
 {
     .y = 0,

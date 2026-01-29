@@ -16,12 +16,10 @@ EventScript_UseRockSmashTool::
     goto EventScript_SmashRock
 
 EventScript_UseStrengthTool::
-    lockall
-    call_if_set FLAG_SYS_USE_STRENGTH, EventScript_PushBoulderScript @ qol_field_moves
-    setflag FLAG_SYS_USE_STRENGTH
-	bufferitemname STR_VAR_2, ITEM_STRENGTH_TOOL
+    bufferitemname STR_VAR_2, ITEM_STRENGTH_TOOL
     msgbox Text_PlayerUsedFieldTool, MSGBOX_DEFAULT
-    msgbox Text_StrengthActivated, MSGBOX_DEFAULT
+    @ No 'closemessage' here if you want text on screen during poof
+    callnative PushBoulderFromScript
     releaseall
     end
 

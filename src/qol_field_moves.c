@@ -36,6 +36,7 @@
 #include "constants/party_menu.h"
 
 #include "transform.h"
+#include "surfable.h"
 
 static u8 CreateUseToolTask(void);
 static void Task_UseTool_Init(u8);
@@ -239,22 +240,95 @@ void Task_SurfToolFieldEffect(u8 taskId)
 
 u32 UseSurf(u32 fieldMoveStatus)
 {
-	HideMapNamePopUpWindow();
-	ForcePlayerToPerformMovementAction();
-	LockPlayerAndLoadMon();
-#ifdef QOL_NO_MESSAGING
-	FlagSet(FLAG_SYS_USE_SURF);
-#endif //QOL_NO_MESSAGING
+    HideMapNamePopUpWindow();
+    
+    // If using tool, handle detransform if needed, then surf
+    if (fieldMoveStatus == FIELD_MOVE_TOOL)
+    {
+        // If already transformed (from land-based tool like Rock Smash), detransform first
+        if (VarGet(VAR_TRANSFORM_MON) != SPECIES_NONE)
+        {
+            LockPlayerFieldControls();
+            VarSet(VAR_0x8004, 1);
+            VarSet(VAR_TRANSFORM_MON, SPECIES_NONE);
+            FlagSet(FLAG_DETRANSFORM_NO_FOLLOWER);
+            ChooseMonForTransform();
+            
+            // Set flag to surf after detransform completes
+            FlagSet(FLAG_SYS_USE_SURF);
+            VarSet(VAR_SURF_MON_SLOT, SURF_MON_LAPRAS);
+            RefreshSurfablePaletteFromFlag();
+            CreateTask(Task_DelayedAutoSurfInteraction, 0);
+            return FIELD_MOVE_TOOL;
+        }
+        
+        // Not transformed, just surf directly
+        ForcePlayerToPerformMovementAction();
+        LockPlayerAndLoadMon();
+        VarSet(VAR_SURF_MON_SLOT, SURF_MON_LAPRAS);
+        RefreshSurfablePaletteFromFlag();
+        ScriptContext_SetupScript(EventScript_UseSurfTool);
+        return FIELD_MOVE_TOOL;
+    }
+    
+    // Original logic for Pokemon
+    ForcePlayerToPerformMovementAction();
+    LockPlayerAndLoadMon();
+    
+    if(fieldMoveStatus == FIELD_MOVE_POKEMON)
+        ScriptContext_SetupScript(EventScript_UseSurfMove);
+    
+    return fieldMoveStatus;
+}
 
-	if (FlagGet(FLAG_SYS_USE_SURF))
-		ScriptContext_SetupScript(EventScript_UseSurfFieldEffect);
-	else if(fieldMoveStatus == FIELD_MOVE_POKEMON)
-		ScriptContext_SetupScript(EventScript_UseSurfMove);
-	else if(fieldMoveStatus == FIELD_MOVE_TOOL)
-		ScriptContext_SetupScript(EventScript_UseSurfTool);
+void UseSurfFromInteraction(void)
+{
+    HideMapNamePopUpWindow();
+    
+    // If already transformed (from land-based tool like Rock Smash), detransform first
+    if (VarGet(VAR_TRANSFORM_MON) != SPECIES_NONE)
+    {
+        LockPlayerFieldControls();
+        VarSet(VAR_0x8004, 1);
+        VarSet(VAR_TRANSFORM_MON, SPECIES_NONE);
+        FlagSet(FLAG_DETRANSFORM_NO_FOLLOWER);
+        ChooseMonForTransform();
+        
+        // Set flag to surf after detransform completes
+        FlagSet(FLAG_SYS_USE_SURF);
+        VarSet(VAR_SURF_MON_SLOT, SURF_MON_LAPRAS);
+        RefreshSurfablePaletteFromFlag();
+        CreateTask(Task_DelayedAutoSurfInteraction, 0);
+        return;
+    }
+    
+    // Not transformed, just surf directly
+    ForcePlayerToPerformMovementAction();
+    LockPlayerAndLoadMon();
+    VarSet(VAR_SURF_MON_SLOT, SURF_MON_LAPRAS);
+    RefreshSurfablePaletteFromFlag();
+    ScriptContext_SetupScript(EventScript_UseSurfTool);
+}
 
-	FlagSet(FLAG_SYS_USE_SURF);
-	return COLLISION_START_SURFING;
+static void Task_DelayedAutoSurfInteraction(u8 taskId)
+{
+    // Wait for detransform animation to complete (20 frames)
+    if (gTasks[taskId].data[0]++ >= 20)
+    {
+        ForcePlayerToPerformMovementAction();
+        ScriptContext_SetupScript(EventScript_UseSurfTool);
+        DestroyTask(taskId);
+    }
+}
+
+static void Task_DelayedAutoSurf(u8 taskId)
+{
+    // Wait for detransform animation to complete (20 frames)
+    if (gTasks[taskId].data[0]++ >= 20)
+    {
+        ScriptContext_SetupScript(EventScript_UseSurfTool);
+        DestroyTask(taskId);
+    }
 }
 
 void RemoveRelevantSurfFieldEffect(void)
@@ -285,7 +359,7 @@ u32 CanUseStrength(u8 collision)
         CheckObjectGraphicsInFrontOfPlayer(OBJ_EVENT_GFX_PUSHABLE_BOULDER)
         && !playerUsedStrength
         && collisionEvent
-        && ((monHasMove && playerHasBadge) || bagHasItem)
+        && (bagHasItem)
        )
     {
         return bagHasItem ? FIELD_MOVE_TOOL : FIELD_MOVE_POKEMON;
@@ -293,27 +367,63 @@ u32 CanUseStrength(u8 collision)
     return FIELD_MOVE_FAIL;
 }
 
+static void Task_DelayedAutoStrength(u8 taskId)
+{
+    if (gTasks[taskId].data[0]++ >= 20)
+    {
+        // After transform completes, enable strength
+        FlagSet(FLAG_SYS_USE_STRENGTH);
+        UnlockPlayerFieldControls();
+        UnfreezeObjectEvents();
+        DestroyTask(taskId);
+    }
+}
+
+void GetPlayerTransformSpecies(void)
+{
+    gSpecialVar_Result = VarGet(VAR_TRANSFORM_MON);
+}
+
 u32 UseStrength(u32 fieldMoveStatus, u8 x, u8 y, u8 direction)
 {
+    HideMapNamePopUpWindow();
+    
+    // If using tool, transform first if not already Machamp
+    if (fieldMoveStatus == FIELD_MOVE_TOOL)
+    {
+        if (VarGet(VAR_TRANSFORM_MON) != SPECIES_MACHAMP)
+        {
+            LockPlayerFieldControls();
+            VarSet(VAR_TRANSFORM_MON, SPECIES_MACHAMP);
+            ChooseMonForTransform();
+            PlayCry_Normal(SPECIES_MACHAMP, 0);
+            
+            CreateTask(Task_DelayedAutoStrength, 0);
+            return COLLISION_PUSHED_BOULDER;
+        }
+        else
+        {
+            // Already Machamp, just enable strength
+            FlagSet(FLAG_SYS_USE_STRENGTH);
+            return COLLISION_PUSHED_BOULDER;
+        }
+    }
+    
+    // Original logic for Pokemon
 #ifdef QOL_NO_MESSAGING
     FlagSet(FLAG_SYS_USE_STRENGTH);
 #endif
-    HideMapNamePopUpWindow();
     LockPlayerAndLoadMon();
-
     if (FlagGet(FLAG_SYS_USE_STRENGTH))
     {
         TryPushBoulder(x, y, direction);
         return COLLISION_PUSHED_BOULDER;
     }
-
     FlagSet(FLAG_SYS_USE_STRENGTH);
-
     if(fieldMoveStatus == FIELD_MOVE_POKEMON)
         ScriptContext_SetupScript(EventScript_UseStrength);
     else
         ScriptContext_SetupScript(EventScript_UseStrengthTool);
-
     return COLLISION_PUSHED_BOULDER;
 }
 
@@ -324,8 +434,21 @@ void PushBoulderFromScript(void)
     s16 y = playerObjEvent->currentCoords.y;
     s16 direction = playerObjEvent->movementDirection;
 
+    // 1. Check for transformation first
+    if (VarGet(VAR_TRANSFORM_MON) != SPECIES_MACHAMP)
+    {
+        LockPlayerFieldControls();
+        VarSet(VAR_TRANSFORM_MON, SPECIES_MACHAMP);
+        ChooseMonForTransform();
+        PlayCry_Normal(SPECIES_MACHAMP, 0);
+        
+        // Use your existing delay task to enable the flag and unlock controls
+        CreateTask(Task_DelayedAutoStrength, 0);
+    }
+
+    // 2. Actually push the boulder
     MoveCoords(direction, &x, &y);
-    TryPushBoulder(x, y,direction);
+    TryPushBoulder(x, y, direction);
 }
 
 // Flash

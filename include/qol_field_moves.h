@@ -1,6 +1,8 @@
 u32 CanUseCut(s16, s16);
 u32 UseCut(u32);
 
+void GetPlayerTransformSpecies(void);
+
 void ReturnToFieldFromFlyToolMapSelect(void);
 bool32 IsFlyToolUsed(void);
 void ReturnToFieldOrBagFromFlyTool(void);
@@ -11,6 +13,9 @@ u32 CanUseSurfFromInteractedWater(void);
 u32 UseSurf(u32);
 void RemoveRelevantSurfFieldEffect(void);
 void Task_SurfToolFieldEffect(u8 taskId);
+static void Task_DelayedAutoSurf(u8 taskId);
+static void Task_DelayedAutoSurfInteraction(u8 taskId);
+void UseSurfFromInteraction(void);
 
 u32 CanUseStrength(u8);
 u32 UseStrength(u32, u8, u8, u8);

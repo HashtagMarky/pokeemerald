@@ -1848,6 +1848,7 @@ void ItemUseOnFieldCB_FlashTool(u8 taskId)
 }
 void ItemUseOutOfBattle_RockSmashTool(u8 taskId)
 {
+    
     if (CheckObjectGraphicsInFrontOfPlayer(OBJ_EVENT_GFX_BREAKABLE_ROCK))
     {
         sItemUseOnFieldCB = ItemUseOnFieldCB_RockSmashTool;

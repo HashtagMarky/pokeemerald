@@ -85,6 +85,15 @@ static const struct RideMonInfo sRideMonInfo[NUM_SPECIES] = {
             [RIDE_SPRITE_DIR_EAST] = { .playerX=-4,  .playerY=-6,  .playerRendersInFront=RIDER_SHOW_BEHIND },
         }
     },
+    [SPECIES_CHARIZARD] = {
+        .riderGfxId = { [MALE] = OBJ_EVENT_GFX_ELIO_RIDING, [FEMALE] = OBJ_EVENT_GFX_SELENE_RIDING },
+        .spriteInfo = {
+            [RIDE_SPRITE_DIR_DOWN] = { .playerX=0,  .playerY=-3,  .playerRendersInFront=RIDER_SHOW_BEHIND },
+            [RIDE_SPRITE_DIR_UP]   = { .playerX=0,  .playerY=-5,  .playerRendersInFront=RIDER_SHOW_INFRONT},
+            [RIDE_SPRITE_DIR_WEST] = { .playerX=5, .playerY=-4,  .playerRendersInFront=RIDER_SHOW_INFRONT },
+            [RIDE_SPRITE_DIR_EAST] = { .playerX=-5,  .playerY=-4,  .playerRendersInFront=RIDER_SHOW_INFRONT },
+        }
+    },
 };
 
 /*

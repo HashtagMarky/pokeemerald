@@ -1099,7 +1099,8 @@ static bool8 ShouldJumpLedge(s16 x, s16 y, u8 direction)
 
 bool8 TryPushBoulder(s16 x, s16 y, u8 direction)
 {
-    if (FlagGet(FLAG_SYS_USE_STRENGTH))
+    // Check if we have strength enabled AND are transformed to Machamp
+    if (FlagGet(FLAG_SYS_USE_STRENGTH) && VarGet(VAR_TRANSFORM_MON) == SPECIES_MACHAMP)
     {
         u8 objectEventId = GetObjectEventIdByXY(x, y);
 

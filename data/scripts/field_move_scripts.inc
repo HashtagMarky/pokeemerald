@@ -237,23 +237,29 @@ Text_CantSmash:
 	.string "may be able to smash it.$"
 
 EventScript_StrengthBoulder::
-	lockall
-	goto_if_set FLAG_SYS_USE_STRENGTH, EventScript_CheckActivatedBoulder
-@ Start qol_field_moves
-	//checkfieldmove FIELD_MOVE_STRENGTH, TRUE
-    checkitem ITEM_STRENGTH_TOOL,1
+    lockall
+    @ If already active, just go straight to the push
+    goto_if_set FLAG_SYS_USE_STRENGTH, EventScript_PushBoulderScript
+    
+    @ Check for the Tool
+    checkitem ITEM_STRENGTH_TOOL, 1
     goto_if_eq VAR_RESULT, TRUE, EventScript_UseStrengthTool
+    
+    @ Fallback to Pokemon check
     checkpartylearnknowsfieldmove ITEM_HM04
-@ End qol_field_moves
-	goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_CantStrength
-	setfieldeffectargument 0, VAR_RESULT
-	msgbox Text_WantToStrength, MSGBOX_YESNO
-	goto_if_eq VAR_RESULT, NO, EventScript_CancelStrength
-	closemessage
-	dofieldeffect FLDEFF_USE_STRENGTH
-	waitstate
-	goto EventScript_ActivateStrength
-	end
+    goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_CantStrength
+    
+    @ Standard Pokemon Path
+    msgbox Text_WantToStrength, MSGBOX_YESNO
+    goto_if_eq VAR_RESULT, NO, EventScript_CancelStrength
+    closemessage
+    dofieldeffect FLDEFF_USE_STRENGTH
+    waitstate
+    setflag FLAG_SYS_USE_STRENGTH
+    msgbox Text_MonUsedStrength, MSGBOX_DEFAULT
+    goto EventScript_PushBoulderScript
+    end
+
 
 EventScript_UseStrength::
 	lockall

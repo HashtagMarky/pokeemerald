@@ -55,6 +55,7 @@
 // End qol_field_moves
 
 #include "transform.h"
+#include "constants/metatile_behaviors.h"
 
 static void SetUpItemUseCallback(u8);
 static void FieldCB_UseItemOnField(void);
@@ -400,7 +401,14 @@ void ItemUseOutOfBattle_Itemfinder(u8 var)
 
 static void ItemUseOnFieldCB_Itemfinder(u8 taskId)
 {
-    if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
+    s16 x, y;
+    u32 behavior;
+
+    PlayerGetDestCoords(&x, &y);
+    behavior = MapGridGetMetatileBehaviorAt(x, y);
+    
+    if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING) ||
+        behavior == MB_ROCKY_PATH)
     {
         DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
         return;
@@ -1659,16 +1667,26 @@ void ItemUseOutOfBattle_TownMap(u8 taskId)
 // Start qol_field_moves
 void ItemUseOutOfBattle_CutTool(u8 taskId)
 {
+    s16 x, y;
+    u32 behavior;
+
+    PlayerGetDestCoords(&x, &y);
+    behavior = MapGridGetMetatileBehaviorAt(x, y);
+
+
+    if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING)|| (behavior == MB_ROCKY_PATH && VarGet(VAR_TRANSFORM_MON) == SPECIES_MUDSDALE))
+    {
+        DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
+    }
+
+    else
+    {
         sItemUseOnFieldCB = ItemUseOnFieldCB_CutTool;
-		SetUpItemUseOnFieldCallback(taskId);
+        SetUpItemUseOnFieldCallback(taskId);
+    }
 }
 void ItemUseOnFieldCB_CutTool(u8 taskId)
 {
-    if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
-    {
-        DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
-        return;
-    }
     LockPlayerFieldControls();
     if (VarGet(VAR_TRANSFORM_MON) == SPECIES_MUDSDALE)
     {
@@ -1690,7 +1708,14 @@ void ItemUseOnFieldCB_CutTool(u8 taskId)
 }
 void ItemUseOutOfBattle_FlyTool(u8 taskId)
 {
-    if (MenuHelpers_IsLinkActive() == TRUE)
+    s16 x, y;
+    u32 behavior;
+
+    PlayerGetDestCoords(&x, &y);
+    behavior = MapGridGetMetatileBehaviorAt(x, y);
+
+    if (MenuHelpers_IsLinkActive() == TRUE ||
+        behavior == MB_ROCKY_PATH)
     {
         DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
     }
@@ -1775,7 +1800,17 @@ void ItemUseOnFieldCB_SurfToolTransform(u8 taskId)
 
 void ItemUseOutOfBattle_StrengthTool(u8 taskId)
 {
+    s16 x, y;
+    u32 behavior;
 
+    PlayerGetDestCoords(&x, &y);
+    behavior = MapGridGetMetatileBehaviorAt(x, y);
+    if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING) ||
+    behavior == MB_ROCKY_PATH)
+    {
+        DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
+        return;
+    }
     if (CheckObjectGraphicsInFrontOfPlayer(OBJ_EVENT_GFX_PUSHABLE_BOULDER))
     {
         sItemUseOnFieldCB = ItemUseOnFieldCB_StrengthTool;
@@ -1789,12 +1824,6 @@ void ItemUseOutOfBattle_StrengthTool(u8 taskId)
 }
 void ItemUseOnFieldCB_StrengthTool(u8 taskId)
 {
-    if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
-    {
-        DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
-        return;
-    }
-
     LockPlayerFieldControls();
     VarSet(VAR_TRANSFORM_MON, SPECIES_MACHAMP);
     ChooseMonForTransform();
@@ -1804,12 +1833,6 @@ void ItemUseOnFieldCB_StrengthTool(u8 taskId)
 }
 static void ItemUseOnFieldCB_StrengthToolNoRock(u8 taskId)
 {
-    if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
-    {
-        DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
-        return;
-    }
-
     LockPlayerFieldControls();
     if (VarGet(VAR_TRANSFORM_MON) == SPECIES_MACHAMP)
     {
@@ -1848,7 +1871,17 @@ void ItemUseOnFieldCB_FlashTool(u8 taskId)
 }
 void ItemUseOutOfBattle_RockSmashTool(u8 taskId)
 {
-    
+    s16 x, y;
+    u32 behavior;
+
+    PlayerGetDestCoords(&x, &y);
+    behavior = MapGridGetMetatileBehaviorAt(x, y);
+    if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING) ||
+    behavior == MB_ROCKY_PATH)
+    {
+        DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
+        return;
+    }    
     if (CheckObjectGraphicsInFrontOfPlayer(OBJ_EVENT_GFX_BREAKABLE_ROCK))
     {
         sItemUseOnFieldCB = ItemUseOnFieldCB_RockSmashTool;
@@ -1862,11 +1895,6 @@ void ItemUseOutOfBattle_RockSmashTool(u8 taskId)
 }
 static void ItemUseOnFieldCB_RockSmashTool(u8 taskId)
 {
-    if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
-    {
-        DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
-        return;
-    }
     LockPlayerFieldControls();
     if (VarGet(VAR_TRANSFORM_MON) != SPECIES_TAUROS)
     {
@@ -1894,11 +1922,6 @@ static void Task_DelayedRockSmashScript(u8 taskId)
 
 static void ItemUseOnFieldCB_RockSmashToolNoRock(u8 taskId)
 {
-    if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
-    {
-        DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
-        return;
-    }    
     LockPlayerFieldControls();
     if (VarGet(VAR_TRANSFORM_MON) == SPECIES_TAUROS)
     {

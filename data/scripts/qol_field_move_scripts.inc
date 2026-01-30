@@ -10,6 +10,9 @@ EventScript_UseCutTool::
 
 EventScript_UseRockSmashTool::
     lockall
+    callnative PrepareRockSmashToolUse
+    compare VAR_RESULT, TRUE
+    goto_if_eq EventScript_EndSmash @ Transforming, exit and wait
     bufferitemname STR_VAR_2, ITEM_ROCKSMASH_TOOL
     msgbox Text_PlayerUsedFieldTool, MSGBOX_DEFAULT
     closemessage

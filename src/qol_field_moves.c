@@ -601,6 +601,42 @@ u32 UseRockSmash(u32 fieldMoveStatus)
     FlagSet(FLAG_SYS_USE_ROCK_SMASH);
     return COLLISION_START_ROCK_SMASH;
 }
+static u8 sRockToSmashLocalId = 0;
+
+static void Task_DelayedRockSmashToolScript(u8 taskId)
+{
+    if (gTasks[taskId].data[0]++ >= 20)
+    {
+        // Restore the rock ID before re-running script
+        VarSet(VAR_LAST_TALKED, sRockToSmashLocalId);
+        ScriptContext_SetupScript(EventScript_UseRockSmashTool);
+        DestroyTask(taskId);
+    }
+}
+
+void PrepareRockSmashToolUse(void)
+{
+    // Store the rock we're about to smash
+    sRockToSmashLocalId = VarGet(VAR_LAST_TALKED);
+    
+    // If not Tauros, transform first
+    if (VarGet(VAR_TRANSFORM_MON) != SPECIES_TAUROS)
+    {
+        LockPlayerFieldControls();
+        VarSet(VAR_TRANSFORM_MON, SPECIES_TAUROS);
+        ChooseMonForTransform();
+        PlayCry_Normal(SPECIES_TAUROS, 0);
+        FlagSet(FLAG_SYS_USE_ROCK_SMASH);
+        CreateTask(Task_DelayedRockSmashToolScript, 0);
+        gSpecialVar_Result = TRUE; // Signal to exit script early
+    }
+    else
+    {
+        gSpecialVar_Result = FALSE; // Continue with script
+    }
+}
+
+
 
 //Waterfall
 

@@ -961,12 +961,6 @@ static void PlayerNotOnBikeMoving(u8 direction, u16 heldKeys)
             PlayerWalkSlow(direction);
             return;
         }
-        // Tauros: if walking, use walk fast speed
-        else if (rideSpecies == SPECIES_TAUROS)
-        {
-            PlayerWalkFast(direction);
-            return;
-        }
         else
         {
             // Not running, so check for creeping

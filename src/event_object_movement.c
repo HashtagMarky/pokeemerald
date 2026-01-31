@@ -6099,6 +6099,23 @@ u8 GetMoveDirectionFastestAnimNum(u8 direction)
     return sMoveDirectionFastestAnimNums[direction];
 }
 
+// Get Tauros-specific fast animation (2 ticks per frame)
+static u8 GetTaurosFastAnimNum(u8 direction)
+{
+    static const u8 sTaurosAnimNums[] = {
+        [DIR_NONE] = ANIM_TAUROS_FAST_SOUTH,
+        [DIR_SOUTH] = ANIM_TAUROS_FAST_SOUTH,
+        [DIR_NORTH] = ANIM_TAUROS_FAST_NORTH,
+        [DIR_WEST] = ANIM_TAUROS_FAST_WEST,
+        [DIR_EAST] = ANIM_TAUROS_FAST_EAST,
+        [DIR_SOUTHWEST] = ANIM_TAUROS_FAST_WEST,
+        [DIR_SOUTHEAST] = ANIM_TAUROS_FAST_EAST,
+        [DIR_NORTHWEST] = ANIM_TAUROS_FAST_WEST,
+        [DIR_NORTHEAST] = ANIM_TAUROS_FAST_EAST,
+    };
+    return sTaurosAnimNums[direction];
+}
+
 u8 GetJumpSpecialDirectionAnimNum(u8 direction)
 {
     return sJumpSpecialDirectionAnimNums[direction];
@@ -7503,7 +7520,17 @@ bool8 MovementAction_Delay16_Step0(struct ObjectEvent *objectEvent, struct Sprit
 
 bool8 MovementAction_WalkFastDown_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
-    InitMovementNormal(objectEvent, sprite, DIR_SOUTH, MOVE_SPEED_FAST_1);
+    // Check if this is player riding Tauros
+    if (objectEvent->isPlayer && VarGet(VAR_TRANSFORM_MON) == SPECIES_TAUROS)
+    {
+        // Use faster speed and Tauros-specific animation
+        InitNpcForMovement(objectEvent, sprite, DIR_SOUTH, MOVE_SPEED_FASTER);
+        SetStepAnimHandleAlternation(objectEvent, sprite, GetTaurosFastAnimNum(DIR_SOUTH));
+    }
+    else
+    {
+        InitMovementNormal(objectEvent, sprite, DIR_SOUTH, MOVE_SPEED_FAST_1);
+    }
     return MovementAction_WalkFastDown_Step1(objectEvent, sprite);
 }
 
@@ -7519,7 +7546,17 @@ bool8 MovementAction_WalkFastDown_Step1(struct ObjectEvent *objectEvent, struct 
 
 bool8 MovementAction_WalkFastUp_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
-    InitMovementNormal(objectEvent, sprite, DIR_NORTH, MOVE_SPEED_FAST_1);
+    // Check if this is player riding Tauros
+    if (objectEvent->isPlayer && VarGet(VAR_TRANSFORM_MON) == SPECIES_TAUROS)
+    {
+        // Use faster speed and Tauros-specific animation
+        InitNpcForMovement(objectEvent, sprite, DIR_NORTH, MOVE_SPEED_FASTER);
+        SetStepAnimHandleAlternation(objectEvent, sprite, GetTaurosFastAnimNum(DIR_NORTH));
+    }
+    else
+    {
+        InitMovementNormal(objectEvent, sprite, DIR_NORTH, MOVE_SPEED_FAST_1);
+    }
     return MovementAction_WalkFastUp_Step1(objectEvent, sprite);
 }
 
@@ -7535,10 +7572,22 @@ bool8 MovementAction_WalkFastUp_Step1(struct ObjectEvent *objectEvent, struct Sp
 
 bool8 MovementAction_WalkFastLeft_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
-    if (objectEvent->directionOverwrite)
-        InitMovementNormal(objectEvent, sprite, objectEvent->directionOverwrite, MOVE_SPEED_FAST_1);
+    u8 direction = (objectEvent->directionOverwrite) ? objectEvent->directionOverwrite : DIR_WEST;
+    
+    // Check if this is player riding Tauros
+    if (objectEvent->isPlayer && VarGet(VAR_TRANSFORM_MON) == SPECIES_TAUROS)
+    {
+        // Use faster speed and Tauros-specific animation
+        InitNpcForMovement(objectEvent, sprite, direction, MOVE_SPEED_FASTER);
+        SetStepAnimHandleAlternation(objectEvent, sprite, GetTaurosFastAnimNum(objectEvent->facingDirection));
+    }
     else
-        InitMovementNormal(objectEvent, sprite, DIR_WEST, MOVE_SPEED_FAST_1);
+    {
+        if (objectEvent->directionOverwrite)
+            InitMovementNormal(objectEvent, sprite, objectEvent->directionOverwrite, MOVE_SPEED_FAST_1);
+        else
+            InitMovementNormal(objectEvent, sprite, DIR_WEST, MOVE_SPEED_FAST_1);
+    }
     return MovementAction_WalkFastLeft_Step1(objectEvent, sprite);
 }
 
@@ -7554,10 +7603,22 @@ bool8 MovementAction_WalkFastLeft_Step1(struct ObjectEvent *objectEvent, struct 
 
 bool8 MovementAction_WalkFastRight_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
-    if (objectEvent->directionOverwrite)
-        InitMovementNormal(objectEvent, sprite, objectEvent->directionOverwrite, MOVE_SPEED_FAST_1);
+    u8 direction = (objectEvent->directionOverwrite) ? objectEvent->directionOverwrite : DIR_EAST;
+    
+    // Check if this is player riding Tauros
+    if (objectEvent->isPlayer && VarGet(VAR_TRANSFORM_MON) == SPECIES_TAUROS)
+    {
+        // Use faster speed and Tauros-specific animation
+        InitNpcForMovement(objectEvent, sprite, direction, MOVE_SPEED_FASTER);
+        SetStepAnimHandleAlternation(objectEvent, sprite, GetTaurosFastAnimNum(objectEvent->facingDirection));
+    }
     else
-        InitMovementNormal(objectEvent, sprite, DIR_EAST, MOVE_SPEED_FAST_1);
+    {
+        if (objectEvent->directionOverwrite)
+            InitMovementNormal(objectEvent, sprite, objectEvent->directionOverwrite, MOVE_SPEED_FAST_1);
+        else
+            InitMovementNormal(objectEvent, sprite, DIR_EAST, MOVE_SPEED_FAST_1);
+    }
     return MovementAction_WalkFastRight_Step1(objectEvent, sprite);
 }
 

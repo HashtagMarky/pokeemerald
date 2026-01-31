@@ -385,6 +385,43 @@ static const union AnimCmd sAnim_GoFastEast2F_Asym[] =
     ANIMCMD_JUMP(0),
 };
 
+// Tauros fast movement animations - 2 ticks per frame to match MOVE_SPEED_FASTER
+static const union AnimCmd sAnim_TaurosFastSouth2F[] =
+{
+    ANIMCMD_FRAME(0, 2),
+    ANIMCMD_FRAME(1, 2),
+    ANIMCMD_FRAME(1, 2),
+    ANIMCMD_FRAME(0, 2),
+    ANIMCMD_JUMP(0),
+};
+
+static const union AnimCmd sAnim_TaurosFastNorth2F[] =
+{
+    ANIMCMD_FRAME(2, 2),
+    ANIMCMD_FRAME(3, 2),
+    ANIMCMD_FRAME(3, 2),
+    ANIMCMD_FRAME(2, 2),
+    ANIMCMD_JUMP(0),
+};
+
+static const union AnimCmd sAnim_TaurosFastWest2F[] =
+{
+    ANIMCMD_FRAME(4, 2),
+    ANIMCMD_FRAME(5, 2),
+    ANIMCMD_FRAME(5, 2),
+    ANIMCMD_FRAME(4, 2),
+    ANIMCMD_JUMP(0),
+};
+
+static const union AnimCmd sAnim_TaurosFastEast2F[] =
+{
+    ANIMCMD_FRAME(4, 2, .hFlip = TRUE),
+    ANIMCMD_FRAME(5, 2, .hFlip = TRUE),
+    ANIMCMD_FRAME(5, 2, .hFlip = TRUE),
+    ANIMCMD_FRAME(4, 2, .hFlip = TRUE),
+    ANIMCMD_JUMP(0),
+};
+
 static const union AnimCmd sAnim_GoFasterSouth[] =
 {
     ANIMCMD_FRAME(3, 2),
@@ -1170,6 +1207,11 @@ const union AnimCmd *const sAnimTable_Following[] = {
     [ANIM_EXIT_POKEBALL_FAST_NORTH] = sAnim_ExitPokeballFastNorth,
     [ANIM_EXIT_POKEBALL_FAST_WEST] = sAnim_ExitPokeballFastWest,
     [ANIM_EXIT_POKEBALL_FAST_EAST] = sAnim_ExitPokeballFastEast,
+    // Tauros fast movement animations (2 ticks/frame for MOVE_SPEED_FASTER)
+    [ANIM_TAUROS_FAST_SOUTH] = sAnim_TaurosFastSouth2F,
+    [ANIM_TAUROS_FAST_NORTH] = sAnim_TaurosFastNorth2F,
+    [ANIM_TAUROS_FAST_WEST] = sAnim_TaurosFastWest2F,
+    [ANIM_TAUROS_FAST_EAST] = sAnim_TaurosFastEast2F,
 };
 
 // Like the above, but has separate frames for facing right
@@ -1198,6 +1240,11 @@ const union AnimCmd *const sAnimTable_Following_Asym[] = {
     [ANIM_EXIT_POKEBALL_FAST_NORTH] = sAnim_ExitPokeballFastNorth,
     [ANIM_EXIT_POKEBALL_FAST_WEST] = sAnim_ExitPokeballFastWest,
     [ANIM_EXIT_POKEBALL_FAST_EAST] = sAnim_ExitPokeballFastEast_Asym,
+    // Tauros fast movement animations (2 ticks/frame for MOVE_SPEED_FASTER)
+    [ANIM_TAUROS_FAST_SOUTH] = sAnim_TaurosFastSouth2F,
+    [ANIM_TAUROS_FAST_NORTH] = sAnim_TaurosFastNorth2F,
+    [ANIM_TAUROS_FAST_WEST] = sAnim_TaurosFastWest2F,
+    [ANIM_TAUROS_FAST_EAST] = sAnim_TaurosFastEast2F,
 };
 
 static const union AnimCmd *const sAnimTable_HoOh[] = {

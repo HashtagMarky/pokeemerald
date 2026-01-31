@@ -134,11 +134,133 @@ u32 UseCut(u32 fieldMoveStatus)
 }
 
 // Fly
+static void FieldCallback_DetransformAfterFly(void);
+static void Task_WaitForDetransformAfterFly(u8 taskId);
+static void FieldCallback_DetransformOnCancel(void);
+static void Task_DetransformAndReturnToBag(u8 taskId);
+static void Task_DetransformAndUnlock(u8 taskId);
+static void FieldCB_DetransformAndReturnToBag(void);
+static void FieldCB_DetransformAndUnlock(void);
+
+static u8 CreateUseToolTask(void);
+static void Task_UseTool_Init(u8);
+static void LockPlayerAndLoadMon(void);
+
+static void FieldCallback_UseFlyTool(void);
+static void Task_UseFlyTool(void);
+
 void ReturnToFieldFromFlyToolMapSelect(void)
 {
-    SetMainCallback2(CB2_ReturnToField);
-    gFieldCallback = Task_UseFlyTool;
+    // Just do the warp, no transform here
+    Overworld_ResetStateAfterFly();
+    WarpIntoMap();
+    SetMainCallback2(CB2_LoadMap);
+    gFieldCallback = FieldCallback_DetransformAfterFly;
 }
+
+static void FieldCallback_DetransformAfterFly(void)
+{
+    Overworld_PlaySpecialMapMusic();
+    FadeInFromBlack();
+    
+    // Create task immediately - it will handle waiting for fade
+    CreateTask(Task_WaitForDetransformAfterFly, 0);
+    gFieldCallback = NULL;
+}
+
+static void Task_WaitForDetransformAfterFly(u8 taskId)
+{
+    struct Task *task = &gTasks[taskId];
+    
+    // Wait for fade to complete first
+    if (gPaletteFade.active)
+        return;
+    
+    // Start detransform on first frame after fade
+    if (task->data[0] == 0)
+    {
+        VarSet(VAR_TRANSFORM_MON, SPECIES_NONE);
+        ChooseMonForTransform();
+        task->data[0]++;
+    }
+    
+    // Wait 20 frames for detransform animation
+    if (task->data[0]++ >= 20)
+    {
+        UnlockPlayerFieldControls();
+        UnfreezeObjectEvents();
+        DestroyTask(taskId);
+    }
+}
+
+static void FieldCallback_DetransformOnCancel(void)
+{
+    Overworld_PlaySpecialMapMusic();
+    FadeInFromBlack();
+    
+    // Check if we came from bag or field
+    if (VarGet(VAR_FLY_TOOL_SOURCE) == FLY_SOURCE_BAG)
+    {
+        CreateTask(Task_DetransformAndReturnToBag, 0);
+    }
+    else
+    {
+        CreateTask(Task_DetransformAndUnlock, 0);
+    }
+    
+    gFieldCallback = NULL;
+}
+
+static void Task_DetransformAndReturnToBag(u8 taskId)
+{
+    struct Task *task = &gTasks[taskId];
+    
+    // Wait for fade to complete first
+    if (gPaletteFade.active)
+        return;
+    
+    // Start detransform on first frame after fade
+    if (task->data[0] == 0)
+    {
+        VarSet(VAR_TRANSFORM_MON, SPECIES_NONE);
+        ChooseMonForTransform();
+        task->data[0]++;
+    }
+    
+    // Wait 20 frames for detransform animation
+    if (task->data[0]++ >= 20)
+    {
+        // Return to bag after detransform
+        GoToBagMenu(ITEMMENULOCATION_LAST, POCKET_KEY_ITEMS, CB2_ReturnToFieldWithOpenMenu);
+        DestroyTask(taskId);
+    }
+}
+
+static void Task_DetransformAndUnlock(u8 taskId)
+{
+    struct Task *task = &gTasks[taskId];
+    
+    // Wait for fade to complete first
+    if (gPaletteFade.active)
+        return;
+    
+    // Start detransform on first frame after fade
+    if (task->data[0] == 0)
+    {
+        VarSet(VAR_TRANSFORM_MON, SPECIES_NONE);
+        ChooseMonForTransform();
+        task->data[0]++;
+    }
+    
+    // Wait 20 frames for detransform animation
+    if (task->data[0]++ >= 20)
+    {
+        UnlockPlayerFieldControls();
+        UnfreezeObjectEvents();
+        DestroyTask(taskId);
+    }
+}
+
 
 static void Task_UseFlyTool(void)
 {
@@ -167,10 +289,28 @@ bool32 IsFlyToolUsed(void)
 
 void ReturnToFieldOrBagFromFlyTool(void)
 {
-    if (VarGet(VAR_FLY_TOOL_SOURCE) == FLY_SOURCE_BAG)
-        GoToBagMenu(ITEMMENULOCATION_LAST,POCKET_KEY_ITEMS,CB2_ReturnToFieldWithOpenMenu);
-    else if (VarGet(VAR_FLY_TOOL_SOURCE) == FLY_SOURCE_FIELD)
-        SetMainCallback2(CB2_ReturnToField);
+    // Set callback to detransform after returning to field
+    gFieldCallback = FieldCallback_DetransformOnCancel;
+    SetMainCallback2(CB2_ReturnToField);
+}
+
+static void FieldCB_DetransformAndReturnToBag(void)
+{
+    if (FuncIsActiveTask(Task_UpdatePlayerTransformAnimation))
+        return;
+    
+    GoToBagMenu(ITEMMENULOCATION_LAST, POCKET_KEY_ITEMS, CB2_ReturnToFieldWithOpenMenu);
+    gFieldCallback = NULL;
+}
+
+static void FieldCB_DetransformAndUnlock(void)
+{
+    if (FuncIsActiveTask(Task_UpdatePlayerTransformAnimation))
+        return;
+    
+    UnlockPlayerFieldControls();
+    UnfreezeObjectEvents();
+    gFieldCallback = NULL;
 }
 
 void ResetFlyTool(void)

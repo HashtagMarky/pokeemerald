@@ -28,6 +28,10 @@
 #include "scanline_effect.h"
 #include "script.h"
 #include "sound.h"
+#include "transform.h"
+#include "constants/flags.h"
+#include "constants/map_types.h"
+#include "constants/vars.h"
 #include "start_menu.h"
 #include "strings.h"
 #include "string_util.h"
@@ -513,6 +517,20 @@ static bool32 WaitForWeatherFadeIn(void)
 
 void DoWarp(void)
 {
+    // Auto-detransform if warping to an indoor map while riding
+    if (GetDestinationWarpMapHeader()->mapType == MAP_TYPE_INDOOR && IsPlayerTransformed())
+    {
+        VarSet(VAR_TRANSFORM_MON, SPECIES_NONE);
+        gSaveBlock2Ptr->pokemonAvatarSpecies = SPECIES_NONE;
+        FlagClear(FLAG_PLAYER_IS_POKEMON);
+        FlagClear(FLAG_DEFER_TRANSFORM);
+        DestroyPlayerMountSprite();
+        
+        // Restore follower if the user has it enabled
+        if (FlagGet(FLAG_FOLLOWERS_MENU_TOGGLE))
+            FlagClear(FLAG_DISABLE_FOLLOWERS);
+    }
+    
     LockPlayerFieldControls();
     TryFadeOutOldMapMusic();
     WarpFadeOutScreen();
@@ -545,6 +563,20 @@ void DoWhiteFadeWarp(void)
 
 void DoDoorWarp(void)
 {
+    // Auto-detransform if warping to an indoor map while riding
+    if (GetDestinationWarpMapHeader()->mapType == MAP_TYPE_INDOOR && IsPlayerTransformed())
+    {
+        VarSet(VAR_TRANSFORM_MON, SPECIES_NONE);
+        gSaveBlock2Ptr->pokemonAvatarSpecies = SPECIES_NONE;
+        FlagClear(FLAG_PLAYER_IS_POKEMON);
+        FlagClear(FLAG_DEFER_TRANSFORM);
+        DestroyPlayerMountSprite();
+        
+        // Restore follower if the user has it enabled
+        if (FlagGet(FLAG_FOLLOWERS_MENU_TOGGLE))
+            FlagClear(FLAG_DISABLE_FOLLOWERS);
+    }
+    
     LockPlayerFieldControls();
     gFieldCallback = FieldCB_DefaultWarpExit;
     CreateTask(Task_DoDoorWarp, 10);
@@ -558,6 +590,20 @@ void DoFallWarp(void)
 
 void DoEscalatorWarp(u8 metatileBehavior)
 {
+    // Auto-detransform if warping to an indoor map while riding
+    if (GetDestinationWarpMapHeader()->mapType == MAP_TYPE_INDOOR && IsPlayerTransformed())
+    {
+        VarSet(VAR_TRANSFORM_MON, SPECIES_NONE);
+        gSaveBlock2Ptr->pokemonAvatarSpecies = SPECIES_NONE;
+        FlagClear(FLAG_PLAYER_IS_POKEMON);
+        FlagClear(FLAG_DEFER_TRANSFORM);
+        DestroyPlayerMountSprite();
+        
+        // Restore follower if the user has it enabled
+        if (FlagGet(FLAG_FOLLOWERS_MENU_TOGGLE))
+            FlagClear(FLAG_DISABLE_FOLLOWERS);
+    }
+    
     LockPlayerFieldControls();
     StartEscalatorWarp(metatileBehavior, 10);
 }
@@ -1668,6 +1714,20 @@ static void Task_StairWarp(u8 taskId)
 
 void DoStairWarp(u16 metatileBehavior, u16 delay)
 {
+    // Auto-detransform if warping to an indoor map while riding
+    if (GetDestinationWarpMapHeader()->mapType == MAP_TYPE_INDOOR && IsPlayerTransformed())
+    {
+        VarSet(VAR_TRANSFORM_MON, SPECIES_NONE);
+        gSaveBlock2Ptr->pokemonAvatarSpecies = SPECIES_NONE;
+        FlagClear(FLAG_PLAYER_IS_POKEMON);
+        FlagClear(FLAG_DEFER_TRANSFORM);
+        DestroyPlayerMountSprite();
+        
+        // Restore follower if the user has it enabled
+        if (FlagGet(FLAG_FOLLOWERS_MENU_TOGGLE))
+            FlagClear(FLAG_DISABLE_FOLLOWERS);
+    }
+    
     u8 taskId = CreateTask(Task_StairWarp, 10);
     gTasks[taskId].tMetatileBehavior = metatileBehavior;
     gTasks[taskId].tDelay = delay;

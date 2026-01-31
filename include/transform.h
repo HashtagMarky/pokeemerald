@@ -44,11 +44,10 @@ void TransformPlayerToSpeciesSimple(u16 species);
  */
 void ChooseMonForTransform(void);
 void CreatePlayerMountSprite(u16 gfxId);
+void DestroyPlayerMountSprite(void);
 bool32 PlayerHasMountSprite(void);
 void UpdatePlayerMountSprite(void);
 void Task_UpdatePlayerTransformAnimation(u8 taskId);
-static void ExecutePlayerTransformation(u16 species);
-static void EndPlayerTransformAnimation(struct Sprite *playerSprite, u8 taskId);
 
 /*
  * Script command with optional defer flag

@@ -394,6 +394,13 @@ void MacroStartFishingSuperRod(u8 taskId)
 
 void ItemUseOutOfBattle_Itemfinder(u8 var)
 {
+    // Prevent transformation indoors
+    if (gMapHeader.mapType == MAP_TYPE_INDOOR && VarGet(VAR_TRANSFORM_MON) != SPECIES_STOUTLAND)
+    {
+        DisplayDadsAdviceCannotUseItemMessage(var, gTasks[var].tUsingRegisteredKeyItem);
+        return;
+    }
+    
     IncrementGameStat(GAME_STAT_USED_ITEMFINDER);
     sItemUseOnFieldCB = ItemUseOnFieldCB_Itemfinder;
     SetUpItemUseOnFieldCallback(var);
@@ -413,6 +420,7 @@ static void ItemUseOnFieldCB_Itemfinder(u8 taskId)
         DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
         return;
     }
+    
     LockPlayerFieldControls();
     if (VarGet(VAR_TRANSFORM_MON) == SPECIES_STOUTLAND)
     {
@@ -1673,6 +1681,12 @@ void ItemUseOutOfBattle_CutTool(u8 taskId)
     PlayerGetDestCoords(&x, &y);
     behavior = MapGridGetMetatileBehaviorAt(x, y);
 
+    // Prevent transformation indoors
+    if (gMapHeader.mapType == MAP_TYPE_INDOOR && VarGet(VAR_TRANSFORM_MON) != SPECIES_MUDSDALE)
+    {
+        DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
+        return;
+    }
 
     if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING)|| (behavior == MB_ROCKY_PATH && VarGet(VAR_TRANSFORM_MON) == SPECIES_MUDSDALE))
     {
@@ -1737,6 +1751,13 @@ void ItemUseOutOfBattle_FlyTool(u8 taskId)
 
     PlayerGetDestCoords(&x, &y);
     behavior = MapGridGetMetatileBehaviorAt(x, y);
+
+    // Prevent transformation indoors
+    if (gMapHeader.mapType == MAP_TYPE_INDOOR)
+    {
+        DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
+        return;
+    }
 
     if (MenuHelpers_IsLinkActive() == TRUE ||
         behavior == MB_ROCKY_PATH)
@@ -1852,6 +1873,14 @@ void ItemUseOutOfBattle_StrengthTool(u8 taskId)
 
     PlayerGetDestCoords(&x, &y);
     behavior = MapGridGetMetatileBehaviorAt(x, y);
+    
+    // Prevent transformation indoors
+    if (gMapHeader.mapType == MAP_TYPE_INDOOR && VarGet(VAR_TRANSFORM_MON) != SPECIES_MACHAMP)
+    {
+        DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
+        return;
+    }
+    
     if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING) ||
     behavior == MB_ROCKY_PATH)
     {
@@ -1923,6 +1952,14 @@ void ItemUseOutOfBattle_RockSmashTool(u8 taskId)
 
     PlayerGetDestCoords(&x, &y);
     behavior = MapGridGetMetatileBehaviorAt(x, y);
+    
+    // Prevent transformation indoors
+    if (gMapHeader.mapType == MAP_TYPE_INDOOR && VarGet(VAR_TRANSFORM_MON) != SPECIES_TAUROS)
+    {
+        DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
+        return;
+    }
+    
     if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING) ||
     behavior == MB_ROCKY_PATH)
     {

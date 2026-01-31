@@ -136,8 +136,9 @@ EWRAM_DATA s16 sPlayerMountSpriteId;
 static void ResetPlayerAvatar(void);
 static void SetPlayerTransformFlags(void);
 static void ClearPlayerTransformFlags(void);
+static void ExecutePlayerTransformation(u16 species);
+static void EndPlayerTransformAnimation(struct Sprite *playerSprite, u8 taskId);
 
-static void DestroyPlayerMountSprite(void);
 static void UpdatePlayerMountSpritePosition(struct Sprite *sprite);
 
 static u16 GetTransformGraphicsIdFromSpecies(void)
@@ -690,7 +691,7 @@ static void UpdateRiderGraphics(void)
     mountSpr->animDelayCounter = 0;
 }
 
-static void DestroyPlayerMountSprite(void)
+void DestroyPlayerMountSprite(void)
 {
     if (sPlayerMountSpriteId >= 0)
     {

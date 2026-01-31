@@ -973,15 +973,19 @@ static void Task_OptionMenuSave(u8 taskId)
     // Handle Follower option (flag-based)
     // If sOptions->sel_custom[MENUITEM_FOLLOWER] is 0 (ON), clear the disable flag.
     // If it's 1 (OFF), set the disable flag.
+    // BUT: Don't change FLAG_DISABLE_FOLLOWERS if player is transformed - let transform system manage it
     if (sOptions->sel_custom[MENUITEM_FOLLOWER] == 0) // Assuming 0 means Followers are ON
     {
         FlagSet(FLAG_FOLLOWERS_MENU_TOGGLE);
-        FlagClear(FLAG_DISABLE_FOLLOWERS); // Enable followers
+        if (!IsPlayerTransformed())  // Only enable if not transformed
+        {
+            FlagClear(FLAG_DISABLE_FOLLOWERS); // Enable followers
+        }
     }
     else // sOptions->sel_custom[MENUITEM_FOLLOWER] == 1, meaning OFF
     {
         FlagClear(FLAG_FOLLOWERS_MENU_TOGGLE); 
-        FlagSet(FLAG_DISABLE_FOLLOWERS);   // Disable followers
+        FlagSet(FLAG_DISABLE_FOLLOWERS);   // Disable followers (always disable when menu says off)
     }
 
     // Handle AutoRun option (another flag-based example, if you have it)

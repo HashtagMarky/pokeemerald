@@ -28,6 +28,7 @@
 #include "sound.h"
 #include "task.h"
 #include "trig.h"
+#include "transform.h"
 #include "constants/event_object_movement.h"
 #include "constants/field_effects.h"
 #include "constants/frontier_util.h"
@@ -542,6 +543,13 @@ static void Task_FollowerNPCOutOfDoor(u8 taskId)
         if (task->tDoorTask < 0 || gTasks[task->tDoorTask].isActive != TRUE)
         {
             follower->invisible = FALSE;
+            
+            // Don't show follower if player is transformed into a rideable Pokémon
+            if (IsPlayerTransformed())
+            {
+                follower->invisible = TRUE;
+            }
+            
             // If the follower should be surfing.
             if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
             {
@@ -630,6 +638,13 @@ static void Task_FollowerNPCHandleEscalatorFinish(u8 taskId)
         break;
     case SHOW_FOLLOWER_DOWN:
         follower->invisible = FALSE;
+        
+        // Don't show follower if player is transformed into a rideable Pokémon
+        if (IsPlayerTransformed())
+        {
+            follower->invisible = TRUE;
+        }
+        
         CalculateFollowerNPCEscalatorTrajectoryDown(task);
         task->tState = MOVE_FOLLOWER_DOWN;
         break;
@@ -648,6 +663,13 @@ static void Task_FollowerNPCHandleEscalatorFinish(u8 taskId)
         break;
     case SHOW_FOLLOWER_UP:
         follower->invisible = FALSE;
+        
+        // Don't show follower if player is transformed into a rideable Pokémon
+        if (IsPlayerTransformed())
+        {
+            follower->invisible = TRUE;
+        }
+        
         CalculateFollowerNPCEscalatorTrajectoryUp(task);
         task->tState = MOVE_FOLLOWER_UP;
         break;
@@ -1098,6 +1120,12 @@ void NPCFollow(struct ObjectEvent *npc, u32 state, bool32 ignoreScriptActive)
         // The follower should be facing the same direction as the player when it comes out of hiding.
         ObjectEventTurn(follower, player->facingDirection);
 
+        // Don't show follower if player is transformed into a rideable Pokémon
+        if (IsPlayerTransformed())
+        {
+            follower->invisible = TRUE;
+        }
+
         // Recreate the surf blob if needed.
         if (GetFollowerNPCData(FNPC_DATA_SURF_BLOB) == FNPC_SURF_BLOB_RECREATE)
         {
@@ -1491,6 +1519,12 @@ void FollowerNPCReappearAfterLeaveMap(struct ObjectEvent *follower, struct Objec
     if (PlayerHasFollowerNPC())
     {
         follower->invisible = FALSE;
+        
+        // Don't show follower if player is transformed into a rideable Pokémon
+        if (IsPlayerTransformed())
+        {
+            follower->invisible = TRUE;
+        }
         MoveObjectEventToMapCoords(follower, player->currentCoords.x, player->currentCoords.y);
         ObjectEventTurn(follower, DIR_SOUTH);
         follower->singleMovementActive = FALSE;

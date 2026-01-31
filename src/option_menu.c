@@ -19,6 +19,7 @@
 #include "constants/rgb.h"
 #include "string_util.h"
 #include "heat_start_menu.h"
+#include "transform.h"
 
 #define useOptionPlusMenu TRUE
 
@@ -636,10 +637,14 @@ static void Follower_DrawChoices(u8 selection)
     styles[1] = 0;
     styles[selection] = 1;
 
+    // Don't change FLAG_DISABLE_FOLLOWERS if player is transformed - let transform system manage it
     if (selection == 0) 
     {
         FlagSet(FLAG_FOLLOWERS_MENU_TOGGLE);
-        FlagClear(FLAG_DISABLE_FOLLOWERS);
+        if (!IsPlayerTransformed())  // Only enable if not transformed
+        {
+            FlagClear(FLAG_DISABLE_FOLLOWERS);
+        }
     }
     else
     {

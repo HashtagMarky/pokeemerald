@@ -540,4 +540,4 @@ Text_RockyPathNoTool:
 	.string "Maybe a POKéMON could cross it.$"
 
 Text_RockyPathUseTool:
-	.string "{PLAYER} used MUDSDALE Gallop!$"
+	.string "{PLAYER} used Mudsdale Gallop!$"

@@ -140,7 +140,9 @@ static void FieldCallback_DetransformOnCancel(void);
 static void Task_DetransformAndReturnToBag(u8 taskId);
 static void Task_DetransformAndUnlock(u8 taskId);
 static void FieldCB_DetransformAndReturnToBag(void);
+static void Task_WaitAndReturnToBag(u8 taskId);
 static void FieldCB_DetransformAndUnlock(void);
+static void Task_WaitAndUnlock(u8 taskId);
 
 static u8 CreateUseToolTask(void);
 static void Task_UseTool_Init(u8);
@@ -150,6 +152,7 @@ static void FieldCallback_UseFlyTool(void);
 static void Task_UseFlyTool(void);
 static void Task_FlyUpAndWarp(u8 taskId);
 static void FieldCallback_FlyUpAnimation(void);
+static void Task_TransformThenFlyUp(u8 taskId);
 
 void ReturnToFieldFromFlyToolMapSelect(void)
 {
@@ -162,8 +165,58 @@ static void FieldCallback_FlyUpAnimation(void)
 {
     Overworld_PlaySpecialMapMusic();
     FadeInFromBlack();
-    CreateTask(Task_FlyUpAndWarp, 0);
+    
+    // Lock controls immediately
+    LockPlayerFieldControls();
+    FreezeObjectEvents();
+    
+    CreateTask(Task_TransformThenFlyUp, 0);
     gFieldCallback = NULL;
+}
+
+static void Task_TransformThenFlyUp(u8 taskId)
+{
+    struct Task *task = &gTasks[taskId];
+    struct ObjectEvent *playerObj;
+    
+    switch (task->data[0])
+    {
+        case 0: // Wait for fade in and ensure player object is ready
+            if (!gPaletteFade.active)
+            {
+                // Ensure player object exists before trying to access it
+                if (gPlayerAvatar.objectEventId < OBJECT_EVENTS_COUNT)
+                {
+                    playerObj = &gObjectEvents[gPlayerAvatar.objectEventId];
+                    
+                    // Turn player to face north using proper function
+                    ObjectEventTurn(playerObj, DIR_NORTH);
+                    
+                    // Transform to Charizard
+                    VarSet(VAR_TRANSFORM_MON, SPECIES_CHARIZARD);
+                    ChooseMonForTransform();
+                    
+                    // Find the transform task and prevent it from unlocking controls
+                    u8 transformTaskId = FindTaskIdByFunc(Task_UpdatePlayerTransformAnimation);
+                    if (transformTaskId != TASK_NONE)
+                    {
+                        gTasks[transformTaskId].data[2] = FALSE; // tUnlockControls = FALSE
+                    }
+                    
+                    task->data[0]++;
+                }
+            }
+            break;
+        case 1: // Wait for transform to complete
+            task->data[1]++;
+            if (task->data[1] >= 30) // Wait 30 frames
+            {
+                // Start the fly up task
+                CreateTask(Task_FlyUpAndWarp, 0);
+                DestroyTask(taskId);
+            }
+            break;
+    }
 }
 
 static void Task_FlyUpAndWarp(u8 taskId)
@@ -174,15 +227,12 @@ static void Task_FlyUpAndWarp(u8 taskId)
     
     switch (task->data[0])
     {
-        case 0: // Wait for fade
-            if (!gPaletteFade.active)
-            {
-                LockPlayerFieldControls();
-                FreezeObjectEvents();
-                PlaySE(SE_M_FLY);
-                FadeScreen(FADE_TO_BLACK, 4); // Start fading immediately (slower fade)
-                task->data[0]++;
-            }
+        case 0: // Start flying
+            LockPlayerFieldControls();
+            FreezeObjectEvents();
+            PlaySE(SE_M_FLY);
+            FadeScreen(FADE_TO_BLACK, 4); // Start fading
+            task->data[0]++;
             break;
         case 1: // Move player up while fading
             // Use task data to track offset (can go beyond y2 limits)
@@ -197,6 +247,7 @@ static void Task_FlyUpAndWarp(u8 taskId)
             // Check if fade is complete
             if (!gPaletteFade.active)
             {
+                // Don't set transform here - already transformed
                 // Do the actual warp (don't reset y2, player stays off screen)
                 Overworld_ResetStateAfterFly();
                 WarpIntoMap();
@@ -212,6 +263,10 @@ static void FieldCallback_DetransformAfterFly(void)
 {
     Overworld_PlaySpecialMapMusic();
     FadeInFromBlack();
+    
+    // Lock controls during detransform
+    LockPlayerFieldControls();
+    FreezeObjectEvents();
     
     // Create task immediately - it will handle waiting for fade
     CreateTask(Task_WaitForDetransformAfterFly, 0);
@@ -231,14 +286,33 @@ static void Task_WaitForDetransformAfterFly(u8 taskId)
     {
         VarSet(VAR_TRANSFORM_MON, SPECIES_NONE);
         ChooseMonForTransform();
-        task->data[0]++;
+        
+        // Find the transform task and prevent it from unlocking controls
+        u8 transformTaskId = FindTaskIdByFunc(Task_UpdatePlayerTransformAnimation);
+        if (transformTaskId != TASK_NONE)
+        {
+            gTasks[transformTaskId].data[2] = FALSE; // tUnlockControls = FALSE
+        }
+        
+        task->data[0] = 1;
+        return;
     }
     
-    // Wait 20 frames for detransform animation
-    if (task->data[0]++ >= 20)
+    // Wait for transform animation task to finish
+    if (FuncIsActiveTask(Task_UpdatePlayerTransformAnimation))
+        return;
+    
+    // Transform is done, now unlock EVERYTHING
+    if (task->data[0] == 1)
     {
+        // Force unlock the player avatar state
+        gPlayerAvatar.preventStep = FALSE;
+        gPlayerAvatar.flags |= PLAYER_AVATAR_FLAG_CONTROLLABLE;
+        
+        // Unlock controls and events
         UnlockPlayerFieldControls();
         UnfreezeObjectEvents();
+        
         DestroyTask(taskId);
     }
 }
@@ -339,28 +413,55 @@ bool32 IsFlyToolUsed(void)
 
 void ReturnToFieldOrBagFromFlyTool(void)
 {
-    // Set callback to detransform after returning to field
-    gFieldCallback = FieldCallback_DetransformOnCancel;
+    // No transform to undo, just return normally
+    if (VarGet(VAR_FLY_TOOL_SOURCE) == FLY_SOURCE_BAG)
+    {
+        gFieldCallback = FieldCB_DetransformAndReturnToBag;
+    }
+    else
+    {
+        gFieldCallback = FieldCB_DetransformAndUnlock;
+    }
     SetMainCallback2(CB2_ReturnToField);
 }
 
 static void FieldCB_DetransformAndReturnToBag(void)
 {
-    if (FuncIsActiveTask(Task_UpdatePlayerTransformAnimation))
-        return;
-    
-    GoToBagMenu(ITEMMENULOCATION_LAST, POCKET_KEY_ITEMS, CB2_ReturnToFieldWithOpenMenu);
+    // No transform to wait for, just return to bag
+    Overworld_PlaySpecialMapMusic();
+    FadeInFromBlack();
+    CreateTask(Task_WaitAndReturnToBag, 0);
     gFieldCallback = NULL;
+}
+
+static void Task_WaitAndReturnToBag(u8 taskId)
+{
+    // Wait for fade to complete
+    if (!gPaletteFade.active)
+    {
+        GoToBagMenu(ITEMMENULOCATION_LAST, POCKET_KEY_ITEMS, CB2_ReturnToFieldWithOpenMenu);
+        DestroyTask(taskId);
+    }
 }
 
 static void FieldCB_DetransformAndUnlock(void)
 {
-    if (FuncIsActiveTask(Task_UpdatePlayerTransformAnimation))
-        return;
-    
-    UnlockPlayerFieldControls();
-    UnfreezeObjectEvents();
+    // No transform to wait for, just unlock
+    Overworld_PlaySpecialMapMusic();
+    FadeInFromBlack();
+    CreateTask(Task_WaitAndUnlock, 0);
     gFieldCallback = NULL;
+}
+
+static void Task_WaitAndUnlock(u8 taskId)
+{
+    // Wait for fade to complete
+    if (!gPaletteFade.active)
+    {
+        UnlockPlayerFieldControls();
+        UnfreezeObjectEvents();
+        DestroyTask(taskId);
+    }
 }
 
 void ResetFlyTool(void)

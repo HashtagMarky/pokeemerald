@@ -1741,29 +1741,6 @@ void ItemUseOnFieldCB_CutTool(u8 taskId)
     }
 }
 
-static void FieldCB_TransformForFlyTool(void);
-static void Task_WaitForTransformThenOpenFlyMap(u8 taskId);
-static void CB2_OpenFlyToolFromBag(void);
-
-static void Task_WaitForTransformThenOpenFlyMap(u8 taskId)
-{
-    if (gTasks[taskId].data[0]++ >= 30)  // Wait 30 frames for transform to fully complete and display
-    {
-        // Transform complete, now open fly map
-        if (VarGet(VAR_FLY_TOOL_SOURCE) == FLY_SOURCE_BAG)
-        {
-            gBagMenu->newScreenCallback = CB2_OpenFlyToolFromBag;
-            Task_FadeAndCloseBagMenu(taskId);
-        }
-        else
-        {
-            CleanupOverworldWindowsAndTilemaps();
-            SetMainCallback2(CB2_OpenFlyMap);
-            DestroyTask(taskId);
-        }
-    }
-}
-
 void ItemUseOutOfBattle_FlyTool(u8 taskId)
 {
     s16 x, y;
@@ -1786,43 +1763,22 @@ void ItemUseOutOfBattle_FlyTool(u8 taskId)
     }
     else if (gTasks[taskId].tUsingRegisteredKeyItem != TRUE)
     {
-        // FROM BAG: Return to field first
+        // FROM BAG: Open fly map directly from bag
         VarSet(VAR_FLY_TOOL_SOURCE, FLY_SOURCE_BAG);
-        gFieldCallback = FieldCB_TransformForFlyTool;
-        gBagMenu->newScreenCallback = CB2_ReturnToField;
+        gBagMenu->newScreenCallback = CB2_OpenFlyMap;
         Task_FadeAndCloseBagMenu(taskId);
     }
     else
     {
-        // FROM FIELD: Transform then open map
+        // FROM FIELD: Just open map directly, no transform yet
         VarSet(VAR_FLY_TOOL_SOURCE, FLY_SOURCE_FIELD);
-        LockPlayerFieldControls();
-        FreezeObjectEvents();
         
-        // Transform without unlocking controls when done
-        TransformPlayerToSpeciesScript(SPECIES_CHARIZARD, FALSE);
-        
-        // Wait for transform animation
-        gTasks[taskId].func = Task_WaitForTransformThenOpenFlyMap;
+        // Open fly map immediately
+        SetMainCallback2(CB2_OpenFlyMap);
+        DestroyTask(taskId);
     }
 }
 
-static void FieldCB_TransformForFlyTool(void)
-{
-    LockPlayerFieldControls();
-    FreezeObjectEvents();
-    
-    // Transform without unlocking controls when done
-    TransformPlayerToSpeciesScript(SPECIES_CHARIZARD, FALSE);
-    
-    CreateTask(Task_WaitForTransformThenOpenFlyMap, 0);
-    gFieldCallback = NULL;
-}
-
-static void CB2_OpenFlyToolFromBag(void)
-{
-    CB2_OpenFlyMap();
-}
 static void Task_OpenRegisteredFlyTool(u8 taskId)
 {
     if (!gPaletteFade.active)

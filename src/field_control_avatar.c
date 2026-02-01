@@ -38,6 +38,13 @@
 #include "wild_encounter.h"
 #include "constants/event_bg.h"
 #include "constants/event_objects.h"
+#include "constants/vars.h"
+#include "transform.h"
+#include "task.h"
+#include "string_util.h"
+#include "strings.h"
+#include "text.h"
+#include "trainer_see.h"
 #include "constants/field_poison.h"
 #include "constants/metatile_behaviors.h"
 #include "constants/songs.h"
@@ -77,6 +84,7 @@ static const struct BgEvent *GetBackgroundEventAtPosition(struct MapHeader *, u1
 static bool8 TryStartCoordEventScript(struct MapPosition *);
 static bool8 TryStartWarpEventScript(struct MapPosition *, u16);
 static bool8 TryStartMiscWalkingScripts(u16);
+static bool8 TryStoutlandItemfinderStep(void);
 static bool8 TryStartStepCountScript(u16);
 static void UpdateFriendshipStepCounter(void);
 static void UpdateFollowerStepCounter(void);
@@ -226,6 +234,10 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
         IncrementGameStat(GAME_STAT_STEPS);
         IncrementBirthIslandRockStepCount();
         if (TryStartStepBasedScript(&position, metatileBehavior, playerDirection) == TRUE)
+            return TRUE;
+        
+        // Check for Stoutland itemfinder while creeping
+        if (TryStoutlandItemfinderStep() == TRUE)
             return TRUE;
     }
 
@@ -1349,4 +1361,98 @@ void CancelSignPostMessageBox(struct FieldInput *input)
         return;
 
     CreateTask(Task_OpenStartMenu, 8);
+}
+
+// Stoutland itemfinder per-step check
+static EWRAM_DATA s16 sLastBarkX;
+static EWRAM_DATA s16 sLastBarkY;
+static EWRAM_DATA bool8 sHasBarkPosition;
+
+static bool8 TryStoutlandItemfinderStep(void)
+{
+    s16 playerX, playerY;
+    s16 itemX, itemY, distanceX, distanceY;
+    const struct MapEvents *events;
+    int i;
+    bool8 foundNearbyItem = FALSE;
+    
+    // Only check if transformed as Stoutland and creeping
+    if (VarGet(VAR_TRANSFORM_MON) != SPECIES_STOUTLAND || !gPlayerAvatar.creeping)
+    {
+        // Reset bark tracking when not Stoutland
+        sHasBarkPosition = FALSE;
+        return FALSE;
+    }
+    
+    // Don't run if player controls are locked (itemfinder task is running)
+    if (ArePlayerFieldControlsLocked())
+        return FALSE;
+    
+    events = gMapHeader.events;
+    if (events == NULL)
+        return FALSE;
+    
+    PlayerGetDestCoords(&playerX, &playerY);
+    
+    // Check for hidden items at player's current position or nearby
+    for (i = 0; i < events->bgEventCount; i++)
+    {
+        if (events->bgEvents[i].kind == BG_EVENT_HIDDEN_ITEM && 
+            !FlagGet(events->bgEvents[i].bgUnion.hiddenItem.hiddenItemId + FLAG_HIDDEN_ITEMS_START))
+        {
+            itemX = (u16)events->bgEvents[i].x + MAP_OFFSET;
+            itemY = (u16)events->bgEvents[i].y + MAP_OFFSET;
+            distanceX = itemX - playerX;
+            distanceY = itemY - playerY;
+            
+            // If standing on the item, trigger the Stoutland hidden item script
+            if (distanceX == 0 && distanceY == 0)
+            {
+                // Set up the hidden item script variables (same as normal interaction)
+                gSpecialVar_0x8004 = events->bgEvents[i].bgUnion.hiddenItem.hiddenItemId + FLAG_HIDDEN_ITEMS_START;
+                gSpecialVar_0x8005 = events->bgEvents[i].bgUnion.hiddenItem.item;
+                
+                // Show exclamation mark above Stoutland with sound
+                struct ObjectEvent *playerObj = &gObjectEvents[gPlayerAvatar.objectEventId];
+                ObjectEventGetLocalIdAndMap(playerObj, &gFieldEffectArguments[0], &gFieldEffectArguments[1], &gFieldEffectArguments[2]);
+                FldEff_ExclamationMarkIcon();
+                PlaySE(SE_PIN);
+                
+                // Stop player movement and lock controls
+                ObjectEventClearHeldMovementIfFinished(playerObj);
+                ObjectEventClearHeldMovement(playerObj);
+                FreezeObjectEvent(playerObj);
+                
+                LockPlayerFieldControls();
+                ScriptContext_SetupScript(EventScript_StoutlandFoundHiddenItem);
+                
+                // Reset bark tracking after finding item
+                sHasBarkPosition = FALSE;
+                return TRUE;
+            }
+            
+            // Check if item is nearby (within 3 tiles)
+            if (distanceX >= -3 && distanceX <= 3 && distanceY >= -3 && distanceY <= 3)
+            {
+                foundNearbyItem = TRUE;
+                
+                // Only bark if we haven't barked for this position yet AND no cry is currently playing
+                if ((!sHasBarkPosition || sLastBarkX != playerX || sLastBarkY != playerY) && !IsCryPlaying())
+                {
+                    PlayCry_Normal(SPECIES_STOUTLAND, 0);
+                    sLastBarkX = playerX;
+                    sLastBarkY = playerY;
+                    sHasBarkPosition = TRUE;
+                }
+            }
+        }
+    }
+    
+    // Reset bark tracking if no items are nearby
+    if (!foundNearbyItem)
+    {
+        sHasBarkPosition = FALSE;
+    }
+    
+    return FALSE;
 }

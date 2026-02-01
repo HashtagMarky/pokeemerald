@@ -108,7 +108,7 @@ static void Task_DelayedRockSmashScript(u8 taskId);
 // End qol_field_moves
 
 static const u8 sText_CantDismountBike[] = _("You can't dismount your BIKE here.{PAUSE_UNTIL_PRESS}");
-static const u8 sText_ItemFinderNearby[] = _("Huh?\nThe ITEMFINDER's responding!\pThere's an item buried around here!{PAUSE_UNTIL_PRESS}");
+static const u8 sText_ItemFinderNearby[] = _("Huh?\nStoutland's staring at something!\pThere must be an item buried around\nhere!{PAUSE_UNTIL_PRESS}");
 static const u8 sText_ItemFinderOnTop[] = _("Oh!\nThe ITEMFINDER's shaking wildly!{PAUSE_UNTIL_PRESS}");
 static const u8 sText_ItemFinderNothing[] = _("… … … …Nope!\nThere's no response.{PAUSE_UNTIL_PRESS}");
 static const u8 sText_CoinCase[] = _("Your COINS:\n{STR_VAR_1}{PAUSE_UNTIL_PRESS}");
@@ -422,6 +422,7 @@ static void ItemUseOnFieldCB_Itemfinder(u8 taskId)
     }
     
     LockPlayerFieldControls();
+    FreezeObjectEvents();
     if (VarGet(VAR_TRANSFORM_MON) == SPECIES_STOUTLAND)
     {
         VarSet(VAR_TRANSFORM_MON, SPECIES_NONE);
@@ -432,8 +433,17 @@ static void ItemUseOnFieldCB_Itemfinder(u8 taskId)
     }
     else
     {
+        u8 transformTaskId;
         VarSet(VAR_TRANSFORM_MON, SPECIES_STOUTLAND);
         ChooseMonForTransform();
+        
+        // Find the transform task and prevent it from unlocking controls
+        transformTaskId = FindTaskIdByFunc(Task_UpdatePlayerTransformAnimation);
+        if (transformTaskId != TASK_NONE)
+        {
+            gTasks[transformTaskId].data[2] = FALSE; // tUnlockControls = FALSE
+        }
+        
         PlayCry_Normal(SPECIES_STOUTLAND, 0);
         if (ItemfinderCheckForHiddenItems(gMapHeader.events, taskId) == TRUE)
         {    
@@ -462,6 +472,14 @@ static void Task_UseItemfinder(u8 taskId)
     s16 *data = gTasks[taskId].data;
     if (tCounter == 0)
     {
+        // For Stoutland, only bark once instead of 4 times (and only if no cry is playing)
+        if (tItemfinderBeeps == 0)
+        {
+            if (!IsCryPlaying())
+                PlayCry_Normal(SPECIES_STOUTLAND, 0);
+            tItemfinderBeeps = 4; // Skip to end
+        }
+        
         if (tItemfinderBeeps == 4)
         {
             playerDirToItem = GetDirectionToHiddenItem(tItemDistanceX, tItemDistanceY);
@@ -485,7 +503,6 @@ static void Task_UseItemfinder(u8 taskId)
             }
             return;
         }
-        PlaySE(SE_ITEMFINDER);
         tItemfinderBeeps++;
     }
     tCounter = (tCounter + 1) & 0x1F;
@@ -494,6 +511,11 @@ static void Task_UseItemfinder(u8 taskId)
 static void Task_CloseItemfinderMessage(u8 taskId)
 {
     ClearDialogWindowAndFrame(0, TRUE);
+    
+    // Restore player avatar control flags that were locked during transform
+    gPlayerAvatar.preventStep = FALSE;
+    gPlayerAvatar.flags |= PLAYER_AVATAR_FLAG_CONTROLLABLE;
+    
     ScriptUnfreezeObjectEvents();
     UnlockPlayerFieldControls();
     DestroyTask(taskId);

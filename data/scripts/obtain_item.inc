@@ -230,3 +230,21 @@ EventScript_NoRoomForHiddenItem::
 	setvar VAR_RESULT, 0
 	releaseall
 	end
+
+EventScript_StoutlandFoundHiddenItem::
+	lockall
+	msgbox EventScript_StoutlandFoundHiddenItem_Text, MSGBOX_DEFAULT
+	waitse
+	copyvar VAR_0x8006, VAR_0x8005
+	additem VAR_0x8005
+	copyvar VAR_0x8007, VAR_RESULT
+	bufferitemnameplural STR_VAR_2, VAR_0x8005, 1
+	checkitemtype VAR_0x8005
+	call EventScript_BufferPocketNameAndTryFanfare
+	goto_if_eq VAR_0x8007, TRUE, EventScript_PickUpHiddenItem
+	goto_if_eq VAR_0x8007, FALSE, EventScript_NoRoomForHiddenItem
+	end
+
+EventScript_StoutlandFoundHiddenItem_Text:
+	.string "Oh!\n"
+	.string "Stoutland found something!$"

@@ -7520,10 +7520,12 @@ bool8 MovementAction_Delay16_Step0(struct ObjectEvent *objectEvent, struct Sprit
 
 bool8 MovementAction_WalkFastDown_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
-    // Check if this is player riding Tauros
-    if (objectEvent->isPlayer && VarGet(VAR_TRANSFORM_MON) == SPECIES_TAUROS)
+    u16 rideSpecies = VarGet(VAR_TRANSFORM_MON);
+    
+    // Check if this is player riding Tauros or Noivern (both use same fast animations)
+    if (objectEvent->isPlayer && (rideSpecies == SPECIES_TAUROS || rideSpecies == SPECIES_NOIVERN))
     {
-        // Use faster speed and Tauros-specific animation
+        // Use faster speed and Tauros-specific animation (works for both)
         InitNpcForMovement(objectEvent, sprite, DIR_SOUTH, MOVE_SPEED_FASTER);
         SetStepAnimHandleAlternation(objectEvent, sprite, GetTaurosFastAnimNum(DIR_SOUTH));
     }
@@ -7546,10 +7548,12 @@ bool8 MovementAction_WalkFastDown_Step1(struct ObjectEvent *objectEvent, struct 
 
 bool8 MovementAction_WalkFastUp_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
-    // Check if this is player riding Tauros
-    if (objectEvent->isPlayer && VarGet(VAR_TRANSFORM_MON) == SPECIES_TAUROS)
+    u16 rideSpecies = VarGet(VAR_TRANSFORM_MON);
+    
+    // Check if this is player riding Tauros or Noivern (both use same fast animations)
+    if (objectEvent->isPlayer && (rideSpecies == SPECIES_TAUROS || rideSpecies == SPECIES_NOIVERN))
     {
-        // Use faster speed and Tauros-specific animation
+        // Use faster speed and Tauros-specific animation (works for both)
         InitNpcForMovement(objectEvent, sprite, DIR_NORTH, MOVE_SPEED_FASTER);
         SetStepAnimHandleAlternation(objectEvent, sprite, GetTaurosFastAnimNum(DIR_NORTH));
     }
@@ -7573,11 +7577,12 @@ bool8 MovementAction_WalkFastUp_Step1(struct ObjectEvent *objectEvent, struct Sp
 bool8 MovementAction_WalkFastLeft_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
     u8 direction = (objectEvent->directionOverwrite) ? objectEvent->directionOverwrite : DIR_WEST;
+    u16 rideSpecies = VarGet(VAR_TRANSFORM_MON);
     
-    // Check if this is player riding Tauros
-    if (objectEvent->isPlayer && VarGet(VAR_TRANSFORM_MON) == SPECIES_TAUROS)
+    // Check if this is player riding Tauros or Noivern (both use same fast animations)
+    if (objectEvent->isPlayer && (rideSpecies == SPECIES_TAUROS || rideSpecies == SPECIES_NOIVERN))
     {
-        // Use faster speed and Tauros-specific animation
+        // Use faster speed and Tauros-specific animation (works for both)
         InitNpcForMovement(objectEvent, sprite, direction, MOVE_SPEED_FASTER);
         SetStepAnimHandleAlternation(objectEvent, sprite, GetTaurosFastAnimNum(objectEvent->facingDirection));
     }
@@ -7604,11 +7609,12 @@ bool8 MovementAction_WalkFastLeft_Step1(struct ObjectEvent *objectEvent, struct 
 bool8 MovementAction_WalkFastRight_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
     u8 direction = (objectEvent->directionOverwrite) ? objectEvent->directionOverwrite : DIR_EAST;
+    u16 rideSpecies = VarGet(VAR_TRANSFORM_MON);
     
-    // Check if this is player riding Tauros
-    if (objectEvent->isPlayer && VarGet(VAR_TRANSFORM_MON) == SPECIES_TAUROS)
+    // Check if this is player riding Tauros or Noivern (both use same fast animations)
+    if (objectEvent->isPlayer && (rideSpecies == SPECIES_TAUROS || rideSpecies == SPECIES_NOIVERN))
     {
-        // Use faster speed and Tauros-specific animation
+        // Use faster speed and Tauros-specific animation (works for both)
         InitNpcForMovement(objectEvent, sprite, direction, MOVE_SPEED_FASTER);
         SetStepAnimHandleAlternation(objectEvent, sprite, GetTaurosFastAnimNum(objectEvent->facingDirection));
     }

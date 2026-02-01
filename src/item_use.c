@@ -1903,20 +1903,51 @@ static void ItemUseOnFieldCB_StrengthToolNoRock(u8 taskId)
 
 void ItemUseOutOfBattle_FlashTool(u8 taskId)
 {
-    if (CanUseFlash())
+    s16 x, y;
+    u32 behavior;
+
+    PlayerGetDestCoords(&x, &y);
+    behavior = MapGridGetMetatileBehaviorAt(x, y);
+    
+    // Prevent transformation indoors (unless already transformed into Noivern)
+    if (gMapHeader.mapType == MAP_TYPE_INDOOR && VarGet(VAR_TRANSFORM_MON) != SPECIES_NOIVERN)
     {
-        sItemUseOnFieldCB = ItemUseOnFieldCB_FlashTool;
-        SetUpItemUseOnFieldCallback(taskId);
-    }
-    else
         DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
+        return;
+    }
+    
+    // Cannot use while surfing or on rocky path (like Tauros restriction)
+    if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING) || behavior == MB_ROCKY_PATH)
+    {
+        DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
+        return;
+    }
+    
+    // Just toggle transformation (no Flash functionality)
+    sItemUseOnFieldCB = ItemUseOnFieldCB_FlashTool;
+    SetUpItemUseOnFieldCallback(taskId);
 }
 void ItemUseOnFieldCB_FlashTool(u8 taskId)
 {
     LockPlayerFieldControls();
-    FldEff_UseFlashTool();
-    DestroyTask(taskId);
+    if (VarGet(VAR_TRANSFORM_MON) == SPECIES_NOIVERN)
+    {
+        VarSet(VAR_TRANSFORM_MON, SPECIES_NONE);
+        ChooseMonForTransform();
+        UnlockPlayerFieldControls();
+        UnfreezeObjectEvents();
+        DestroyTask(taskId);
+    }
+    else
+    {
+        VarSet(VAR_TRANSFORM_MON, SPECIES_NOIVERN);
+        ChooseMonForTransform();
+        UnlockPlayerFieldControls();
+        UnfreezeObjectEvents();
+        DestroyTask(taskId);
+    };
 }
+
 void ItemUseOutOfBattle_RockSmashTool(u8 taskId)
 {
     s16 x, y;

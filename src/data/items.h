@@ -14700,15 +14700,15 @@ const struct Item gItemsInfo[] =
 
     [ITEM_FLASH_TOOL] =
     {
-        .name = ITEM_NAME("Flash Tool"),
+        .name = ITEM_NAME("Noivern Soar"),
         .price = 0,
         .importance = 1,
         .description = sFlashToolDesc,
-        .pocket = POCKET_KEY_ITEMS,
+        .pocket = POCKET_POKERIDE,
         .type = ITEM_USE_FIELD,
         .fieldUseFunc = ItemUseOutOfBattle_FlashTool,
-        .iconPic = gItemIcon_QuestionMark,
-        .iconPalette = gItemIconPalette_QuestionMark,        
+        .iconPic = gItemIcon_PokeRideNoivern,
+        .iconPalette = gItemIconPalette_PokeRideNoivern,        
     },
 
     [ITEM_ROCKSMASH_TOOL] =

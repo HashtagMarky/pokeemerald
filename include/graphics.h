@@ -1758,6 +1758,8 @@ extern const u32 gItemIcon_PokeRideMudsdale[];
 extern const u16 gItemIconPalette_PokeRideMudsdale[];
 extern const u32 gItemIcon_PokeRideTauros[];
 extern const u16 gItemIconPalette_PokeRideTauros[];
+extern const u32 gItemIcon_PokeRideNoivern[];
+extern const u16 gItemIconPalette_PokeRideNoivern[];
 
 
 //menu graphics

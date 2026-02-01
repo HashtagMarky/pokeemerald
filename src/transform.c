@@ -249,6 +249,8 @@ static void ExecutePlayerTransformation(u16 species)
     // Play appropriate sound for transformation
     if (species == SPECIES_NONE)
         PlaySE(SE_M_TELEPORT);  // Detransforming - use teleport sound
+    else if (!IsCryPlaying())
+        PlayCry_Normal(species, 0);  // Transforming - use mon's cry
     
     gPlayerTransformSpecies = species;
     DestroyPlayerMountSprite();

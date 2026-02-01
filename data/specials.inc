@@ -565,3 +565,4 @@ gSpecials::
 	def_special GetCodeFeedback
 	def_special CreateFollowMonEncounter
 	def_special SetHiddenNature
+	def_special TransformToMudsdale

@@ -517,3 +517,27 @@ Text_MonUsedRockClimb:
 Text_CantRockClimb:
     .string "The cliff is steep.\n"
     .string "A Pokémon may be able to climb it.$"
+
+@ Rocky path sign/tile
+EventScript_RockyPath::
+	lockall
+	checkitem ITEM_CUT_TOOL, 1
+	goto_if_eq VAR_RESULT, TRUE, EventScript_RockyPathHasTool
+	msgbox Text_RockyPathNoTool, MSGBOX_DEFAULT
+	releaseall
+	end
+
+EventScript_RockyPathHasTool::
+	msgbox Text_RockyPathUseTool, MSGBOX_DEFAULT
+	closemessage
+	special TransformToMudsdale
+	waitstate
+	releaseall
+	end
+
+Text_RockyPathNoTool:
+	.string "The road up here is very rocky.\n"
+	.string "Maybe a POKéMON could cross it.$"
+
+Text_RockyPathUseTool:
+	.string "{PLAYER} used MUDSDALE Gallop!$"

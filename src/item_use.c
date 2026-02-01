@@ -444,7 +444,6 @@ static void ItemUseOnFieldCB_Itemfinder(u8 taskId)
             gTasks[transformTaskId].data[2] = FALSE; // tUnlockControls = FALSE
         }
         
-        PlayCry_Normal(SPECIES_STOUTLAND, 0);
         if (ItemfinderCheckForHiddenItems(gMapHeader.events, taskId) == TRUE)
         {    
             gTasks[taskId].func = Task_UseItemfinder;
@@ -1736,7 +1735,6 @@ void ItemUseOnFieldCB_CutTool(u8 taskId)
     {
         VarSet(VAR_TRANSFORM_MON, SPECIES_MUDSDALE);
         ChooseMonForTransform();
-        PlayCry_Normal(SPECIES_MUDSDALE, 0);
         UnlockPlayerFieldControls();
         UnfreezeObjectEvents();
         DestroyTask(taskId);
@@ -1803,7 +1801,6 @@ void ItemUseOutOfBattle_FlyTool(u8 taskId)
         
         // Transform without unlocking controls when done
         TransformPlayerToSpeciesScript(SPECIES_CHARIZARD, FALSE);
-        PlayCry_Normal(SPECIES_CHARIZARD, 0);
         
         // Wait for transform animation
         gTasks[taskId].func = Task_WaitForTransformThenOpenFlyMap;
@@ -1817,7 +1814,6 @@ static void FieldCB_TransformForFlyTool(void)
     
     // Transform without unlocking controls when done
     TransformPlayerToSpeciesScript(SPECIES_CHARIZARD, FALSE);
-    PlayCry_Normal(SPECIES_CHARIZARD, 0);
     
     CreateTask(Task_WaitForTransformThenOpenFlyMap, 0);
     gFieldCallback = NULL;
@@ -1925,7 +1921,6 @@ void ItemUseOnFieldCB_StrengthTool(u8 taskId)
     LockPlayerFieldControls();
     VarSet(VAR_TRANSFORM_MON, SPECIES_MACHAMP);
     ChooseMonForTransform();
-    PlayCry_Normal(SPECIES_MACHAMP, 0);
     ScriptContext_SetupScript(EventScript_UseStrengthTool);
     DestroyTask(taskId);
 }
@@ -1944,7 +1939,6 @@ static void ItemUseOnFieldCB_StrengthToolNoRock(u8 taskId)
     {
         VarSet(VAR_TRANSFORM_MON, SPECIES_MACHAMP);
         ChooseMonForTransform();
-        PlayCry_Normal(SPECIES_MACHAMP, 0);
         UnlockPlayerFieldControls();
         UnfreezeObjectEvents();
         DestroyTask(taskId);
@@ -2006,7 +2000,6 @@ static void ItemUseOnFieldCB_RockSmashTool(u8 taskId)
     {
         VarSet(VAR_TRANSFORM_MON, SPECIES_TAUROS);
         ChooseMonForTransform();
-        PlayCry_Normal(SPECIES_TAUROS, 0);
         CreateTask(Task_DelayedRockSmashScript, 0);
         DestroyTask(taskId);
     }
@@ -2041,7 +2034,6 @@ static void ItemUseOnFieldCB_RockSmashToolNoRock(u8 taskId)
     {
         VarSet(VAR_TRANSFORM_MON, SPECIES_TAUROS);
         ChooseMonForTransform();
-        PlayCry_Normal(SPECIES_TAUROS, 0);
         UnlockPlayerFieldControls();
         UnfreezeObjectEvents();
         DestroyTask(taskId);

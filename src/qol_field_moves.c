@@ -1051,3 +1051,9 @@ static bool32 SetMonResultVariables(u32 partyIndex, u32 species)
     gSpecialVar_0x8004 = species;
     return TRUE;
 }
+
+void TransformToMudsdale(void)
+{
+    VarSet(VAR_TRANSFORM_MON, SPECIES_MUDSDALE);
+    ChooseMonForTransform();
+}

@@ -47,6 +47,8 @@ bool8 FldEff_SweetScentTool(void);
 void ClearFieldMoveFlags(void);
 bool32 PartyHasMonLearnsKnowsFieldMove(u16);
 
+void TransformToMudsdale(void);
+
 enum FieldMoveActionSource
 {
     FIELD_MOVE_FAIL,

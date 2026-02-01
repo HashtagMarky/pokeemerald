@@ -425,6 +425,7 @@ extern const u8 EventScript_UseWaterfallTool[];
 extern const u8 EventScript_UseWaterfallFieldEffect[];
 extern const u8 EventScript_UseDiveTool[];
 extern const u8 EventScript_AskTeleportTool[];
+extern const u8 EventScript_RockyPath[];
 //End qol_field_moves
 
 //player pc

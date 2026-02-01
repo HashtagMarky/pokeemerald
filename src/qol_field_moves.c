@@ -148,14 +148,64 @@ static void LockPlayerAndLoadMon(void);
 
 static void FieldCallback_UseFlyTool(void);
 static void Task_UseFlyTool(void);
+static void Task_FlyUpAndWarp(u8 taskId);
+static void FieldCallback_FlyUpAnimation(void);
 
 void ReturnToFieldFromFlyToolMapSelect(void)
 {
-    // Just do the warp, no transform here
-    Overworld_ResetStateAfterFly();
-    WarpIntoMap();
-    SetMainCallback2(CB2_LoadMap);
-    gFieldCallback = FieldCallback_DetransformAfterFly;
+    // Return to field and start fly-up animation
+    SetMainCallback2(CB2_ReturnToField);
+    gFieldCallback = FieldCallback_FlyUpAnimation;
+}
+
+static void FieldCallback_FlyUpAnimation(void)
+{
+    Overworld_PlaySpecialMapMusic();
+    FadeInFromBlack();
+    CreateTask(Task_FlyUpAndWarp, 0);
+    gFieldCallback = NULL;
+}
+
+static void Task_FlyUpAndWarp(u8 taskId)
+{
+    struct Task *task = &gTasks[taskId];
+    struct ObjectEvent *playerObj = &gObjectEvents[gPlayerAvatar.objectEventId];
+    struct Sprite *playerSprite = &gSprites[playerObj->spriteId];
+    
+    switch (task->data[0])
+    {
+        case 0: // Wait for fade
+            if (!gPaletteFade.active)
+            {
+                LockPlayerFieldControls();
+                FreezeObjectEvents();
+                PlaySE(SE_M_FLY);
+                FadeScreen(FADE_TO_BLACK, 4); // Start fading immediately (slower fade)
+                task->data[0]++;
+            }
+            break;
+        case 1: // Move player up while fading
+            // Use task data to track offset (can go beyond y2 limits)
+            task->data[1] -= 4; // Decrease by 4 each frame (moving up)
+            
+            // Apply the offset to y2 (clamped to s8 range)
+            if (task->data[1] > -128)
+                playerSprite->y2 = task->data[1];
+            else
+                playerSprite->y2 = -128; // Max offset for y2
+            
+            // Check if fade is complete
+            if (!gPaletteFade.active)
+            {
+                // Do the actual warp (don't reset y2, player stays off screen)
+                Overworld_ResetStateAfterFly();
+                WarpIntoMap();
+                SetMainCallback2(CB2_LoadMap);
+                gFieldCallback = FieldCallback_DetransformAfterFly;
+                DestroyTask(taskId);
+            }
+            break;
+    }
 }
 
 static void FieldCallback_DetransformAfterFly(void)

@@ -245,6 +245,17 @@ static void Task_CloseCantUseKeyItemMessage(u8 taskId)
     UnlockPlayerFieldControls();
 }
 
+static void Task_WaitForButtonPress_RidePager(u8 taskId)
+{
+    if (JOY_NEW(A_BUTTON | B_BUTTON))
+    {
+        ClearDialogWindowAndFrame(0, TRUE);
+        DestroyTask(taskId);
+        ScriptUnfreezeObjectEvents();
+        UnlockPlayerFieldControls();
+    }
+}
+
 u8 CheckIfItemIsTMHMOrEvolutionStone(u16 itemId)
 {
     if (GetItemFieldFunc(itemId) == ItemUseOutOfBattle_TMHM)
@@ -1990,8 +2001,8 @@ void ItemUseOutOfBattle_RidePager(u8 taskId)
     {
         // Display "You cannot ride on {SPECIES_NAME}!" message
         StringCopy(gStringVar1, GetSpeciesName(species));
-        StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("You cannot ride on\n{STR_VAR_1}!"));
-        DisplayItemMessageOnField(taskId, gStringVar4, Task_CloseCantUseKeyItemMessage);
+        StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("You cannot ride on {STR_VAR_1}!"));
+        DisplayItemMessageOnField(taskId, gStringVar4, Task_WaitForButtonPress_RidePager);
         return;
     }
     

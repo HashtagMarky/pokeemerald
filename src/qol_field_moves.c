@@ -261,14 +261,24 @@ static void Task_FlyUpAndWarp(u8 taskId)
 
 static void FieldCallback_DetransformAfterFly(void)
 {
-    Overworld_PlaySpecialMapMusic();
-    FadeInFromBlack();
+    struct ObjectEvent *playerObj;
+    struct Sprite *playerSprite;
     
-    // Lock controls during detransform
+    Overworld_PlaySpecialMapMusic();
+    
+    // Lock controls during descent and detransform
     LockPlayerFieldControls();
     FreezeObjectEvents();
     
-    // Create task immediately - it will handle waiting for fade
+    // Position player above ground BEFORE fade-in starts
+    playerObj = &gObjectEvents[gPlayerAvatar.objectEventId];
+    playerSprite = &gSprites[playerObj->spriteId];
+    playerSprite->y2 = -32; // Start 32 pixels above ground
+    
+    // Now start fade-in
+    FadeInFromBlack();
+    
+    // Create task for descent animation
     CreateTask(Task_WaitForDetransformAfterFly, 0);
     gFieldCallback = NULL;
 }
@@ -276,44 +286,58 @@ static void FieldCallback_DetransformAfterFly(void)
 static void Task_WaitForDetransformAfterFly(u8 taskId)
 {
     struct Task *task = &gTasks[taskId];
+    struct ObjectEvent *playerObj;
+    struct Sprite *playerSprite;
     
-    // Wait for fade to complete first
-    if (gPaletteFade.active)
-        return;
-    
-    // Start detransform on first frame after fade
-    if (task->data[0] == 0)
+    switch (task->data[0])
     {
-        VarSet(VAR_TRANSFORM_MON, SPECIES_NONE);
-        ChooseMonForTransform();
-        
-        // Find the transform task and prevent it from unlocking controls
-        u8 transformTaskId = FindTaskIdByFunc(Task_UpdatePlayerTransformAnimation);
-        if (transformTaskId != TASK_NONE)
-        {
-            gTasks[transformTaskId].data[2] = FALSE; // tUnlockControls = FALSE
-        }
-        
-        task->data[0] = 1;
-        return;
-    }
-    
-    // Wait for transform animation task to finish
-    if (FuncIsActiveTask(Task_UpdatePlayerTransformAnimation))
-        return;
-    
-    // Transform is done, now unlock EVERYTHING
-    if (task->data[0] == 1)
-    {
-        // Force unlock the player avatar state
-        gPlayerAvatar.preventStep = FALSE;
-        gPlayerAvatar.flags |= PLAYER_AVATAR_FLAG_CONTROLLABLE;
-        
-        // Unlock controls and events
-        UnlockPlayerFieldControls();
-        UnfreezeObjectEvents();
-        
-        DestroyTask(taskId);
+        case 0: // Initialize
+            task->data[1] = -32; // Track descent position (starting high)
+            task->data[0] = 1;
+            break;
+            
+        case 1: // Descending animation
+            playerObj = &gObjectEvents[gPlayerAvatar.objectEventId];
+            playerSprite = &gSprites[playerObj->spriteId];
+            
+            // Move down 2 pixels per frame
+            task->data[1] += 2;
+            playerSprite->y2 = task->data[1];
+            
+            // When we reach ground level, start detransform
+            if (task->data[1] >= 0)
+            {
+                playerSprite->y2 = 0;
+                
+                // Start detransform
+                VarSet(VAR_TRANSFORM_MON, SPECIES_NONE);
+                ChooseMonForTransform();
+                
+                // Find the transform task and prevent it from unlocking controls
+                u8 transformTaskId = FindTaskIdByFunc(Task_UpdatePlayerTransformAnimation);
+                if (transformTaskId != TASK_NONE)
+                {
+                    gTasks[transformTaskId].data[2] = FALSE; // tUnlockControls = FALSE
+                }
+                
+                task->data[0] = 2;
+            }
+            break;
+            
+        case 2: // Wait for transform animation to finish
+            if (!FuncIsActiveTask(Task_UpdatePlayerTransformAnimation))
+            {
+                // Force unlock the player avatar state
+                gPlayerAvatar.preventStep = FALSE;
+                gPlayerAvatar.flags |= PLAYER_AVATAR_FLAG_CONTROLLABLE;
+                
+                // Unlock controls and events
+                UnlockPlayerFieldControls();
+                UnfreezeObjectEvents();
+                
+                DestroyTask(taskId);
+            }
+            break;
     }
 }
 

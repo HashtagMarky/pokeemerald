@@ -48,63 +48,7 @@ struct RideMonInfo
     struct RideSpriteInfo spriteInfo[RIDE_SPRITE_DIR_COUNT];
 };
 
-static const struct RideMonInfo sRideMonInfo[NUM_SPECIES] = {
-    [SPECIES_TAUROS] = {
-        .riderGfxId = { [MALE] = OBJ_EVENT_GFX_ELIO_RIDING, [FEMALE] = OBJ_EVENT_GFX_SELENE_RIDING },
-        .spriteInfo = {
-            [RIDE_SPRITE_DIR_DOWN] = { .playerX=0,  .playerY=-10, .playerRendersInFront=RIDER_SHOW_INFRONT },
-            [RIDE_SPRITE_DIR_UP]   = { .playerX=0,  .playerY=-7,  .playerRendersInFront=RIDER_SHOW_INFRONT },
-            [RIDE_SPRITE_DIR_WEST] = { .playerX=3, .playerY=-6,  .playerRendersInFront=RIDER_SHOW_INFRONT },
-            [RIDE_SPRITE_DIR_EAST] = { .playerX=-3,  .playerY=-6,  .playerRendersInFront=RIDER_SHOW_INFRONT },
-        },
-    },
-    [SPECIES_STOUTLAND] = {
-        .riderGfxId = { [MALE] = OBJ_EVENT_GFX_ELIO_RIDING, [FEMALE] = OBJ_EVENT_GFX_SELENE_RIDING },
-        .spriteInfo = {
-            [RIDE_SPRITE_DIR_DOWN] = { .playerX=0,  .playerY=-8,  .playerRendersInFront=RIDER_SHOW_INFRONT },
-            [RIDE_SPRITE_DIR_UP]   = { .playerX=0,  .playerY=-7,  .playerRendersInFront=RIDER_SHOW_INFRONT },
-            [RIDE_SPRITE_DIR_WEST] = { .playerX=3, .playerY=-6,  .playerRendersInFront=RIDER_SHOW_INFRONT },
-            [RIDE_SPRITE_DIR_EAST] = { .playerX=-3,  .playerY=-6,  .playerRendersInFront=RIDER_SHOW_INFRONT },
-        }
-    },
-    [SPECIES_MUDSDALE] = {
-        .riderGfxId = { [MALE] = OBJ_EVENT_GFX_ELIO_RIDING, [FEMALE] = OBJ_EVENT_GFX_SELENE_RIDING },
-        .spriteInfo = {
-            [RIDE_SPRITE_DIR_DOWN] = { .playerX=0,  .playerY=-8,  .playerRendersInFront=RIDER_SHOW_BEHIND },
-            [RIDE_SPRITE_DIR_UP]   = { .playerX=0,  .playerY=-8,  .playerRendersInFront=RIDER_SHOW_INFRONT },
-            [RIDE_SPRITE_DIR_WEST] = { .playerX=3, .playerY=-7,  .playerRendersInFront=RIDER_SHOW_INFRONT },
-            [RIDE_SPRITE_DIR_EAST] = { .playerX=-3,  .playerY=-7,  .playerRendersInFront=RIDER_SHOW_INFRONT },
-        }
-    },
-    [SPECIES_MACHAMP] = {
-        .riderGfxId = { [MALE] = OBJ_EVENT_GFX_ELIO_RIDING, [FEMALE] = OBJ_EVENT_GFX_SELENE_RIDING },
-        .spriteInfo = {
-            [RIDE_SPRITE_DIR_DOWN] = { .playerX=0,  .playerY=-6,  .playerRendersInFront=RIDER_SHOW_BEHIND },
-            [RIDE_SPRITE_DIR_UP]   = { .playerX=0,  .playerY=-6,  .playerRendersInFront=RIDER_SHOW_INFRONT },
-            [RIDE_SPRITE_DIR_WEST] = { .playerX=4, .playerY=-6,  .playerRendersInFront=RIDER_SHOW_BEHIND },
-            [RIDE_SPRITE_DIR_EAST] = { .playerX=-4,  .playerY=-6,  .playerRendersInFront=RIDER_SHOW_BEHIND },
-        }
-    },
-    [SPECIES_CHARIZARD] = {
-        .riderGfxId = { [MALE] = OBJ_EVENT_GFX_ELIO_RIDING, [FEMALE] = OBJ_EVENT_GFX_SELENE_RIDING },
-        .spriteInfo = {
-            [RIDE_SPRITE_DIR_DOWN] = { .playerX=0,  .playerY=-3,  .playerRendersInFront=RIDER_SHOW_BEHIND },
-            [RIDE_SPRITE_DIR_UP]   = { .playerX=0,  .playerY=-5,  .playerRendersInFront=RIDER_SHOW_INFRONT},
-            [RIDE_SPRITE_DIR_WEST] = { .playerX=5, .playerY=-4,  .playerRendersInFront=RIDER_SHOW_INFRONT },
-            [RIDE_SPRITE_DIR_EAST] = { .playerX=-5,  .playerY=-4,  .playerRendersInFront=RIDER_SHOW_INFRONT },
-        }
-    },
-    [SPECIES_NOIVERN] =
-    {
-        .riderGfxId = { [MALE] = OBJ_EVENT_GFX_ELIO_RIDING, [FEMALE] = OBJ_EVENT_GFX_SELENE_RIDING },
-        .spriteInfo = {
-            [RIDE_SPRITE_DIR_DOWN] = { .playerX=0,  .playerY=-7,  .playerRendersInFront=RIDER_SHOW_BEHIND },
-            [RIDE_SPRITE_DIR_UP]   = { .playerX=0,  .playerY=-7,  .playerRendersInFront=RIDER_SHOW_INFRONT},
-            [RIDE_SPRITE_DIR_WEST] = { .playerX=3, .playerY=-8,  .playerRendersInFront=RIDER_SHOW_BEHIND },
-            [RIDE_SPRITE_DIR_EAST] = { .playerX=-3,  .playerY=-8,  .playerRendersInFront=RIDER_SHOW_BEHIND },
-        }
-    },
-};
+#include "data/rogue_ridemon_infos_converted.h"
 
 /*
  * ============================================================================
@@ -155,10 +99,23 @@ static u16 GetTransformGraphicsIdFromSpecies(void)
 {
     u16 gfxId = gPlayerTransformSpecies + OBJ_EVENT_MON;
 
-    if (FlagGet(FLAG_SHINY_RIDE))
+    // Check both the global shiny ride flag and the Ride Pager specific flag
+    if (FlagGet(FLAG_SHINY_RIDE) || FlagGet(FLAG_RIDE_PAGER_SHINY))
         gfxId += OBJ_EVENT_MON_SHINY;
 
     return gfxId;
+}
+
+// Check if a species can be ridden (has valid ride data)
+bool8 CanRideOnSpecies(u16 species)
+{
+    u8 gender;
+    
+    if (species == SPECIES_NONE || species >= NUM_SPECIES)
+        return FALSE;
+    
+    gender = gSaveBlock2Ptr->playerGender;
+    return sRideMonInfo[species].riderGfxId[gender] != 0;
 }
 
 /*
@@ -431,7 +388,8 @@ u16 GetPlayerTransformGraphicsId(void)
         return GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_NORMAL);
 
     u16 gfxId = gPlayerTransformSpecies + OBJ_EVENT_MON;
-    if (FlagGet(FLAG_SHINY_RIDE))
+    // Check both the global shiny ride flag and the Ride Pager specific flag
+    if (FlagGet(FLAG_SHINY_RIDE) || FlagGet(FLAG_RIDE_PAGER_SHINY))
         gfxId += OBJ_EVENT_MON_SHINY;
 
     return gfxId;

@@ -29,6 +29,10 @@ bool32 IsPlayerTransformed(void);
 
 /* Returns the overworld graphicsId for the current transformed species */
 u16 GetPlayerTransformGraphicsId(void);
+
+/* Check if a species can be ridden (has valid ride data) */
+bool8 CanRideOnSpecies(u16 species);
+
 extern u16 gPlayerTransformSpecies;
 void TransformPlayerToSpeciesSimple(u16 species);
 /*

@@ -2722,24 +2722,6 @@ static const struct RideMonInfo sRideMonInfo[NUM_SPECIES] = {
             [RIDE_SPRITE_DIR_EAST] = { .playerX=-1,  .playerY=-20,  .playerRendersInFront=RIDER_SHOW_INFRONT },
         }
     },
-    [SPECIES_ZACIAN] = {
-        .riderGfxId = { [MALE] = OBJ_EVENT_GFX_ELIO_RIDING, [FEMALE] = OBJ_EVENT_GFX_SELENE_RIDING },
-        .spriteInfo = {
-            [RIDE_SPRITE_DIR_DOWN] = { .playerX=0,  .playerY=-7,  .playerRendersInFront=RIDER_SHOW_INFRONT },
-            [RIDE_SPRITE_DIR_UP]   = { .playerX=0,  .playerY=-10,  .playerRendersInFront=RIDER_SHOW_INFRONT },
-            [RIDE_SPRITE_DIR_WEST] = { .playerX=1, .playerY=-8,  .playerRendersInFront=RIDER_SHOW_INFRONT },
-            [RIDE_SPRITE_DIR_EAST] = { .playerX=-1,  .playerY=-8,  .playerRendersInFront=RIDER_SHOW_INFRONT },
-        }
-    },
-    [SPECIES_ZAMAZENTA] = {
-        .riderGfxId = { [MALE] = OBJ_EVENT_GFX_ELIO_RIDING, [FEMALE] = OBJ_EVENT_GFX_SELENE_RIDING },
-        .spriteInfo = {
-            [RIDE_SPRITE_DIR_DOWN] = { .playerX=0,  .playerY=-8,  .playerRendersInFront=RIDER_SHOW_INFRONT },
-            [RIDE_SPRITE_DIR_UP]   = { .playerX=0,  .playerY=-9,  .playerRendersInFront=RIDER_SHOW_INFRONT },
-            [RIDE_SPRITE_DIR_WEST] = { .playerX=1, .playerY=-8,  .playerRendersInFront=RIDER_SHOW_INFRONT },
-            [RIDE_SPRITE_DIR_EAST] = { .playerX=-1,  .playerY=-8,  .playerRendersInFront=RIDER_SHOW_INFRONT },
-        }
-    },
     [SPECIES_ETERNATUS] = {
         .riderGfxId = { [MALE] = OBJ_EVENT_GFX_ELIO_RIDING, [FEMALE] = OBJ_EVENT_GFX_SELENE_RIDING },
         .spriteInfo = {
@@ -2830,7 +2812,7 @@ static const struct RideMonInfo sRideMonInfo[NUM_SPECIES] = {
             [RIDE_SPRITE_DIR_EAST] = { .playerX=-3,  .playerY=-10,  .playerRendersInFront=RIDER_SHOW_INFRONT },
         }
     },
-    [SPECIES_BASCULEGION] = {
+    [SPECIES_BASCULEGION_M] = {
         .riderGfxId = { [MALE] = OBJ_EVENT_GFX_ELIO_RIDING, [FEMALE] = OBJ_EVENT_GFX_SELENE_RIDING },
         .spriteInfo = {
             [RIDE_SPRITE_DIR_DOWN] = { .playerX=0,  .playerY=-6,  .playerRendersInFront=RIDER_SHOW_INFRONT },
@@ -2866,7 +2848,7 @@ static const struct RideMonInfo sRideMonInfo[NUM_SPECIES] = {
             [RIDE_SPRITE_DIR_EAST] = { .playerX=-5,  .playerY=-5,  .playerRendersInFront=RIDER_SHOW_INFRONT },
         }
     },
-    [SPECIES_RAICHU_ALOLAN] = {
+    [SPECIES_RAICHU_ALOLA] = {
         .riderGfxId = { [MALE] = OBJ_EVENT_GFX_ELIO_RIDING, [FEMALE] = OBJ_EVENT_GFX_SELENE_RIDING },
         .spriteInfo = {
             [RIDE_SPRITE_DIR_DOWN] = { .playerX=0,  .playerY=-13,  .playerRendersInFront=RIDER_SHOW_INFRONT },
@@ -2875,7 +2857,7 @@ static const struct RideMonInfo sRideMonInfo[NUM_SPECIES] = {
             [RIDE_SPRITE_DIR_EAST] = { .playerX=-3,  .playerY=-11,  .playerRendersInFront=RIDER_SHOW_INFRONT },
         }
     },
-    [SPECIES_DUGTRIO_ALOLAN] = {
+    [SPECIES_DUGTRIO_ALOLA] = {
         .riderGfxId = { [MALE] = OBJ_EVENT_GFX_ELIO_RIDING, [FEMALE] = OBJ_EVENT_GFX_SELENE_RIDING },
         .spriteInfo = {
             [RIDE_SPRITE_DIR_DOWN] = { .playerX=0,  .playerY=-6,  .playerRendersInFront=RIDER_SHOW_BEHIND },
@@ -2884,7 +2866,7 @@ static const struct RideMonInfo sRideMonInfo[NUM_SPECIES] = {
             [RIDE_SPRITE_DIR_EAST] = { .playerX=-3,  .playerY=-6,  .playerRendersInFront=RIDER_SHOW_INFRONT },
         }
     },
-    [SPECIES_GOLEM_ALOLAN] = {
+    [SPECIES_GOLEM_ALOLA] = {
         .riderGfxId = { [MALE] = OBJ_EVENT_GFX_ELIO_RIDING, [FEMALE] = OBJ_EVENT_GFX_SELENE_RIDING },
         .spriteInfo = {
             [RIDE_SPRITE_DIR_DOWN] = { .playerX=0,  .playerY=-9,  .playerRendersInFront=RIDER_SHOW_BEHIND },
@@ -2893,7 +2875,7 @@ static const struct RideMonInfo sRideMonInfo[NUM_SPECIES] = {
             [RIDE_SPRITE_DIR_EAST] = { .playerX=-4,  .playerY=-7,  .playerRendersInFront=RIDER_SHOW_INFRONT },
         }
     },
-    [SPECIES_MUK_ALOLAN] = {
+    [SPECIES_MUK_ALOLA] = {
         .riderGfxId = { [MALE] = OBJ_EVENT_GFX_ELIO_RIDING, [FEMALE] = OBJ_EVENT_GFX_SELENE_RIDING },
         .spriteInfo = {
             [RIDE_SPRITE_DIR_DOWN] = { .playerX=0,  .playerY=-8,  .playerRendersInFront=RIDER_SHOW_INFRONT },
@@ -2902,7 +2884,7 @@ static const struct RideMonInfo sRideMonInfo[NUM_SPECIES] = {
             [RIDE_SPRITE_DIR_EAST] = { .playerX=-3,  .playerY=-7,  .playerRendersInFront=RIDER_SHOW_INFRONT },
         }
     },
-    [SPECIES_EXEGGUTOR_ALOLAN] = {
+    [SPECIES_EXEGGUTOR_ALOLA] = {
         .riderGfxId = { [MALE] = OBJ_EVENT_GFX_ELIO_RIDING, [FEMALE] = OBJ_EVENT_GFX_SELENE_RIDING },
         .spriteInfo = {
             [RIDE_SPRITE_DIR_DOWN] = { .playerX=1,  .playerY=-29,  .playerRendersInFront=RIDER_SHOW_BEHIND },
@@ -2911,7 +2893,7 @@ static const struct RideMonInfo sRideMonInfo[NUM_SPECIES] = {
             [RIDE_SPRITE_DIR_EAST] = { .playerX=-3,  .playerY=-27,  .playerRendersInFront=RIDER_SHOW_INFRONT },
         }
     },
-    [SPECIES_RAPIDASH_GALARIAN] = {
+    [SPECIES_RAPIDASH_GALAR] = {
         .riderGfxId = { [MALE] = OBJ_EVENT_GFX_ELIO_RIDING, [FEMALE] = OBJ_EVENT_GFX_SELENE_RIDING },
         .spriteInfo = {
             [RIDE_SPRITE_DIR_DOWN] = { .playerX=0,  .playerY=-7,  .playerRendersInFront=RIDER_SHOW_BEHIND },
@@ -2920,7 +2902,7 @@ static const struct RideMonInfo sRideMonInfo[NUM_SPECIES] = {
             [RIDE_SPRITE_DIR_EAST] = { .playerX=-2,  .playerY=-7,  .playerRendersInFront=RIDER_SHOW_INFRONT },
         }
     },
-    [SPECIES_SLOWBRO_GALARIAN] = {
+    [SPECIES_SLOWBRO_GALAR] = {
         .riderGfxId = { [MALE] = OBJ_EVENT_GFX_ELIO_RIDING, [FEMALE] = OBJ_EVENT_GFX_SELENE_RIDING },
         .spriteInfo = {
             [RIDE_SPRITE_DIR_DOWN] = { .playerX=0,  .playerY=-5,  .playerRendersInFront=RIDER_SHOW_BEHIND },
@@ -2929,7 +2911,7 @@ static const struct RideMonInfo sRideMonInfo[NUM_SPECIES] = {
             [RIDE_SPRITE_DIR_EAST] = { .playerX=-2,  .playerY=-5,  .playerRendersInFront=RIDER_SHOW_INFRONT },
         }
     },
-    [SPECIES_WEEZING_GALARIAN] = {
+    [SPECIES_WEEZING_GALAR] = {
         .riderGfxId = { [MALE] = OBJ_EVENT_GFX_ELIO_RIDING, [FEMALE] = OBJ_EVENT_GFX_SELENE_RIDING },
         .spriteInfo = {
             [RIDE_SPRITE_DIR_DOWN] = { .playerX=-4,  .playerY=-7,  .playerRendersInFront=RIDER_SHOW_BEHIND },
@@ -2938,7 +2920,7 @@ static const struct RideMonInfo sRideMonInfo[NUM_SPECIES] = {
             [RIDE_SPRITE_DIR_EAST] = { .playerX=-5,  .playerY=-6,  .playerRendersInFront=RIDER_SHOW_BEHIND },
         }
     },
-    [SPECIES_ARTICUNO_GALARIAN] = {
+    [SPECIES_ARTICUNO_GALAR] = {
         .riderGfxId = { [MALE] = OBJ_EVENT_GFX_ELIO_RIDING, [FEMALE] = OBJ_EVENT_GFX_SELENE_RIDING },
         .spriteInfo = {
             [RIDE_SPRITE_DIR_DOWN] = { .playerX=0,  .playerY=-6,  .playerRendersInFront=RIDER_SHOW_BEHIND },
@@ -2947,7 +2929,7 @@ static const struct RideMonInfo sRideMonInfo[NUM_SPECIES] = {
             [RIDE_SPRITE_DIR_EAST] = { .playerX=-1,  .playerY=-9,  .playerRendersInFront=RIDER_SHOW_BEHIND },
         }
     },
-    [SPECIES_ZAPDOS_GALARIAN] = {
+    [SPECIES_ZAPDOS_GALAR] = {
         .riderGfxId = { [MALE] = OBJ_EVENT_GFX_ELIO_RIDING, [FEMALE] = OBJ_EVENT_GFX_SELENE_RIDING },
         .spriteInfo = {
             [RIDE_SPRITE_DIR_DOWN] = { .playerX=0,  .playerY=-7,  .playerRendersInFront=RIDER_SHOW_BEHIND },
@@ -2956,7 +2938,7 @@ static const struct RideMonInfo sRideMonInfo[NUM_SPECIES] = {
             [RIDE_SPRITE_DIR_EAST] = { .playerX=-1,  .playerY=-8,  .playerRendersInFront=RIDER_SHOW_INFRONT },
         }
     },
-    [SPECIES_MOLTRES_GALARIAN] = {
+    [SPECIES_MOLTRES_GALAR] = {
         .riderGfxId = { [MALE] = OBJ_EVENT_GFX_ELIO_RIDING, [FEMALE] = OBJ_EVENT_GFX_SELENE_RIDING },
         .spriteInfo = {
             [RIDE_SPRITE_DIR_DOWN] = { .playerX=0,  .playerY=-7,  .playerRendersInFront=RIDER_SHOW_BEHIND },
@@ -2965,7 +2947,7 @@ static const struct RideMonInfo sRideMonInfo[NUM_SPECIES] = {
             [RIDE_SPRITE_DIR_EAST] = { .playerX=-4,  .playerY=-9,  .playerRendersInFront=RIDER_SHOW_BEHIND },
         }
     },
-    [SPECIES_SLOWKING_GALARIAN] = {
+    [SPECIES_SLOWKING_GALAR] = {
         .riderGfxId = { [MALE] = OBJ_EVENT_GFX_ELIO_RIDING, [FEMALE] = OBJ_EVENT_GFX_SELENE_RIDING },
         .spriteInfo = {
             [RIDE_SPRITE_DIR_DOWN] = { .playerX=0,  .playerY=-5,  .playerRendersInFront=RIDER_SHOW_BEHIND },
@@ -2974,7 +2956,7 @@ static const struct RideMonInfo sRideMonInfo[NUM_SPECIES] = {
             [RIDE_SPRITE_DIR_EAST] = { .playerX=-3,  .playerY=-5,  .playerRendersInFront=RIDER_SHOW_INFRONT },
         }
     },
-    [SPECIES_DARMANITAN_GALARIAN] = {
+    [SPECIES_DARMANITAN_GALAR] = {
         .riderGfxId = { [MALE] = OBJ_EVENT_GFX_ELIO_RIDING, [FEMALE] = OBJ_EVENT_GFX_SELENE_RIDING },
         .spriteInfo = {
             [RIDE_SPRITE_DIR_DOWN] = { .playerX=0,  .playerY=-6,  .playerRendersInFront=RIDER_SHOW_BEHIND },
@@ -2983,7 +2965,7 @@ static const struct RideMonInfo sRideMonInfo[NUM_SPECIES] = {
             [RIDE_SPRITE_DIR_EAST] = { .playerX=-4,  .playerY=-6,  .playerRendersInFront=RIDER_SHOW_INFRONT },
         }
     },
-    [SPECIES_ARCANINE_HISUIAN] = {
+    [SPECIES_ARCANINE_HISUI] = {
         .riderGfxId = { [MALE] = OBJ_EVENT_GFX_ELIO_RIDING, [FEMALE] = OBJ_EVENT_GFX_SELENE_RIDING },
         .spriteInfo = {
             [RIDE_SPRITE_DIR_DOWN] = { .playerX=0,  .playerY=-9,  .playerRendersInFront=RIDER_SHOW_INFRONT },
@@ -2992,7 +2974,7 @@ static const struct RideMonInfo sRideMonInfo[NUM_SPECIES] = {
             [RIDE_SPRITE_DIR_EAST] = { .playerX=-2,  .playerY=-7,  .playerRendersInFront=RIDER_SHOW_INFRONT },
         }
     },
-    [SPECIES_ELECTRODE_HISUIAN] = {
+    [SPECIES_ELECTRODE_HISUI] = {
         .riderGfxId = { [MALE] = OBJ_EVENT_GFX_ELIO_RIDING, [FEMALE] = OBJ_EVENT_GFX_SELENE_RIDING },
         .spriteInfo = {
             [RIDE_SPRITE_DIR_DOWN] = { .playerX=0,  .playerY=-10,  .playerRendersInFront=RIDER_SHOW_INFRONT },
@@ -3001,7 +2983,7 @@ static const struct RideMonInfo sRideMonInfo[NUM_SPECIES] = {
             [RIDE_SPRITE_DIR_EAST] = { .playerX=-6,  .playerY=-6,  .playerRendersInFront=RIDER_SHOW_INFRONT },
         }
     },
-    [SPECIES_TYPHLOSION_HISUIAN] = {
+    [SPECIES_TYPHLOSION_HISUI] = {
         .riderGfxId = { [MALE] = OBJ_EVENT_GFX_ELIO_RIDING, [FEMALE] = OBJ_EVENT_GFX_SELENE_RIDING },
         .spriteInfo = {
             [RIDE_SPRITE_DIR_DOWN] = { .playerX=0,  .playerY=-8,  .playerRendersInFront=RIDER_SHOW_BEHIND },
@@ -3010,7 +2992,7 @@ static const struct RideMonInfo sRideMonInfo[NUM_SPECIES] = {
             [RIDE_SPRITE_DIR_EAST] = { .playerX=-7,  .playerY=-5,  .playerRendersInFront=RIDER_SHOW_INFRONT },
         }
     },
-    [SPECIES_SAMUROTT_HISUIAN] = {
+    [SPECIES_SAMUROTT_HISUI] = {
         .riderGfxId = { [MALE] = OBJ_EVENT_GFX_ELIO_RIDING, [FEMALE] = OBJ_EVENT_GFX_SELENE_RIDING },
         .spriteInfo = {
             [RIDE_SPRITE_DIR_DOWN] = { .playerX=0,  .playerY=-7,  .playerRendersInFront=RIDER_SHOW_BEHIND },
@@ -3019,7 +3001,7 @@ static const struct RideMonInfo sRideMonInfo[NUM_SPECIES] = {
             [RIDE_SPRITE_DIR_EAST] = { .playerX=-4,  .playerY=-5,  .playerRendersInFront=RIDER_SHOW_INFRONT },
         }
     },
-    [SPECIES_LILLIGANT_HISUIAN] = {
+    [SPECIES_LILLIGANT_HISUI] = {
         .riderGfxId = { [MALE] = OBJ_EVENT_GFX_ELIO_RIDING, [FEMALE] = OBJ_EVENT_GFX_SELENE_RIDING },
         .spriteInfo = {
             [RIDE_SPRITE_DIR_DOWN] = { .playerX=0,  .playerY=-4,  .playerRendersInFront=RIDER_SHOW_BEHIND },
@@ -3028,7 +3010,7 @@ static const struct RideMonInfo sRideMonInfo[NUM_SPECIES] = {
             [RIDE_SPRITE_DIR_EAST] = { .playerX=-3,  .playerY=-5,  .playerRendersInFront=RIDER_SHOW_INFRONT },
         }
     },
-    [SPECIES_ZOROARK_HISUIAN] = {
+    [SPECIES_ZOROARK_HISUI] = {
         .riderGfxId = { [MALE] = OBJ_EVENT_GFX_ELIO_RIDING, [FEMALE] = OBJ_EVENT_GFX_SELENE_RIDING },
         .spriteInfo = {
             [RIDE_SPRITE_DIR_DOWN] = { .playerX=0,  .playerY=-6,  .playerRendersInFront=RIDER_SHOW_BEHIND },
@@ -3037,7 +3019,7 @@ static const struct RideMonInfo sRideMonInfo[NUM_SPECIES] = {
             [RIDE_SPRITE_DIR_EAST] = { .playerX=-4,  .playerY=-6,  .playerRendersInFront=RIDER_SHOW_INFRONT },
         }
     },
-    [SPECIES_BRAVIARY_HISUIAN] = {
+    [SPECIES_BRAVIARY_HISUI] = {
         .riderGfxId = { [MALE] = OBJ_EVENT_GFX_ELIO_RIDING, [FEMALE] = OBJ_EVENT_GFX_SELENE_RIDING },
         .spriteInfo = {
             [RIDE_SPRITE_DIR_DOWN] = { .playerX=0,  .playerY=-8,  .playerRendersInFront=RIDER_SHOW_INFRONT },
@@ -3046,7 +3028,7 @@ static const struct RideMonInfo sRideMonInfo[NUM_SPECIES] = {
             [RIDE_SPRITE_DIR_EAST] = { .playerX=-6,  .playerY=-8,  .playerRendersInFront=RIDER_SHOW_BEHIND },
         }
     },
-    [SPECIES_GOODRA_HISUIAN] = {
+    [SPECIES_GOODRA_HISUI] = {
         .riderGfxId = { [MALE] = OBJ_EVENT_GFX_ELIO_RIDING, [FEMALE] = OBJ_EVENT_GFX_SELENE_RIDING },
         .spriteInfo = {
             [RIDE_SPRITE_DIR_DOWN] = { .playerX=0,  .playerY=-11,  .playerRendersInFront=RIDER_SHOW_BEHIND },
@@ -3055,7 +3037,7 @@ static const struct RideMonInfo sRideMonInfo[NUM_SPECIES] = {
             [RIDE_SPRITE_DIR_EAST] = { .playerX=-3,  .playerY=-11,  .playerRendersInFront=RIDER_SHOW_INFRONT },
         }
     },
-    [SPECIES_AVALUGG_HISUIAN] = {
+    [SPECIES_AVALUGG_HISUI] = {
         .riderGfxId = { [MALE] = OBJ_EVENT_GFX_ELIO_RIDING, [FEMALE] = OBJ_EVENT_GFX_SELENE_RIDING },
         .spriteInfo = {
             [RIDE_SPRITE_DIR_DOWN] = { .playerX=0,  .playerY=-5,  .playerRendersInFront=RIDER_SHOW_INFRONT },
@@ -3064,7 +3046,7 @@ static const struct RideMonInfo sRideMonInfo[NUM_SPECIES] = {
             [RIDE_SPRITE_DIR_EAST] = { .playerX=-1,  .playerY=-8,  .playerRendersInFront=RIDER_SHOW_INFRONT },
         }
     },
-    [SPECIES_GASTRODON_EAST_SEA] = {
+    [SPECIES_GASTRODON_EAST] = {
         .riderGfxId = { [MALE] = OBJ_EVENT_GFX_ELIO_RIDING, [FEMALE] = OBJ_EVENT_GFX_SELENE_RIDING },
         .spriteInfo = {
             [RIDE_SPRITE_DIR_DOWN] = { .playerX=0,  .playerY=-4,  .playerRendersInFront=RIDER_SHOW_BEHIND },
@@ -3154,7 +3136,7 @@ static const struct RideMonInfo sRideMonInfo[NUM_SPECIES] = {
             [RIDE_SPRITE_DIR_EAST] = { .playerX=-2,  .playerY=-8,  .playerRendersInFront=RIDER_SHOW_BEHIND },
         }
     },
-    [SPECIES_ZACIAN_CROWNED_SWORD] = {
+    [SPECIES_ZACIAN_HERO] = {
         .riderGfxId = { [MALE] = OBJ_EVENT_GFX_ELIO_RIDING, [FEMALE] = OBJ_EVENT_GFX_SELENE_RIDING },
         .spriteInfo = {
             [RIDE_SPRITE_DIR_DOWN] = { .playerX=0,  .playerY=-6,  .playerRendersInFront=RIDER_SHOW_INFRONT },
@@ -3163,7 +3145,7 @@ static const struct RideMonInfo sRideMonInfo[NUM_SPECIES] = {
             [RIDE_SPRITE_DIR_EAST] = { .playerX=-1,  .playerY=-8,  .playerRendersInFront=RIDER_SHOW_INFRONT },
         }
     },
-    [SPECIES_ZAMAZENTA_CROWNED_SHIELD] = {
+    [SPECIES_ZAMAZENTA_HERO] = {
         .riderGfxId = { [MALE] = OBJ_EVENT_GFX_ELIO_RIDING, [FEMALE] = OBJ_EVENT_GFX_SELENE_RIDING },
         .spriteInfo = {
             [RIDE_SPRITE_DIR_DOWN] = { .playerX=0,  .playerY=-8,  .playerRendersInFront=RIDER_SHOW_INFRONT },
@@ -3172,22 +3154,13 @@ static const struct RideMonInfo sRideMonInfo[NUM_SPECIES] = {
             [RIDE_SPRITE_DIR_EAST] = { .playerX=-2,  .playerY=-9,  .playerRendersInFront=RIDER_SHOW_INFRONT },
         }
     },
-    [SPECIES_URSHIFU_RAPID_STRIKE_STYLE] = {
+    [SPECIES_URSHIFU_RAPID_STRIKE] = {
         .riderGfxId = { [MALE] = OBJ_EVENT_GFX_ELIO_RIDING, [FEMALE] = OBJ_EVENT_GFX_SELENE_RIDING },
         .spriteInfo = {
             [RIDE_SPRITE_DIR_DOWN] = { .playerX=0,  .playerY=-8,  .playerRendersInFront=RIDER_SHOW_BEHIND },
             [RIDE_SPRITE_DIR_UP]   = { .playerX=0,  .playerY=-6,  .playerRendersInFront=RIDER_SHOW_INFRONT },
             [RIDE_SPRITE_DIR_WEST] = { .playerX=2, .playerY=-7,  .playerRendersInFront=RIDER_SHOW_INFRONT },
             [RIDE_SPRITE_DIR_EAST] = { .playerX=-2,  .playerY=-7,  .playerRendersInFront=RIDER_SHOW_INFRONT },
-        }
-    },
-    [SPECIES_BASCULEGION_FEMALE] = {
-        .riderGfxId = { [MALE] = OBJ_EVENT_GFX_ELIO_RIDING, [FEMALE] = OBJ_EVENT_GFX_SELENE_RIDING },
-        .spriteInfo = {
-            [RIDE_SPRITE_DIR_DOWN] = { .playerX=0,  .playerY=-6,  .playerRendersInFront=RIDER_SHOW_INFRONT },
-            [RIDE_SPRITE_DIR_UP]   = { .playerX=0,  .playerY=-7,  .playerRendersInFront=RIDER_SHOW_INFRONT },
-            [RIDE_SPRITE_DIR_WEST] = { .playerX=2, .playerY=-6,  .playerRendersInFront=RIDER_SHOW_INFRONT },
-            [RIDE_SPRITE_DIR_EAST] = { .playerX=-2,  .playerY=-6,  .playerRendersInFront=RIDER_SHOW_INFRONT },
         }
     },
     [SPECIES_SKELEDIRGE] = {
@@ -3532,7 +3505,7 @@ static const struct RideMonInfo sRideMonInfo[NUM_SPECIES] = {
             [RIDE_SPRITE_DIR_EAST] = { .playerX=-2,  .playerY=-11,  .playerRendersInFront=RIDER_SHOW_BEHIND },
         }
     },
-    [SPECIES_TAUROS_PALDEAN_COMBAT_BREED] = {
+    [SPECIES_TAUROS_PALDEA_COMBAT] = {
         .riderGfxId = { [MALE] = OBJ_EVENT_GFX_ELIO_RIDING, [FEMALE] = OBJ_EVENT_GFX_SELENE_RIDING },
         .spriteInfo = {
             [RIDE_SPRITE_DIR_DOWN] = { .playerX=0,  .playerY=-6,  .playerRendersInFront=RIDER_SHOW_INFRONT },
@@ -3541,7 +3514,7 @@ static const struct RideMonInfo sRideMonInfo[NUM_SPECIES] = {
             [RIDE_SPRITE_DIR_EAST] = { .playerX=-1,  .playerY=-5,  .playerRendersInFront=RIDER_SHOW_INFRONT },
         }
     },
-    [SPECIES_TAUROS_PALDEAN_BLAZE_BREED] = {
+    [SPECIES_TAUROS_PALDEA_BLAZE] = {
         .riderGfxId = { [MALE] = OBJ_EVENT_GFX_ELIO_RIDING, [FEMALE] = OBJ_EVENT_GFX_SELENE_RIDING },
         .spriteInfo = {
             [RIDE_SPRITE_DIR_DOWN] = { .playerX=0,  .playerY=-6,  .playerRendersInFront=RIDER_SHOW_INFRONT },
@@ -3550,7 +3523,7 @@ static const struct RideMonInfo sRideMonInfo[NUM_SPECIES] = {
             [RIDE_SPRITE_DIR_EAST] = { .playerX=-3,  .playerY=-5,  .playerRendersInFront=RIDER_SHOW_INFRONT },
         }
     },
-    [SPECIES_TAUROS_PALDEAN_AQUA_BREED] = {
+    [SPECIES_TAUROS_PALDEA_AQUA] = {
         .riderGfxId = { [MALE] = OBJ_EVENT_GFX_ELIO_RIDING, [FEMALE] = OBJ_EVENT_GFX_SELENE_RIDING },
         .spriteInfo = {
             [RIDE_SPRITE_DIR_DOWN] = { .playerX=0,  .playerY=-6,  .playerRendersInFront=RIDER_SHOW_INFRONT },

@@ -669,7 +669,7 @@
 #define FLAG_PLAYER_IS_POKEMON 0x26E // Unused Flag
 #define FLAG_DEFER_TRANSFORM 0x26F // Unused Flag
 #define FLAG_DETRANSFORM_NO_FOLLOWER  0x270 //no followers when detransforming before surfing
-#define FLAG_UNUSED_0x271  0x271 // Unused Flag
+#define FLAG_RIDE_PAGER_SHINY  0x271 // Set when Ride Pager uses a shiny Pokemon
 #define FLAG_UNUSED_0x272  0x272 // Unused Flag
 #define FLAG_UNUSED_0x273  0x273 // Unused Flag
 #define FLAG_UNUSED_0x274  0x274 // Unused Flag

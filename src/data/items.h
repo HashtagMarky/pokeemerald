@@ -167,9 +167,9 @@ static const u8 sStrengthToolDesc[] = _(
     "heavy boulders.");
 
 static const u8 sFlashToolDesc[] = _(
-	"This tool\n"
-    "is used for\n"
-    "lighting caves.");
+	"This Noivern\n"
+    "can soar quickly\n"
+    "through the air.");
 
 static const u8 sRockSmashToolDesc[] = _(
 	"This Tauros's\n"
@@ -187,9 +187,9 @@ static const u8 sDiveToolDesc[] = _(
     "diving underwater.");
 
 static const u8 sTeleportToolDesc[] = _(
-	"This tool\n"
-    "is used for\n"
-    "getting to safety.");
+	"This pager allows\n"
+    "riding of party\n"
+    "lead Pokémon.");
 
 static const u8 sSweetScentToolDesc[] = _(
 	"This tool\n"
@@ -14752,15 +14752,15 @@ const struct Item gItemsInfo[] =
 
     [ITEM_TELEPORT_TOOL] =
     {
-        .name = ITEM_NAME("Teleport Tool"),
+        .name = ITEM_NAME("Ride Pager"),
         .price = 0,
         .importance = 1,
         .description = sTeleportToolDesc,
-        .pocket = POCKET_KEY_ITEMS,
+        .pocket = POCKET_POKERIDE,
         .type = ITEM_USE_FIELD,
-        .fieldUseFunc = ItemUseOutOfBattle_TeleportTool,
-        .iconPic = gItemIcon_QuestionMark,
-        .iconPalette = gItemIconPalette_QuestionMark,        
+        .fieldUseFunc = ItemUseOutOfBattle_RidePager,
+        .iconPic = gItemIcon_RidePager,
+        .iconPalette = gItemIconPalette_RidePager,        
     },
 
     [ITEM_SWEETSCENT_TOOL] =

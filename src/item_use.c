@@ -434,6 +434,7 @@ static void ItemUseOnFieldCB_Itemfinder(u8 taskId)
     else
     {
         u8 transformTaskId;
+        FlagClear(FLAG_RIDE_PAGER_SHINY); // Clear Ride Pager shiny flag for hardcoded species
         VarSet(VAR_TRANSFORM_MON, SPECIES_STOUTLAND);
         ChooseMonForTransform();
         
@@ -1726,6 +1727,7 @@ void ItemUseOnFieldCB_CutTool(u8 taskId)
     if (VarGet(VAR_TRANSFORM_MON) == SPECIES_MUDSDALE)
     {
         VarSet(VAR_TRANSFORM_MON, SPECIES_NONE);
+        FlagClear(FLAG_RIDE_PAGER_SHINY); // Clear when detransforming
         ChooseMonForTransform();
         UnlockPlayerFieldControls();
         UnfreezeObjectEvents();
@@ -1733,6 +1735,7 @@ void ItemUseOnFieldCB_CutTool(u8 taskId)
     }
     else
     {
+        FlagClear(FLAG_RIDE_PAGER_SHINY); // Clear Ride Pager shiny flag for hardcoded species
         VarSet(VAR_TRANSFORM_MON, SPECIES_MUDSDALE);
         ChooseMonForTransform();
         UnlockPlayerFieldControls();
@@ -1875,6 +1878,7 @@ void ItemUseOutOfBattle_StrengthTool(u8 taskId)
 void ItemUseOnFieldCB_StrengthTool(u8 taskId)
 {
     LockPlayerFieldControls();
+    FlagClear(FLAG_RIDE_PAGER_SHINY); // Clear Ride Pager shiny flag for hardcoded species
     VarSet(VAR_TRANSFORM_MON, SPECIES_MACHAMP);
     ChooseMonForTransform();
     ScriptContext_SetupScript(EventScript_UseStrengthTool);
@@ -1886,6 +1890,7 @@ static void ItemUseOnFieldCB_StrengthToolNoRock(u8 taskId)
     if (VarGet(VAR_TRANSFORM_MON) == SPECIES_MACHAMP)
     {
         VarSet(VAR_TRANSFORM_MON, SPECIES_NONE);
+        FlagClear(FLAG_RIDE_PAGER_SHINY); // Clear when detransforming
         ChooseMonForTransform();
         UnlockPlayerFieldControls();
         UnfreezeObjectEvents();
@@ -1893,6 +1898,7 @@ static void ItemUseOnFieldCB_StrengthToolNoRock(u8 taskId)
     }
     else
     {
+        FlagClear(FLAG_RIDE_PAGER_SHINY); // Clear Ride Pager shiny flag for hardcoded species
         VarSet(VAR_TRANSFORM_MON, SPECIES_MACHAMP);
         ChooseMonForTransform();
         UnlockPlayerFieldControls();
@@ -1933,6 +1939,7 @@ void ItemUseOnFieldCB_FlashTool(u8 taskId)
     if (VarGet(VAR_TRANSFORM_MON) == SPECIES_NOIVERN)
     {
         VarSet(VAR_TRANSFORM_MON, SPECIES_NONE);
+        FlagClear(FLAG_RIDE_PAGER_SHINY); // Clear when detransforming
         ChooseMonForTransform();
         UnlockPlayerFieldControls();
         UnfreezeObjectEvents();
@@ -1940,12 +1947,114 @@ void ItemUseOnFieldCB_FlashTool(u8 taskId)
     }
     else
     {
+        FlagClear(FLAG_RIDE_PAGER_SHINY); // Clear Ride Pager shiny flag for hardcoded species
         VarSet(VAR_TRANSFORM_MON, SPECIES_NOIVERN);
         ChooseMonForTransform();
         UnlockPlayerFieldControls();
         UnfreezeObjectEvents();
         DestroyTask(taskId);
     };
+}
+
+
+void ItemUseOutOfBattle_RidePager(u8 taskId)
+{
+    s16 x, y;
+    u32 behavior;
+    u16 species;
+    bool8 isShiny;
+
+    PlayerGetDestCoords(&x, &y);
+    behavior = MapGridGetMetatileBehaviorAt(x, y);
+    
+    // Check if already transformed - if so, detransform
+    if (VarGet(VAR_TRANSFORM_MON) != SPECIES_NONE)
+    {
+        sItemUseOnFieldCB = ItemUseOnFieldCB_RidePager;
+        SetUpItemUseOnFieldCallback(taskId);
+        return;
+    }
+    
+    // Get first party Pokemon species
+    species = GetMonData(&gPlayerParty[0], MON_DATA_SPECIES, NULL);
+    
+    // Check if party is empty or first mon is an egg
+    if (species == SPECIES_NONE || GetMonData(&gPlayerParty[0], MON_DATA_IS_EGG, NULL))
+    {
+        DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
+        return;
+    }
+    
+    // Check if this species can be ridden
+    if (!CanRideOnSpecies(species))
+    {
+        // Display "You cannot ride on {SPECIES_NAME}!" message
+        StringCopy(gStringVar1, GetSpeciesName(species));
+        StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("You cannot ride on\n{STR_VAR_1}!"));
+        DisplayItemMessageOnField(taskId, gStringVar4, Task_CloseCantUseKeyItemMessage);
+        return;
+    }
+    
+    // Check if the Pokemon is shiny and set the Ride Pager shiny flag
+    isShiny = GetMonData(&gPlayerParty[0], MON_DATA_IS_SHINY, NULL);
+    if (isShiny)
+        FlagSet(FLAG_RIDE_PAGER_SHINY);
+    else
+        FlagClear(FLAG_RIDE_PAGER_SHINY);
+    
+    // Prevent transformation indoors
+    if (gMapHeader.mapType == MAP_TYPE_INDOOR)
+    {
+        DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
+        return;
+    }
+    
+    // Cannot use while surfing or on rocky path
+    if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING) || behavior == MB_ROCKY_PATH)
+    {
+        DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
+        return;
+    }
+    
+    sItemUseOnFieldCB = ItemUseOnFieldCB_RidePager;
+    SetUpItemUseOnFieldCallback(taskId);
+}
+
+void ItemUseOnFieldCB_RidePager(u8 taskId)
+{
+    u16 species;
+    bool8 isShiny;
+    
+    LockPlayerFieldControls();
+    
+    // Check if we're detransforming
+    if (VarGet(VAR_TRANSFORM_MON) != SPECIES_NONE)
+    {
+        VarSet(VAR_TRANSFORM_MON, SPECIES_NONE);
+        FlagClear(FLAG_RIDE_PAGER_SHINY); // Clear Ride Pager shiny flag when detransforming
+        ChooseMonForTransform();
+        UnlockPlayerFieldControls();
+        UnfreezeObjectEvents();
+        DestroyTask(taskId);
+        return;
+    }
+    
+    // Get first party Pokemon species and shiny status
+    species = GetMonData(&gPlayerParty[0], MON_DATA_SPECIES, NULL);
+    isShiny = GetMonData(&gPlayerParty[0], MON_DATA_IS_SHINY, NULL);
+    
+    // Set Ride Pager shiny flag based on Pokemon's shiny status
+    if (isShiny)
+        FlagSet(FLAG_RIDE_PAGER_SHINY);
+    else
+        FlagClear(FLAG_RIDE_PAGER_SHINY);
+    
+    // Transform into first party Pokemon
+    VarSet(VAR_TRANSFORM_MON, species);
+    ChooseMonForTransform();
+    UnlockPlayerFieldControls();
+    UnfreezeObjectEvents();
+    DestroyTask(taskId);
 }
 
 void ItemUseOutOfBattle_RockSmashTool(u8 taskId)
@@ -1985,6 +2094,7 @@ static void ItemUseOnFieldCB_RockSmashTool(u8 taskId)
     LockPlayerFieldControls();
     if (VarGet(VAR_TRANSFORM_MON) != SPECIES_TAUROS)
     {
+        FlagClear(FLAG_RIDE_PAGER_SHINY); // Clear Ride Pager shiny flag for hardcoded species
         VarSet(VAR_TRANSFORM_MON, SPECIES_TAUROS);
         ChooseMonForTransform();
         CreateTask(Task_DelayedRockSmashScript, 0);
@@ -2012,6 +2122,7 @@ static void ItemUseOnFieldCB_RockSmashToolNoRock(u8 taskId)
     if (VarGet(VAR_TRANSFORM_MON) == SPECIES_TAUROS)
     {
         VarSet(VAR_TRANSFORM_MON, SPECIES_NONE);
+        FlagClear(FLAG_RIDE_PAGER_SHINY); // Clear when detransforming
         ChooseMonForTransform();
         UnlockPlayerFieldControls();
         UnfreezeObjectEvents();
@@ -2019,6 +2130,7 @@ static void ItemUseOnFieldCB_RockSmashToolNoRock(u8 taskId)
     }
     else
     {
+        FlagClear(FLAG_RIDE_PAGER_SHINY); // Clear Ride Pager shiny flag for hardcoded species
         VarSet(VAR_TRANSFORM_MON, SPECIES_TAUROS);
         ChooseMonForTransform();
         UnlockPlayerFieldControls();

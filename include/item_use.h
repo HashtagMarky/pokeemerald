@@ -79,6 +79,9 @@ void ItemUseOutOfBattle_TeleportTool(u8);
 void ItemUseOutOfBattle_SweetScentTool(u8);
 void ItemUseOnFieldCB_SweetScentTool(u8);
 
+
+void ItemUseOutOfBattle_RidePager(u8);
+void ItemUseOnFieldCB_RidePager(u8);
 // End qol_field_moves
 
 enum {

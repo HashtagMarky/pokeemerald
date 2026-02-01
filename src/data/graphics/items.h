@@ -112,6 +112,12 @@ const u16 gItemIconPalette_PokeRideMudsdale[] = INCBIN_U16("graphics/items/icon_
 const u32 gItemIcon_PokeRideStoutland[] = INCBIN_U32("graphics/items/icons/pokeridestoutland.4bpp.lz");
 const u16 gItemIconPalette_PokeRideStoutland[] = INCBIN_U16("graphics/items/icon_palettes/pokeridestoutland.gbapal");
 
+const u32 gItemIcon_PokeRideNoivern[] = INCBIN_U32("graphics/items/icons/pokeridenoivern.4bpp.lz");
+const u16 gItemIconPalette_PokeRideNoivern[] = INCBIN_U16("graphics/items/icon_palettes/pokeridenoivern.gbapal");
+
+const u32 gItemIcon_RidePager[] = INCBIN_U32("graphics/items/icons/ride_pager.4bpp.lz");
+const u16 gItemIconPalette_RidePager[] = INCBIN_U16("graphics/items/icon_palettes/ride_pager.gbapal");
+
 
 // Medicine
 

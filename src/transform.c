@@ -246,7 +246,10 @@ void Task_UpdatePlayerTransformAnimation(u8 taskId)
 }
 static void ExecutePlayerTransformation(u16 species)
 {
-    PlaySE(SE_M_TELEPORT);
+    // Play appropriate sound for transformation
+    if (species == SPECIES_NONE)
+        PlaySE(SE_M_TELEPORT);  // Detransforming - use teleport sound
+    
     gPlayerTransformSpecies = species;
     DestroyPlayerMountSprite();
     

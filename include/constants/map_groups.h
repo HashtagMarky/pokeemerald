@@ -105,6 +105,10 @@
 #define MAP_HAUOLI_CITY_POKECENTER    (6 | (1 << 8))
 #define MAP_TAPU_KOKO_SHRINE_ENTRANCE (7 | (1 << 8))
 #define MAP_TAPU_KOKO_BATTLE          (8 | (1 << 8))
+#define MAP_INDOOR_TRAINER_SCHOOL     (9 | (1 << 8))
+#define MAP_TRAINER_SCHOOL1CR         (10 | (1 << 8))
+#define MAP_TRAINER_SCHOOL2F          (11 | (1 << 8))
+#define MAP_TRAINER_SCHOOL3F          (12 | (1 << 8))
 
 // gMapGroup_IndoorLittleroot
 #define MAP_LITTLEROOT_TOWN_BRENDANS_HOUSE_1F    (0 | (2 << 8))

@@ -114,13 +114,13 @@ static const struct WindowTemplate sScreenshotsWindowTemplates[] =
 };
 
 
-static const u32 sTabletScreenshotsTiles[] = INCBIN_U32("graphics/ui_screenshots/seacrown_tablet_tiles.8bpp.smol");
-static const u32 sTabletScreenshotsTilemap[] = INCBIN_U32("graphics/ui_screenshots/seacrown_tablet_tiles.bin.smolTM");
-static const u16 sTabletScreenshotsPalette[] = INCBIN_U16("graphics/ui_screenshots/seacrown_tablet_tiles.gbapal");
+// static const u32 sTabletScreenshotsTiles[] = INCBIN_U32("graphics/ui_screenshots/seacrown_tablet_tiles.8bpp.smol");
+// static const u32 sTabletScreenshotsTilemap[] = INCBIN_U32("graphics/ui_screenshots/seacrown_tablet_tiles.bin.smolTM");
+// static const u16 sTabletScreenshotsPalette[] = INCBIN_U16("graphics/ui_screenshots/seacrown_tablet_tiles.gbapal");
 
-static const u32 sMayScreenshotsTiles[] = INCBIN_U32("graphics/ui_screenshots/may_goodbye_tiles.8bpp.smol");
-static const u32 sMayScreenshotsTilemap[] = INCBIN_U32("graphics/ui_screenshots/may_goodbye_tiles.bin.smolTM");
-static const u16 sMayScreenshotsPalette[] = INCBIN_U16("graphics/ui_screenshots/may_goodbye_tiles.gbapal");
+// static const u32 sMayScreenshotsTiles[] = INCBIN_U32("graphics/ui_screenshots/may_goodbye_tiles.8bpp.smol");
+// static const u32 sMayScreenshotsTilemap[] = INCBIN_U32("graphics/ui_screenshots/may_goodbye_tiles.bin.smolTM");
+// static const u16 sMayScreenshotsPalette[] = INCBIN_U16("graphics/ui_screenshots/may_goodbye_tiles.gbapal");
 
 struct Screenshot {
 	const u32 *screenshotTiles;
@@ -130,15 +130,15 @@ struct Screenshot {
 
 static const struct Screenshot sScreenshotData[] = {
 	[SCREENSHOT_TABLET] = {
-		.screenshotTiles = sTabletScreenshotsTiles,
-		.screenshotTilemap = sTabletScreenshotsTilemap,
-		.screenshotPalette = sTabletScreenshotsPalette,
+		// .screenshotTiles = sTabletScreenshotsTiles,
+		// .screenshotTilemap = sTabletScreenshotsTilemap,
+		// .screenshotPalette = sTabletScreenshotsPalette,
 	},
 	
 	[SCREENSHOT_MAY_GOODBYE] = {
-		.screenshotTiles = sMayScreenshotsTiles,
-		.screenshotTilemap = sMayScreenshotsTilemap,
-		.screenshotPalette = sMayScreenshotsPalette,
+		// .screenshotTiles = sMayScreenshotsTiles,
+		// .screenshotTilemap = sMayScreenshotsTilemap,
+		// .screenshotPalette = sMayScreenshotsPalette,
 	},
 };
 
@@ -160,16 +160,16 @@ static const u8 sScreenshotsWindowFontColors[][3] =
 
 //==========FUNCTIONS==========//
 // UI loader template
-void Task_OpenScreenshotsFromStartScreenshots(u8 taskId)
-{
-    s16 *data = gTasks[taskId].data;
-    if (!gPaletteFade.active)
-    {
-        CleanupOverworldWindowsAndTilemaps();
-        Screenshots_Init(CB2_ReturnToFullScreenStartMenu);
-        DestroyTask(taskId);
-    }
-}
+// void Task_OpenScreenshotsFromStartScreenshots(u8 taskId)
+// {
+//     s16 *data = gTasks[taskId].data;
+//     if (!gPaletteFade.active)
+//     {
+//         CleanupOverworldWindowsAndTilemaps();
+//         Screenshots_Init(CB2_ReturnToFullScreenStartMenu);
+//         DestroyTask(taskId);
+//     }
+// }
 
 void OpenScreenshotsFromScript(void)
 {

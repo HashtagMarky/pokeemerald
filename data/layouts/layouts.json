@@ -4830,6 +4830,46 @@
       "secondary_tileset": "gTileset_islandtrial",
       "border_filepath": "data/layouts/MelemeleIslandTrialTotem/border.bin",
       "blockdata_filepath": "data/layouts/MelemeleIslandTrialTotem/map.bin"
+    },
+    {
+      "id": "LAYOUT_INDOOR_TRAINER_SCHOOL",
+      "name": "IndoorTrainerSchool_Layout",
+      "width": 27,
+      "height": 20,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_GenericBuilding",
+      "border_filepath": "data/layouts/IndoorTrainerSchool/border.bin",
+      "blockdata_filepath": "data/layouts/IndoorTrainerSchool/map.bin"
+    },
+    {
+      "id": "LAYOUT_TRAINER_SCHOOL1CR",
+      "name": "TrainerSchool1CR_Layout",
+      "width": 20,
+      "height": 20,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_PokemonSchool",
+      "border_filepath": "data/layouts/TrainerSchool1CR/border.bin",
+      "blockdata_filepath": "data/layouts/TrainerSchool1CR/map.bin"
+    },
+    {
+      "id": "LAYOUT_TRAINER_SCHOOL2F",
+      "name": "TrainerSchool2F_Layout",
+      "width": 24,
+      "height": 20,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_GenericBuilding",
+      "border_filepath": "data/layouts/TrainerSchool2F/border.bin",
+      "blockdata_filepath": "data/layouts/TrainerSchool2F/map.bin"
+    },
+    {
+      "id": "LAYOUT_TRAINER_SCHOOL3F",
+      "name": "TrainerSchool3F_Layout",
+      "width": 26,
+      "height": 20,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_GenericBuilding",
+      "border_filepath": "data/layouts/TrainerSchool3F/border.bin",
+      "blockdata_filepath": "data/layouts/TrainerSchool3F/map.bin"
     }
   ]
 }

@@ -45,8 +45,8 @@
       "x": 24,
       "y": 13,
       "elevation": 0,
-      "dest_map": "MAP_HAUOLI_OUTSKIRTS",
-      "dest_warp_id": "1"
+      "dest_map": "MAP_INDOOR_TRAINER_SCHOOL",
+      "dest_warp_id": "0"
     },
     {
       "x": 35,
@@ -54,6 +54,13 @@
       "elevation": 0,
       "dest_map": "MAP_HAOULI_POKEMON_CENTER",
       "dest_warp_id": "0"
+    },
+    {
+      "x": 13,
+      "y": 11,
+      "elevation": 0,
+      "dest_map": "MAP_INDOOR_TRAINER_SCHOOL",
+      "dest_warp_id": "3"
     }
   ],
   "coord_events": [],

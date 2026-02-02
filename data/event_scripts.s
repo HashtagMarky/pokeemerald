@@ -1252,3 +1252,11 @@ EventScript_VsSeekerChargingDone::
 
 	
 
+
+	.include "data/maps/IndoorTrainerSchool/scripts.inc"
+
+	.include "data/maps/TrainerSchool1CR/scripts.inc"
+
+	.include "data/maps/TrainerSchool2F/scripts.inc"
+
+	.include "data/maps/TrainerSchool3F/scripts.inc"

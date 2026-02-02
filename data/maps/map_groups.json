@@ -131,7 +131,11 @@
     "Route2Pokecenter",
     "HauoliCityPokecenter",
     "TapuKokoShrineEntrance",
-    "TapuKokoBattle"
+    "TapuKokoBattle",
+    "IndoorTrainerSchool",
+    "TrainerSchool1CR",
+    "TrainerSchool2F",
+    "TrainerSchool3F"
   ],
   "gMapGroup_IndoorLittleroot": [
     "LittlerootTown_BrendansHouse_1F",

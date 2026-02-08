@@ -10,32 +10,26 @@
   "allow_cycling": false,
   "allow_escaping": false,
   "allow_running": true,
-  "show_map_name": true,
+  "show_map_name": false,
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
-  "connections": 0,
-  "object_events": [
-
-  ],
+  "connections": null,
+  "object_events": [],
   "warp_events": [
     {
-      "x": 11,
-      "y": 13,
+      "x": 7,
+      "y": 11,
       "elevation": 0,
       "dest_map": "MAP_PLAYER_HOUSE",
       "dest_warp_id": "3"
     },
     {
-      "x": 12,
-      "y": 13,
+      "x": 8,
+      "y": 11,
       "elevation": 0,
       "dest_map": "MAP_PLAYER_HOUSE",
       "dest_warp_id": "3"
     }
   ],
-  "coord_events": [
-
-  ],
-  "bg_events": [
-
-  ]
+  "coord_events": [],
+  "bg_events": []
 }

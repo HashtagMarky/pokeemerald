@@ -28,6 +28,20 @@
       "elevation": 0,
       "dest_map": "MAP_INDOOR_TRAINER_SCHOOL",
       "dest_warp_id": "4"
+    },
+    {
+      "x": 13,
+      "y": 10,
+      "elevation": 0,
+      "dest_map": "MAP_TRAINER_SCHOOL2FCLASSROOM",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 4,
+      "y": 10,
+      "elevation": 0,
+      "dest_map": "MAP_TRAINER_SCHOOL2F",
+      "dest_warp_id": "0"
     }
   ],
   "coord_events": [],

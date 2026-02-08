@@ -615,6 +615,7 @@ gSongTable::
 	song mus_usum_ikitown_day 0, 0
 	song mus_usum_hauoli_city 0, 0
 	song mus_usum_route2 0, 0
+	song mus_usum_battle_gladion 0, 0
 	.align 2
 dummy_song_header:
 	.byte 0, 0, 0, 0

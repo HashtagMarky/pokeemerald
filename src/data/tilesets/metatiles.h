@@ -273,3 +273,9 @@ const u16 gMetatileAttributes_TapuShrine[] = INCBIN_U16("data/tilesets/secondary
 
 const u16 gMetatiles_IslandTrialCave[] = INCBIN_U16("data/tilesets/secondary/island_trial_cave/metatiles.bin");
 const u16 gMetatileAttributes_IslandTrialCave[] = INCBIN_U16("data/tilesets/secondary/island_trial_cave/metatile_attributes.bin");
+
+const u16 gMetatiles_playerhouse[] = INCBIN_U16("data/tilesets/secondary/playerhouse/metatiles.bin");
+const u16 gMetatileAttributes_playerhouse[] = INCBIN_U16("data/tilesets/secondary/playerhouse/metatile_attributes.bin");
+
+const u16 gMetatiles_PlayerHouse2[] = INCBIN_U16("data/tilesets/secondary/player_house_2/metatiles.bin");
+const u16 gMetatileAttributes_PlayerHouse2[] = INCBIN_U16("data/tilesets/secondary/player_house_2/metatile_attributes.bin");

@@ -1,8 +1,14 @@
 mapscripts HaouliPokemonCenter_MapScripts {
+     MAP_SCRIPT_ON_TRANSITION:Route1_Pokecenter_SetHealSpot
+}
+
+script Route1_Pokecenter_SetHealSpot{
+    setrespawn(HEAL_LOCATION_ROUTE1N)
+    end
 }
 
 script HaouliPokemonCenter_EventScript_Nurse{
-    setvar(VAR_0x800B, HauoliNurse1)
+	setvar(VAR_0x800B, Route_1_Nurse)
 	call(Common_EventScript_PkmnCenterNurse)
 	waitmessage
 	waitbuttonpress

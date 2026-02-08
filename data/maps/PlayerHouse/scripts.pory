@@ -1,0 +1,12 @@
+mapscripts PlayerHouse_MapScripts{}
+
+script PlayerRoomDoor{
+    playse(SE_DOOR)
+    warp(MAP_PLAYER_ROOM, 0)
+    end
+}
+script MomsRoomDoor{
+    playse(SE_DOOR)
+    warp(MAP_MOMS_ROOM, 0)
+    end
+}

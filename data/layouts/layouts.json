@@ -887,7 +887,7 @@
       "width": 10,
       "height": 21,
       "primary_tileset": "gTileset_Building",
-      "secondary_tileset": "gTileset_MauvilleGym",
+      "secondary_tileset": "gTileset_playerhouse",
       "border_filepath": "data/layouts/MauvilleCity_Gym/border.bin",
       "blockdata_filepath": "data/layouts/MauvilleCity_Gym/map.bin"
     },
@@ -4627,7 +4627,7 @@
       "width": 20,
       "height": 20,
       "primary_tileset": "gTileset_Building",
-      "secondary_tileset": "gTileset_Gen4IndoorSecondary",
+      "secondary_tileset": "gTileset_PlayerHouse2",
       "border_filepath": "data/layouts/PlayerHouse/border.bin",
       "blockdata_filepath": "data/layouts/PlayerHouse/map.bin"
     },
@@ -4647,7 +4647,7 @@
       "width": 20,
       "height": 20,
       "primary_tileset": "gTileset_Building",
-      "secondary_tileset": "gTileset_Gen4IndoorSecondary",
+      "secondary_tileset": "gTileset_PlayerHouse2",
       "border_filepath": "data/layouts/PlayerRoom/border.bin",
       "blockdata_filepath": "data/layouts/PlayerRoom/map.bin"
     },
@@ -4697,7 +4697,7 @@
       "width": 20,
       "height": 20,
       "primary_tileset": "gTileset_Building",
-      "secondary_tileset": "gTileset_Gen4IndoorSecondary",
+      "secondary_tileset": "gTileset_PlayerHouse2",
       "border_filepath": "data/layouts/MomsRoom/border.bin",
       "blockdata_filepath": "data/layouts/MomsRoom/map.bin"
     },
@@ -4870,6 +4870,36 @@
       "secondary_tileset": "gTileset_GenericBuilding",
       "border_filepath": "data/layouts/TrainerSchool3F/border.bin",
       "blockdata_filepath": "data/layouts/TrainerSchool3F/map.bin"
+    },
+    {
+      "id": "LAYOUT_TRAINER_SCHOOL2FCLASSROOM",
+      "name": "TrainerSchool2FClassroom_Layout",
+      "width": 24,
+      "height": 20,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_PokemonSchool",
+      "border_filepath": "data/layouts/TrainerSchool2FClassroom/border.bin",
+      "blockdata_filepath": "data/layouts/TrainerSchool2FClassroom/map.bin"
+    },
+    {
+      "id": "LAYOUT_TRAINER_SCHOOL3FCLASSROOM",
+      "name": "TrainerSchool3FClassroom_Layout",
+      "width": 26,
+      "height": 20,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_PokemonSchool",
+      "border_filepath": "data/layouts/TrainerSchool3FClassroom/border.bin",
+      "blockdata_filepath": "data/layouts/TrainerSchool3FClassroom/map.bin"
+    },
+    {
+      "id": "LAYOUT_TRAINER_SCHOOL2FTEACHERS_LOUNGE",
+      "name": "TrainerSchool2FTeachersLounge_Layout",
+      "width": 24,
+      "height": 20,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_GenericBuilding",
+      "border_filepath": "data/layouts/TrainerSchool2FTeachersLounge/border.bin",
+      "blockdata_filepath": "data/layouts/TrainerSchool2FTeachersLounge/map.bin"
     }
   ]
 }

@@ -1072,3 +1072,25 @@ const struct Tileset gTileset_IslandTrialCave =
     .metatileAttributes = gMetatileAttributes_IslandTrialCave,
     .callback = NULL,
 };
+
+const struct Tileset gTileset_playerhouse =
+{
+    .isCompressed = TRUE,
+    .isSecondary = TRUE,
+    .tiles = gTilesetTiles_playerhouse,
+    .palettes = gTilesetPalettes_playerhouse,
+    .metatiles = gMetatiles_playerhouse,
+    .metatileAttributes = gMetatileAttributes_playerhouse,
+    .callback = NULL,
+};
+
+const struct Tileset gTileset_PlayerHouse2 =
+{
+    .isCompressed = TRUE,
+    .isSecondary = TRUE,
+    .tiles = gTilesetTiles_PlayerHouse2,
+    .palettes = gTilesetPalettes_PlayerHouse2,
+    .metatiles = gMetatiles_PlayerHouse2,
+    .metatileAttributes = gMetatileAttributes_PlayerHouse2,
+    .callback = NULL,
+};

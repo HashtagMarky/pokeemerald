@@ -82,6 +82,7 @@ EventScript_PkmnCenterNurse_PlayerWaitingInUnionRoom::
 	setflag FLAG_NURSE_UNION_ROOM_REMINDER
 	message CableClub_Text_PlayerIsWaiting
 	waitmessage
+	waitbuttonpress
 	applymovement VAR_0x800B, Movement_PkmnCenterNurse_Bow
 	waitmovement 0
 	message gText_WeHopeToSeeYouAgain

@@ -559,7 +559,7 @@
 //USUM music
 #define MUS_USUM_IKITOWN_DAY        610
 #define MUS_USUM_HAUOLI_CITY        611
-#define MUS_USUM_ROUTE2            612
-
+#define MUS_USUM_ROUTE2             612
+#define MUS_USUM_BATTLE_GLADION     613
 
 #endif  // GUARD_CONSTANTS_SONGS_H

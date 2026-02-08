@@ -135,7 +135,10 @@
     "IndoorTrainerSchool",
     "TrainerSchool1CR",
     "TrainerSchool2F",
-    "TrainerSchool3F"
+    "TrainerSchool3F",
+    "TrainerSchool2FTeachersLounge",
+    "TrainerSchool2FClassroom",
+    "TrainerSchool3FClassroom"
   ],
   "gMapGroup_IndoorLittleroot": [
     "LittlerootTown_BrendansHouse_1F",

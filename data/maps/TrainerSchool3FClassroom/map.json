@@ -14,7 +14,22 @@
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
   "connections": null,
   "object_events": [],
-  "warp_events": [],
+  "warp_events": [
+    {
+      "x": 12,
+      "y": 12,
+      "elevation": 0,
+      "dest_map": "MAP_TRAINER_SCHOOL3F",
+      "dest_warp_id": "1"
+    },
+    {
+      "x": 13,
+      "y": 12,
+      "elevation": 0,
+      "dest_map": "MAP_TRAINER_SCHOOL3F",
+      "dest_warp_id": "1"
+    }
+  ],
   "coord_events": [],
   "bg_events": []
 }

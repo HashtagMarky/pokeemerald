@@ -1,0 +1,13 @@
+mapscripts TrainerSchool2F_MapScripts{}
+
+script TeachersLoungeDoor{
+    playse(SE_DOOR)
+    warp(MAP_TRAINER_SCHOOL2FTEACHERS_LOUNGE, 0)
+    end
+}
+
+script ClassroomDoor2F{
+    playse(SE_DOOR)
+    warp(MAP_TRAINER_SCHOOL2FCLASSROOM, 0)
+    end
+}

@@ -7,7 +7,7 @@ TrainerSchoolSign::
 	lock
 # 5 "data/maps/Route1N/scripts.pory"
 	msgbox TrainerSchoolSign_Text_0
-# 6 "data/maps/Route1N/scripts.pory"
+# 9 "data/maps/Route1N/scripts.pory"
 	release
 	end
 

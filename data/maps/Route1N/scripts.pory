@@ -2,7 +2,10 @@ mapscripts Route1N_MapScripts{}
 
 script TrainerSchoolSign{
     lock
-    msgbox(format("Let's learn and grow.\nLet's grow and train.\lUnsullied, enjoyable, and academic.\lEveryone starts at the beginning!"))
+    msgbox("Let's learn and grow.\n"
+        "Let's grow and train.\l"
+        "Unsullied, enjoyable, and academic.\l"
+        "Everyone starts at the beginning!")
     release
 end    
 }

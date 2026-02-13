@@ -1094,3 +1094,14 @@ const struct Tileset gTileset_PlayerHouse2 =
     .metatileAttributes = gMetatileAttributes_PlayerHouse2,
     .callback = NULL,
 };
+
+const struct Tileset gTileset_HauoliLab =
+{
+    .isCompressed = TRUE,
+    .isSecondary = TRUE,
+    .tiles = gTilesetTiles_HauoliLab,
+    .palettes = gTilesetPalettes_HauoliLab,
+    .metatiles = gMetatiles_HauoliLab,
+    .metatileAttributes = gMetatileAttributes_HauoliLab,
+    .callback = NULL,
+};

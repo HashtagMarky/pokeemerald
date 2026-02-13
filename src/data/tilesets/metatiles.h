@@ -279,3 +279,6 @@ const u16 gMetatileAttributes_playerhouse[] = INCBIN_U16("data/tilesets/secondar
 
 const u16 gMetatiles_PlayerHouse2[] = INCBIN_U16("data/tilesets/secondary/player_house_2/metatiles.bin");
 const u16 gMetatileAttributes_PlayerHouse2[] = INCBIN_U16("data/tilesets/secondary/player_house_2/metatile_attributes.bin");
+
+const u16 gMetatiles_HauoliLab[] = INCBIN_U16("data/tilesets/secondary/hauoli_lab/metatiles.bin");
+const u16 gMetatileAttributes_HauoliLab[] = INCBIN_U16("data/tilesets/secondary/hauoli_lab/metatile_attributes.bin");

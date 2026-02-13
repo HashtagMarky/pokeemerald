@@ -4757,7 +4757,7 @@
       "width": 20,
       "height": 20,
       "primary_tileset": "gTileset_Building",
-      "secondary_tileset": "gTileset_GenericBuilding",
+      "secondary_tileset": "gTileset_HauoliLab",
       "border_filepath": "data/layouts/AlolaLaboratory/border.bin",
       "blockdata_filepath": "data/layouts/AlolaLaboratory/map.bin"
     },

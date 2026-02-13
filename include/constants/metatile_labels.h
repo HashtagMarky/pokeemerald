@@ -249,6 +249,9 @@
 #define METATILE_GenericBuilding_TrickHouse_Door_Closed  0x81B
 #define METATILE_GenericBuilding_TrickHouse_Stairs_Down  0x819
 
+// gTileset_HauoliLab
+#define METATILE_HauoliLab_Door  0x86C
+
 // gTileset_InsideOfTruck
 #define METATILE_InsideOfTruck_DoorClosedFloor_Bottom  0x81D
 #define METATILE_InsideOfTruck_DoorClosedFloor_Mid     0x815
@@ -790,7 +793,6 @@
 #define METATILE_DeptStore_Right               0x855
 #define METATILE_HaouliDock_Left               0x87B
 #define METATILE_HaouliDock_Right              0x87C
-#define METATILE_HauoliLab_Door                0x86C
 #define METATILE_IkiTownHouse_Door             0x822
 #define METATILE_IkiTownSlide_Left             0x85B
 #define METATILE_IkiTownSlide_Right            0x85C

@@ -29,6 +29,10 @@
 #include "constants/weather.h"
 #include "qol_field_moves.h" // qol_field_moves
 
+// Set to TRUE to use standard fly method (party menu -> fly animation)
+// Set to FALSE to use pokeride fly method (fly tool -> transform -> fly)
+#define USE_STANDARD_FLY TRUE
+
 /*
  *  This file handles region maps generally, and the map used when selecting a fly destination.
  *  Specific features of other region map uses are handled elsewhere
@@ -2005,19 +2009,29 @@ static void CB_ExitFlyMap(void)
 
                 SetFlyDestination(tempRegionMap);
             // Start qol_field_moves
+            #if USE_STANDARD_FLY
+                // Use standard fly method (party menu -> fly animation)
+                ReturnToFieldFromFlyMapSelect();
+            #else
+                // Use pokeride fly method (fly tool -> transform -> fly)
                 if (IsFlyToolUsed())
                     ReturnToFieldFromFlyToolMapSelect();
                 else
                     ReturnToFieldFromFlyMapSelect();
-            }
-            else if (IsFlyToolUsed())
-            {
-                ReturnToFieldOrBagFromFlyTool();
-            // End qol_field_moves
+            #endif
             }
             else
             {
+            #if USE_STANDARD_FLY
+                // Use standard fly method
                 SetMainCallback2(CB2_ReturnToPartyMenuFromFlyMap);
+            #else
+                // Use pokeride fly method
+                if (IsFlyToolUsed())
+                    ReturnToFieldOrBagFromFlyTool();
+                else
+                    SetMainCallback2(CB2_ReturnToPartyMenuFromFlyMap);
+            #endif
             }
             ResetFlyTool(); // qol_field_moves
             TRY_FREE_AND_SET_NULL(sFlyMap);

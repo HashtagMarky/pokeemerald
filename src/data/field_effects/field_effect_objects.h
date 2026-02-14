@@ -1144,6 +1144,46 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_SandDisguisePlaceholder =
     .callback = UpdateDisguiseFieldEffect,
 };
 
+const struct SpritePalette gSpritePalette_CharizardFly = {gFieldEffectPal_Charizard, FLDEFF_PAL_TAG_CHARIZARD};
+
+const struct SpritePalette gSpritePalette_CharizardFlyShiny = {gFieldEffectPal_CharizardShiny, FLDEFF_PAL_TAG_CHARIZARD_SHINY};
+
+static const struct SpriteFrameImage sPicTable_CharizardFly[] = {
+    obj_frame_tiles(gFieldEffectObjectPic_Charizard),
+};
+
+static const union AnimCmd sAnim_CharizardFly[] =
+{
+    ANIMCMD_FRAME(0, 1),
+    ANIMCMD_END,
+};
+
+static const union AnimCmd *const sAnimTable_CharizardFly[] =
+{
+    sAnim_CharizardFly,
+};
+
+const struct SpriteTemplate gFieldEffectObjectTemplate_CharizardFly = {
+    .tileTag = TAG_NONE,
+    .paletteTag = FLDEFF_PAL_TAG_CHARIZARD,
+    .oam = &gObjectEventBaseOam_64x64,
+    .anims = sAnimTable_CharizardFly,
+    .images = sPicTable_CharizardFly,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCallbackDummy,
+};
+
+const struct SpriteTemplate gFieldEffectObjectTemplate_CharizardFlyShiny = {
+    .tileTag = TAG_NONE,
+    .paletteTag = FLDEFF_PAL_TAG_CHARIZARD_SHINY,
+    .oam = &gObjectEventBaseOam_64x64,
+    .anims = sAnimTable_CharizardFly,
+    .images = sPicTable_CharizardFly,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCallbackDummy,
+};
+
+
 static const struct SpriteFrameImage sPicTable_Bird[] = {
     obj_frame_tiles(gFieldEffectObjectPic_Bird),
 };

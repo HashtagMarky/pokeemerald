@@ -131,6 +131,8 @@
 #define FLDEFFOBJ_ROCK_CLIMB_BLOB       41
 #define FLDEFFOBJ_ROCK_CLIMB_DUST       42
 #define FLDEFFOBJ_SHINY_SPARKLE         43
+#define FLDEFFOBJ_CHARIZARD_FLY         44
+#define FLDEFFOBJ_CHARIZARD_FLY_SHINY   45
 
 #define FLDEFF_PAL_TAG_CUT_GRASS          0x1000
 #define FLDEFF_PAL_TAG_SECRET_POWER_TREE  0x1003
@@ -146,6 +148,8 @@
 #define FLDEFF_PAL_TAG_UNKNOWN            0x1011
 #define FLDEFF_PAL_TAG_CAVE_DUST          0x1012
 #define FLDEFF_PAL_TAG_DUST_CLOUD         0x1013
+#define FLDEFF_PAL_TAG_CHARIZARD          0x1014
+#define FLDEFF_PAL_TAG_CHARIZARD_SHINY    0x1015
 #define FLDEFF_PAL_TAG_FIELD_MOVE_MON     0x8400
 
 // tile tags, for field effects that may have many copies on screen at once

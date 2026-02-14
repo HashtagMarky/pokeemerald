@@ -76,7 +76,7 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_BrendanSurfing = {
 
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_BrendanFieldMove = {
     .tileTag = TAG_NONE,
-    .paletteTag = OBJ_EVENT_PAL_TAG_BRENDAN,
+    .paletteTag = OBJ_EVENT_PAL_TAG_ELIO,
     .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_BRIDGE_REFLECTION,
     .size = 512,
     .width = 32,
@@ -1748,7 +1748,7 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_MaySurfing = {
 
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_MayFieldMove = {
     .tileTag = TAG_NONE,
-    .paletteTag = OBJ_EVENT_PAL_TAG_MAY,
+    .paletteTag = OBJ_EVENT_PAL_TAG_SELENE,
     .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_BRIDGE_REFLECTION,
     .size = 512,
     .width = 32,
@@ -1976,7 +1976,7 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_RivalBrendanSurfin
 
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_RivalBrendanFieldMove = {
     .tileTag = TAG_NONE,
-    .paletteTag = OBJ_EVENT_PAL_TAG_BRENDAN,
+    .paletteTag = OBJ_EVENT_PAL_TAG_ELIO,
     .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_BRIDGE_REFLECTION,
     .size = 512,
     .width = 32,
@@ -2071,7 +2071,7 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_RivalMaySurfing = 
 
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_RivalMayFieldMove = {
     .tileTag = TAG_NONE,
-    .paletteTag = OBJ_EVENT_PAL_TAG_MAY,
+    .paletteTag = OBJ_EVENT_PAL_TAG_SELENE,
     .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_BRIDGE_REFLECTION,
     .size = 512,
     .width = 32,

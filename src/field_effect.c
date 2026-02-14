@@ -39,6 +39,7 @@
 #include "constants/rgb.h"
 #include "constants/songs.h"
 #include "constants/map_types.h"
+#include "constants/species.h"
 #include "qol_field_moves.h" // qol_field_moves
 
 #define subsprite_table(ptr) {.subsprites = ptr, .subspriteCount = (sizeof ptr) / (sizeof(struct Subsprite))}
@@ -272,6 +273,8 @@ static u8 sActiveList[32];
 // External declarations
 extern u8 *gFieldEffectScriptPointers[];
 extern const struct SpriteTemplate *const gFieldEffectObjectTemplatePointers[];
+extern const struct SpritePalette gSpritePalette_CharizardFly;
+extern const struct SpritePalette gSpritePalette_CharizardFlyShiny;
 
 static const u32 sNewGameBirch_Gfx[] = INCBIN_U32("graphics/birch_speech/birch.4bpp");
 static const u32 sUnusedBirchBeauty[] = INCBIN_U32("graphics/birch_speech/unused_beauty.4bpp");
@@ -2832,12 +2835,12 @@ bool8 FldEff_FieldMoveShowMon(void)
 
 bool8 FldEff_FieldMoveShowMonInit(void)
 {
-    struct Pokemon *pokemon;
     bool32 noDucking = gFieldEffectArguments[0] & SHOW_MON_CRY_NO_DUCKING;
-    pokemon = &gPlayerParty[(u8)gFieldEffectArguments[0]];
-    gFieldEffectArguments[0] = GetMonData(pokemon, MON_DATA_SPECIES);
-    gFieldEffectArguments[1] = GetMonData(pokemon, MON_DATA_IS_SHINY);
-    gFieldEffectArguments[2] = GetMonData(pokemon, MON_DATA_PERSONALITY);
+    
+    // Always show Charizard (or shiny Charizard based on FLAG_SHINY_RIDE)
+    gFieldEffectArguments[0] = SPECIES_CHARIZARD;
+    gFieldEffectArguments[1] = FlagGet(FLAG_SHINY_RIDE); // Use FLAG_SHINY_RIDE to determine shiny
+    gFieldEffectArguments[2] = 0; // Personality (can be 0 for fly animation)
     gFieldEffectArguments[0] |= noDucking;
     FieldEffectStart(FLDEFF_FIELD_MOVE_SHOW_MON);
     FieldEffectActiveListRemove(FLDEFF_FIELD_MOVE_SHOW_MON_INIT);
@@ -3385,10 +3388,25 @@ u8 FldEff_RayquazaSpotlight(void)
 
 u8 FldEff_NPCFlyOut(void)
 {
-    u8 spriteId = CreateSprite(gFieldEffectObjectTemplatePointers[FLDEFFOBJ_BIRD], 0x78, 0, 1);
-    struct Sprite *sprite = &gSprites[spriteId];
-
-    sprite->oam.paletteNum = LoadPlayerObjectEventPalette(gSaveBlock2Ptr->playerGender);
+    u8 objectId;
+    u8 spriteId;
+    struct Sprite *sprite;
+    bool8 isShiny = FlagGet(FLAG_SHINY_RIDE);
+    
+    // Load the appropriate palette
+    if (isShiny)
+    {
+        LoadSpritePalette(&gSpritePalette_CharizardFlyShiny);
+        objectId = FLDEFFOBJ_CHARIZARD_FLY_SHINY;
+    }
+    else
+    {
+        LoadSpritePalette(&gSpritePalette_CharizardFly);
+        objectId = FLDEFFOBJ_CHARIZARD_FLY;
+    }
+    
+    spriteId = CreateSprite(gFieldEffectObjectTemplatePointers[objectId], 0x78, 0, 1);
+    sprite = &gSprites[spriteId];
     sprite->oam.priority = 1;
     sprite->callback = SpriteCB_NPCFlyOut;
     sprite->data[1] = gFieldEffectArguments[0];
@@ -3567,11 +3585,25 @@ static void FlyOutFieldEffect_End(struct Task *task)
 
 static u8 CreateFlyBirdSprite(void)
 {
+    u8 objectId;
     u8 spriteId;
     struct Sprite *sprite;
-    spriteId = CreateSprite(gFieldEffectObjectTemplatePointers[FLDEFFOBJ_BIRD], 0xff, 0xb4, 0x1);
+    bool8 isShiny = FlagGet(FLAG_SHINY_RIDE);
+    
+    // Load the appropriate palette
+    if (isShiny)
+    {
+        LoadSpritePalette(&gSpritePalette_CharizardFlyShiny);
+        objectId = FLDEFFOBJ_CHARIZARD_FLY_SHINY;
+    }
+    else
+    {
+        LoadSpritePalette(&gSpritePalette_CharizardFly);
+        objectId = FLDEFFOBJ_CHARIZARD_FLY;
+    }
+    
+    spriteId = CreateSprite(gFieldEffectObjectTemplatePointers[objectId], 0xff, 0xb4, 0x1);
     sprite = &gSprites[spriteId];
-    sprite->oam.paletteNum = LoadPlayerObjectEventPalette(gSaveBlock2Ptr->playerGender);
     sprite->oam.priority = 1;
     sprite->callback = SpriteCB_FlyBirdLeaveBall;
     return spriteId;

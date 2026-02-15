@@ -42,8 +42,8 @@
       "x": 25,
       "y": 26,
       "elevation": 0,
-      "dest_map": "MAP_IKI_TOWN",
-      "dest_warp_id": "1"
+      "dest_map": "MAP_IKITOWN_HOUSE_TWO",
+      "dest_warp_id": "0"
     },
     {
       "x": 12,
@@ -63,8 +63,8 @@
       "x": 16,
       "y": 26,
       "elevation": 0,
-      "dest_map": "MAP_ROUTE1N",
-      "dest_warp_id": "1"
+      "dest_map": "MAP_IKITOWN_HOUSE_ONE",
+      "dest_warp_id": "0"
     },
     {
       "x": 23,

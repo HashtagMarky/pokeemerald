@@ -1266,3 +1266,9 @@ EventScript_VsSeekerChargingDone::
 	.include "data/maps/TrainerSchool3FClassroom/scripts.inc"
 
 	.include "data/maps/TrainerSchool2FTeachersLounge/scripts.inc"
+
+	.include "data/maps/AlolaLabBasement/scripts.inc"
+
+	.include "data/maps/IkitownHouseOne/scripts.inc"
+
+	.include "data/maps/IkitownHouseTwo/scripts.inc"

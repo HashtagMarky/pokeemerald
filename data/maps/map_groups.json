@@ -138,7 +138,10 @@
     "TrainerSchool3F",
     "TrainerSchool2FTeachersLounge",
     "TrainerSchool2FClassroom",
-    "TrainerSchool3FClassroom"
+    "TrainerSchool3FClassroom",
+    "AlolaLabBasement",
+    "IkitownHouseOne",
+    "IkitownHouseTwo"
   ],
   "gMapGroup_IndoorLittleroot": [
     "LittlerootTown_BrendansHouse_1F",

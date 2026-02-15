@@ -112,6 +112,9 @@
 #define MAP_TRAINER_SCHOOL2FTEACHERS_LOUNGE (13 | (1 << 8))
 #define MAP_TRAINER_SCHOOL2FCLASSROOM       (14 | (1 << 8))
 #define MAP_TRAINER_SCHOOL3FCLASSROOM       (15 | (1 << 8))
+#define MAP_ALOLA_LAB_BASEMENT              (16 | (1 << 8))
+#define MAP_IKITOWN_HOUSE_ONE               (17 | (1 << 8))
+#define MAP_IKITOWN_HOUSE_TWO               (18 | (1 << 8))
 
 // gMapGroup_IndoorLittleroot
 #define MAP_LITTLEROOT_TOWN_BRENDANS_HOUSE_1F    (0 | (2 << 8))

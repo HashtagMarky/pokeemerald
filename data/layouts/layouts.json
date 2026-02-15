@@ -4900,6 +4900,36 @@
       "secondary_tileset": "gTileset_Lab",
       "border_filepath": "data/layouts/TrainerSchool2FTeachersLounge/border.bin",
       "blockdata_filepath": "data/layouts/TrainerSchool2FTeachersLounge/map.bin"
+    },
+    {
+      "id": "LAYOUT_ALOLA_LAB_BASEMENT",
+      "name": "AlolaLabBasement_Layout",
+      "width": 20,
+      "height": 20,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_HauoliLab",
+      "border_filepath": "data/layouts/AlolaLabBasement/border.bin",
+      "blockdata_filepath": "data/layouts/AlolaLabBasement/map.bin"
+    },
+    {
+      "id": "LAYOUT_IKITOWN_HOUSE_ONE",
+      "name": "IkitownHouseOne_Layout",
+      "width": 20,
+      "height": 20,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_GenericBuilding",
+      "border_filepath": "data/layouts/IkitownHouseOne/border.bin",
+      "blockdata_filepath": "data/layouts/IkitownHouseOne/map.bin"
+    },
+    {
+      "id": "LAYOUT_IKITOWN_HOUSE_TWO",
+      "name": "IkitownHouseTwo_Layout",
+      "width": 20,
+      "height": 20,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_GenericBuilding",
+      "border_filepath": "data/layouts/IkitownHouseTwo/border.bin",
+      "blockdata_filepath": "data/layouts/IkitownHouseTwo/map.bin"
     }
   ]
 }

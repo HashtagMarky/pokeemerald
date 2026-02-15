@@ -115,6 +115,7 @@
 #define MAP_ALOLA_LAB_BASEMENT              (16 | (1 << 8))
 #define MAP_IKITOWN_HOUSE_ONE               (17 | (1 << 8))
 #define MAP_IKITOWN_HOUSE_TWO               (18 | (1 << 8))
+#define MAP_IKITOWN_HOUSE_THREE             (19 | (1 << 8))
 
 // gMapGroup_IndoorLittleroot
 #define MAP_LITTLEROOT_TOWN_BRENDANS_HOUSE_1F    (0 | (2 << 8))

@@ -49,39 +49,32 @@
   ],
   "warp_events": [
     {
-      "x": 42,
-      "y": 13,
-      "elevation": 0,
-      "dest_map": "MAP_HAOULI_CEMETARY",
-      "dest_warp_id": "0"
-    },
-    {
       "x": 23,
-      "y": 25,
+      "y": 26,
       "elevation": 0,
       "dest_map": "MAP_HAUOLI_CITY",
       "dest_warp_id": "3"
     },
     {
       "x": 24,
-      "y": 25,
-      "elevation": 0,
-      "dest_map": "MAP_HAUOLI_CITY",
-      "dest_warp_id": "3"
-    },
-    {
-      "x": 25,
-      "y": 25,
+      "y": 26,
       "elevation": 0,
       "dest_map": "MAP_HAUOLI_CITY",
       "dest_warp_id": "4"
     },
     {
-      "x": 26,
-      "y": 25,
+      "x": 25,
+      "y": 26,
       "elevation": 0,
       "dest_map": "MAP_HAUOLI_CITY",
       "dest_warp_id": "5"
+    },
+    {
+      "x": 26,
+      "y": 26,
+      "elevation": 0,
+      "dest_map": "MAP_HAUOLI_CITY",
+      "dest_warp_id": "13"
     },
     {
       "x": 42,
@@ -96,13 +89,6 @@
       "elevation": 0,
       "dest_map": "MAP_HAOULI_CEMETARY",
       "dest_warp_id": "2"
-    },
-    {
-      "x": 42,
-      "y": 16,
-      "elevation": 0,
-      "dest_map": "MAP_HAOULI_CEMETARY",
-      "dest_warp_id": "3"
     }
   ],
   "coord_events": [],

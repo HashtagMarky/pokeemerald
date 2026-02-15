@@ -4930,6 +4930,16 @@
       "secondary_tileset": "gTileset_GenericBuilding",
       "border_filepath": "data/layouts/IkitownHouseTwo/border.bin",
       "blockdata_filepath": "data/layouts/IkitownHouseTwo/map.bin"
+    },
+    {
+      "id": "LAYOUT_IKITOWN_HOUSE_THREE",
+      "name": "IkitownHouseThree_Layout",
+      "width": 20,
+      "height": 20,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_GenericBuilding",
+      "border_filepath": "data/layouts/IkitownHouseThree/border.bin",
+      "blockdata_filepath": "data/layouts/IkitownHouseThree/map.bin"
     }
   ]
 }

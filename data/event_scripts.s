@@ -1272,3 +1272,5 @@ EventScript_VsSeekerChargingDone::
 	.include "data/maps/IkitownHouseOne/scripts.inc"
 
 	.include "data/maps/IkitownHouseTwo/scripts.inc"
+
+	.include "data/maps/IkitownHouseThree/scripts.inc"

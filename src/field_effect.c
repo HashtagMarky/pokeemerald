@@ -40,6 +40,7 @@
 #include "constants/songs.h"
 #include "constants/map_types.h"
 #include "constants/species.h"
+#include "transform.h"
 #include "qol_field_moves.h" // qol_field_moves
 
 #define subsprite_table(ptr) {.subsprites = ptr, .subspriteCount = (sizeof ptr) / (sizeof(struct Subsprite))}
@@ -1393,13 +1394,46 @@ void ReturnToFieldFromFlyMapSelect(void)
     gFieldCallback = FieldCallback_UseFly;
 }
 
+static void Task_WaitForDetransformThenFly(u8 taskId);
+
 void FieldCallback_UseFly(void)
 {
     FadeInFromBlack();
-    CreateTask(Task_UseFly, 0);
     LockPlayerFieldControls();
     FreezeObjectEvents();
+    
+    // Check if player is transformed and needs to detransform first
+    if (IsPlayerTransformed())
+    {
+        // Detransform first (don't set FLAG_DETRANSFORM_NO_FOLLOWER - followers should stay)
+        VarSet(VAR_TRANSFORM_MON, SPECIES_NONE);
+        ChooseMonForTransform();
+        
+        // Create task to wait for detransform animation (20 frames), then start fly
+        CreateTask(Task_WaitForDetransformThenFly, 0);
+    }
+    else
+    {
+        // Not transformed, proceed directly with fly
+        CreateTask(Task_UseFly, 0);
+    }
+    
     gFieldCallback = NULL;
+}
+
+static void Task_WaitForDetransformThenFly(u8 taskId)
+{
+    // Keep controls locked during detransform
+    LockPlayerFieldControls();
+    FreezeObjectEvents();
+    
+    // Wait for detransform animation to complete (20 frames)
+    if (gTasks[taskId].data[0]++ >= 20)
+    {
+        // Transform complete, now start fly
+        CreateTask(Task_UseFly, 0);
+        DestroyTask(taskId);
+    }
 }
 
 #define taskState           task->data[3]

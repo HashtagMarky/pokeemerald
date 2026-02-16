@@ -1775,6 +1775,12 @@ void ItemUseOutOfBattle_FlyTool(u8 taskId)
     {
         DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
     }
+    if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING) ||
+    behavior == MB_ROCKY_PATH)
+    {
+        DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
+        return;
+    }
     else if (gTasks[taskId].tUsingRegisteredKeyItem != TRUE)
     {
         // FROM BAG: Open fly map directly from bag

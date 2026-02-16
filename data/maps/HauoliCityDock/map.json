@@ -19,52 +19,38 @@
       "direction": "up"
     }
   ],
-  "object_events": [
-    {
-      "graphics_id": "OBJ_EVENT_GFX_SPECIES(TOUCANNON)",
-      "x": 37,
-      "y": 23,
-      "elevation": 0,
-      "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
-      "movement_range_x": 1,
-      "movement_range_y": 1,
-      "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
-      "flag": "0"
-    }
-  ],
+  "object_events": [],
   "warp_events": [
     {
-      "x": 48,
+      "x": 41,
       "y": 24,
       "elevation": 0,
       "dest_map": "MAP_HAUOLI_CITY_SOUTH",
       "dest_warp_id": "6"
     },
     {
-      "x": 48,
+      "x": 41,
       "y": 25,
       "elevation": 0,
       "dest_map": "MAP_HAUOLI_CITY_SOUTH",
       "dest_warp_id": "6"
     },
     {
-      "x": 48,
+      "x": 41,
       "y": 26,
       "elevation": 0,
       "dest_map": "MAP_HAUOLI_CITY_SOUTH",
       "dest_warp_id": "7"
     },
     {
-      "x": 48,
+      "x": 41,
       "y": 27,
       "elevation": 0,
       "dest_map": "MAP_HAUOLI_CITY_SOUTH",
       "dest_warp_id": "8"
     },
     {
-      "x": 48,
+      "x": 41,
       "y": 28,
       "elevation": 0,
       "dest_map": "MAP_HAUOLI_CITY_SOUTH",
@@ -72,14 +58,14 @@
     },
     {
       "x": 30,
-      "y": 21,
+      "y": 23,
       "elevation": 0,
       "dest_map": "MAP_HAUOLI_CITY_DOCK",
       "dest_warp_id": "5"
     },
     {
       "x": 31,
-      "y": 21,
+      "y": 23,
       "elevation": 0,
       "dest_map": "MAP_HAUOLI_CITY_DOCK",
       "dest_warp_id": "6"

@@ -4615,7 +4615,7 @@
       "id": "LAYOUT_HAUOLI_CITY_DOCK",
       "name": "HauoliCityDock_Layout",
       "width": 65,
-      "height": 30,
+      "height": 32,
       "primary_tileset": "gTileset_HauoliCity_Primary",
       "secondary_tileset": "gTileset_HauoliCityDock",
       "border_filepath": "data/layouts/HauoliCityDock/border.bin",

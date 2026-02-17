@@ -1,0 +1,6 @@
+mapscripts Route2House1_MapScripts {}
+
+script Route2House1_Door {
+    playse(SE_DOOR)
+    warp(MAP_ROUTE2HOUSE1ROOM, 0)
+}

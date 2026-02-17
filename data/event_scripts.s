@@ -1274,3 +1274,15 @@ EventScript_VsSeekerChargingDone::
 	.include "data/maps/IkitownHouseTwo/scripts.inc"
 
 	.include "data/maps/IkitownHouseThree/scripts.inc"
+
+	.include "data/maps/SlakingHotelFrontDesk/scripts.inc"
+
+	.include "data/maps/SlakingHotelRoom1/scripts.inc"
+
+	.include "data/maps/SlakingHotelRoom2/scripts.inc"
+
+	.include "data/maps/Route2House1/scripts.inc"
+
+	.include "data/maps/Route2House1Room/scripts.inc"
+
+	.include "data/maps/Route2House2/scripts.inc"

@@ -4940,6 +4940,66 @@
       "secondary_tileset": "gTileset_GenericBuilding",
       "border_filepath": "data/layouts/IkitownHouseThree/border.bin",
       "blockdata_filepath": "data/layouts/IkitownHouseThree/map.bin"
+    },
+    {
+      "id": "LAYOUT_SLAKING_HOTEL_FRONT_DESK",
+      "name": "SlakingHotelFrontDesk_Layout",
+      "width": 20,
+      "height": 20,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_Shop",
+      "border_filepath": "data/layouts/SlakingHotelFrontDesk/border.bin",
+      "blockdata_filepath": "data/layouts/SlakingHotelFrontDesk/map.bin"
+    },
+    {
+      "id": "LAYOUT_SLAKING_HOTEL_ROOM1",
+      "name": "SlakingHotelRoom1_Layout",
+      "width": 20,
+      "height": 20,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_PlayerHouse2",
+      "border_filepath": "data/layouts/SlakingHotelRoom1/border.bin",
+      "blockdata_filepath": "data/layouts/SlakingHotelRoom1/map.bin"
+    },
+    {
+      "id": "LAYOUT_SLAKING_HOTEL_ROOM2",
+      "name": "SlakingHotelRoom2_Layout",
+      "width": 20,
+      "height": 20,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_PlayerHouse2",
+      "border_filepath": "data/layouts/SlakingHotelRoom2/border.bin",
+      "blockdata_filepath": "data/layouts/SlakingHotelRoom2/map.bin"
+    },
+    {
+      "id": "LAYOUT_ROUTE2HOUSE1",
+      "name": "Route2House1_Layout",
+      "width": 17,
+      "height": 18,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_PlayerHouse2",
+      "border_filepath": "data/layouts/Route2House1/border.bin",
+      "blockdata_filepath": "data/layouts/Route2House1/map.bin"
+    },
+    {
+      "id": "LAYOUT_ROUTE2HOUSE1ROOM",
+      "name": "Route2House1Room_Layout",
+      "width": 20,
+      "height": 20,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_PlayerHouse2",
+      "border_filepath": "data/layouts/Route2House1Room/border.bin",
+      "blockdata_filepath": "data/layouts/Route2House1Room/map.bin"
+    },
+    {
+      "id": "LAYOUT_ROUTE2HOUSE2",
+      "name": "Route2House2_Layout",
+      "width": 54,
+      "height": 49,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_PlayerHouse2",
+      "border_filepath": "data/layouts/Route2House2/border.bin",
+      "blockdata_filepath": "data/layouts/Route2House2/map.bin"
     }
   ]
 }

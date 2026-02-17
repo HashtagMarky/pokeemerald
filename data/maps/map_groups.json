@@ -142,7 +142,13 @@
     "AlolaLabBasement",
     "IkitownHouseOne",
     "IkitownHouseTwo",
-    "IkitownHouseThree"
+    "IkitownHouseThree",
+    "SlakingHotelFrontDesk",
+    "SlakingHotelRoom1",
+    "SlakingHotelRoom2",
+    "Route2House1",
+    "Route2House1Room",
+    "Route2House2"
   ],
   "gMapGroup_IndoorLittleroot": [
     "LittlerootTown_BrendansHouse_1F",

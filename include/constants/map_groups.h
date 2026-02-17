@@ -116,6 +116,12 @@
 #define MAP_IKITOWN_HOUSE_ONE               (17 | (1 << 8))
 #define MAP_IKITOWN_HOUSE_TWO               (18 | (1 << 8))
 #define MAP_IKITOWN_HOUSE_THREE             (19 | (1 << 8))
+#define MAP_SLAKING_HOTEL_FRONT_DESK        (20 | (1 << 8))
+#define MAP_SLAKING_HOTEL_ROOM1             (21 | (1 << 8))
+#define MAP_SLAKING_HOTEL_ROOM2             (22 | (1 << 8))
+#define MAP_ROUTE2HOUSE1                    (23 | (1 << 8))
+#define MAP_ROUTE2HOUSE1ROOM                (24 | (1 << 8))
+#define MAP_ROUTE2HOUSE2                    (25 | (1 << 8))
 
 // gMapGroup_IndoorLittleroot
 #define MAP_LITTLEROOT_TOWN_BRENDANS_HOUSE_1F    (0 | (2 << 8))

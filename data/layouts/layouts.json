@@ -4664,7 +4664,7 @@
     {
       "id": "LAYOUT_HAOULI_CEMETARY",
       "name": "HaouliCemetary_Layout",
-      "width": 40,
+      "width": 43,
       "height": 40,
       "primary_tileset": "gTileset_orangeislands",
       "secondary_tileset": "gTileset_HaouliCemetary",

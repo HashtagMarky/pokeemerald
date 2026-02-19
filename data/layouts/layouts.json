@@ -5000,6 +5000,16 @@
       "secondary_tileset": "gTileset_PlayerHouse2",
       "border_filepath": "data/layouts/Route2House2/border.bin",
       "blockdata_filepath": "data/layouts/Route2House2/map.bin"
+    },
+    {
+      "id": "LAYOUT_ALOLA_TOUREST_BUREAU",
+      "name": "AlolaTourestBureau_Layout",
+      "width": 20,
+      "height": 20,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_Shop",
+      "border_filepath": "data/layouts/AlolaTourestBureau/border.bin",
+      "blockdata_filepath": "data/layouts/AlolaTourestBureau/map.bin"
     }
   ]
 }

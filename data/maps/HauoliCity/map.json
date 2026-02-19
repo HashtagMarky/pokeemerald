@@ -107,15 +107,15 @@
       "x": 49,
       "y": 16,
       "elevation": 0,
-      "dest_map": "MAP_HAUOLI_CITY",
-      "dest_warp_id": "11"
+      "dest_map": "MAP_ALOLA_TOUREST_BUREAU",
+      "dest_warp_id": "0"
     },
     {
       "x": 50,
       "y": 16,
       "elevation": 0,
-      "dest_map": "MAP_HAUOLI_CITY",
-      "dest_warp_id": "12"
+      "dest_map": "MAP_ALOLA_TOUREST_BUREAU",
+      "dest_warp_id": "1"
     },
     {
       "x": 12,

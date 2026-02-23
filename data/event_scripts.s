@@ -1288,3 +1288,7 @@ EventScript_VsSeekerChargingDone::
 	.include "data/maps/Route2House2/scripts.inc"
 
 	.include "data/maps/AlolaTourestBureau/scripts.inc"
+
+	.include "data/maps/ClothingStore/scripts.inc"
+
+	.include "data/maps/LevannySalon/scripts.inc"

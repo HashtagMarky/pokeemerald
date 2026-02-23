@@ -5010,6 +5010,26 @@
       "secondary_tileset": "gTileset_Shop",
       "border_filepath": "data/layouts/AlolaTourestBureau/border.bin",
       "blockdata_filepath": "data/layouts/AlolaTourestBureau/map.bin"
+    },
+    {
+      "id": "LAYOUT_CLOTHING_STORE",
+      "name": "ClothingStore_Layout",
+      "width": 20,
+      "height": 20,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_PrettyPetalFlowerShop",
+      "border_filepath": "data/layouts/ClothingStore/border.bin",
+      "blockdata_filepath": "data/layouts/ClothingStore/map.bin"
+    },
+    {
+      "id": "LAYOUT_LEVANNY_SALON",
+      "name": "LevannySalon_Layout",
+      "width": 20,
+      "height": 20,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_Shop",
+      "border_filepath": "data/layouts/LevannySalon/border.bin",
+      "blockdata_filepath": "data/layouts/LevannySalon/map.bin"
     }
   ]
 }

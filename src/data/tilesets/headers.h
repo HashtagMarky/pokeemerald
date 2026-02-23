@@ -982,7 +982,7 @@ const struct Tileset gTileset_MelemeleMeadow =
     .palettes = gTilesetPalettes_MelemeleMeadow,
     .metatiles = gMetatiles_MelemeleMeadow,
     .metatileAttributes = gMetatileAttributes_MelemeleMeadow,
-    .callback = NULL,
+    .callback = InitTilesetAnim_MelemeleMeadow,
 };
 
 const struct Tileset gTileset_HaouliCemetary =
@@ -1103,5 +1103,5 @@ const struct Tileset gTileset_HauoliLab =
     .palettes = gTilesetPalettes_HauoliLab,
     .metatiles = gMetatiles_HauoliLab,
     .metatileAttributes = gMetatileAttributes_HauoliLab,
-    .callback = NULL,
+    .callback = InitTilesetAnim_HauoliLab,
 };

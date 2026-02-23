@@ -1,14 +1,20 @@
 const u32 gBattleEnvironmentTiles_TallGrass[] = INCBIN_U32("graphics/battle_environment/tall_grass/tiles.4bpp.smol");
 const u16 gBattleEnvironmentPalette_TallGrass[] = INCBIN_U16("graphics/battle_environment/tall_grass/palette.gbapal");
 const u32 gBattleEnvironmentTilemap_TallGrass[] = INCBIN_U32("graphics/battle_environment/tall_grass/map.bin.smolTM");
+const u16 gBattleEnvironmentPalette_TallGrassTransition[] = INCBIN_U16("graphics/battle_environment/tall_grass/palette.gbapal");
+const u16 gBattleEnvironmentPalette_TallGrassNight[] = INCBIN_U16("graphics/battle_environment/tall_grass/palette.gbapal");
 
 const u32 gBattleEnvironmentTiles_LongGrass[] = INCBIN_U32("graphics/battle_environment/long_grass/tiles.4bpp.smol");
 const u16 gBattleEnvironmentPalette_LongGrass[] = INCBIN_U16("graphics/battle_environment/long_grass/palette.gbapal");
 const u32 gBattleEnvironmentTilemap_LongGrass[] = INCBIN_U32("graphics/battle_environment/long_grass/map.bin.smolTM");
+const u16 gBattleEnvironmentPalette_LongGrassTransition[] = INCBIN_U16("graphics/battle_environment/long_grass/palette.gbapal");
+const u16 gBattleEnvironmentPalette_LongGrassNight[] = INCBIN_U16("graphics/battle_environment/long_grass/palette.gbapal");
 
 const u32 gBattleEnvironmentTiles_Sand[] = INCBIN_U32("graphics/battle_environment/sand/tiles.4bpp.smol");
 const u16 gBattleEnvironmentPalette_Sand[] = INCBIN_U16("graphics/battle_environment/sand/palette.gbapal");
 const u32 gBattleEnvironmentTilemap_Sand[] = INCBIN_U32("graphics/battle_environment/sand/map.bin.smolTM");
+const u16 gBattleEnvironmentPalette_SandTransition[] = INCBIN_U16("graphics/battle_environment/sand/palette.gbapal");
+const u16 gBattleEnvironmentPalette_SandNight[] = INCBIN_U16("graphics/battle_environment/sand/palette.gbapal");
 
 const u32 gBattleEnvironmentTiles_Underwater[] = INCBIN_U32("graphics/battle_environment/underwater/tiles.4bpp.smol");
 const u16 gBattleEnvironmentPalette_Underwater[] = INCBIN_U16("graphics/battle_environment/underwater/palette.gbapal");
@@ -17,6 +23,8 @@ const u32 gBattleEnvironmentTilemap_Underwater[] = INCBIN_U32("graphics/battle_e
 const u32 gBattleEnvironmentTiles_Water[] = INCBIN_U32("graphics/battle_environment/water/tiles.4bpp.smol");
 const u16 gBattleEnvironmentPalette_Water[] = INCBIN_U16("graphics/battle_environment/water/palette.gbapal");
 const u32 gBattleEnvironmentTilemap_Water[] = INCBIN_U32("graphics/battle_environment/water/map.bin.smolTM");
+const u16 gBattleEnvironmentPalette_WaterTransition[] = INCBIN_U16("graphics/battle_environment/water/palette.gbapal");
+const u16 gBattleEnvironmentPalette_WaterNight[] = INCBIN_U16("graphics/battle_environment/water/palette.gbapal");
 
 const u32 gBattleEnvironmentTiles_PondWater[] = INCBIN_U32("graphics/battle_environment/pond_water/tiles.4bpp.smol");
 const u16 gBattleEnvironmentPalette_PondWater[] = INCBIN_U16("graphics/battle_environment/pond_water/palette.gbapal");
@@ -43,6 +51,8 @@ const u32 gBattleEnvironmentTilemap_Building[] = INCBIN_U32("graphics/battle_env
     .entryTileset = gBattleEnvironmentAnimTiles_##background,   \
     .entryTilemap = gBattleEnvironmentAnimTilemap_##background, \
     .palette = gBattleEnvironmentPalette_##background,          \
+    .paletteTransition = NULL,                                  \
+    .paletteNight = NULL,                                       \
 }
 
 const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] =
@@ -58,7 +68,16 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
     #endif
         .secretPowerEffect = B_SECRET_POWER_EFFECT >= GEN_4 ? MOVE_EFFECT_SLEEP : MOVE_EFFECT_POISON,
         .camouflageType = TYPE_GRASS,
-        .background = ENVIRONMENT_BACKGROUND(TallGrass),
+        .background =
+        {
+            .tileset = gBattleEnvironmentTiles_TallGrass,
+            .tilemap = gBattleEnvironmentTilemap_TallGrass,
+            .entryTileset = gBattleEnvironmentAnimTiles_TallGrass,
+            .entryTilemap = gBattleEnvironmentAnimTilemap_TallGrass,
+            .palette = gBattleEnvironmentPalette_TallGrass,
+            .paletteTransition = gBattleEnvironmentPalette_TallGrassTransition,
+            .paletteNight = gBattleEnvironmentPalette_TallGrassNight,
+        },
     },
 
     [BATTLE_ENVIRONMENT_LONG_GRASS] =
@@ -72,7 +91,16 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
     #endif
         .secretPowerEffect = MOVE_EFFECT_SLEEP,
         .camouflageType = TYPE_GRASS,
-        .background = ENVIRONMENT_BACKGROUND(LongGrass),
+        .background =
+        {
+            .tileset = gBattleEnvironmentTiles_LongGrass,
+            .tilemap = gBattleEnvironmentTilemap_LongGrass,
+            .entryTileset = gBattleEnvironmentAnimTiles_LongGrass,
+            .entryTilemap = gBattleEnvironmentAnimTilemap_LongGrass,
+            .palette = gBattleEnvironmentPalette_LongGrass,
+            .paletteTransition = gBattleEnvironmentPalette_LongGrassTransition,
+            .paletteNight = gBattleEnvironmentPalette_LongGrassNight,
+        },
     },
 
     [BATTLE_ENVIRONMENT_SAND] =
@@ -80,7 +108,16 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
         .naturePower = B_NATURE_POWER_MOVES >= GEN_6 ? MOVE_EARTH_POWER : MOVE_EARTHQUAKE,
         .secretPowerEffect = MOVE_EFFECT_ACC_MINUS_1,
         .camouflageType = TYPE_GROUND,
-        .background = ENVIRONMENT_BACKGROUND(Sand),
+        .background =
+        {
+            .tileset = gBattleEnvironmentTiles_Sand,
+            .tilemap = gBattleEnvironmentTilemap_Sand,
+            .entryTileset = gBattleEnvironmentAnimTiles_Sand,
+            .entryTilemap = gBattleEnvironmentAnimTilemap_Sand,
+            .palette = gBattleEnvironmentPalette_Sand,
+            .paletteTransition = gBattleEnvironmentPalette_SandTransition,
+            .paletteNight = gBattleEnvironmentPalette_SandNight,
+        },
     },
 
     [BATTLE_ENVIRONMENT_UNDERWATER] =
@@ -96,7 +133,16 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
         .naturePower = B_NATURE_POWER_MOVES >= GEN_4 ? MOVE_HYDRO_PUMP : MOVE_SURF,
         .secretPowerEffect = MOVE_EFFECT_ATK_MINUS_1,
         .camouflageType = TYPE_WATER,
-        .background = ENVIRONMENT_BACKGROUND(Water),
+        .background =
+        {
+            .tileset = gBattleEnvironmentTiles_Water,
+            .tilemap = gBattleEnvironmentTilemap_Water,
+            .entryTileset = gBattleEnvironmentAnimTiles_Water,
+            .entryTilemap = gBattleEnvironmentAnimTilemap_Water,
+            .palette = gBattleEnvironmentPalette_Water,
+            .paletteTransition = gBattleEnvironmentPalette_WaterTransition,
+            .paletteNight = gBattleEnvironmentPalette_WaterNight,
+        },
     },
 
     [BATTLE_ENVIRONMENT_POND] =

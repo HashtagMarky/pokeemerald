@@ -16,6 +16,7 @@
 #include "menu.h"
 #include "overworld.h"
 #include "palette.h"
+#include "rtc.h"
 #include "sound.h"
 #include "sprite.h"
 #include "task.h"
@@ -627,12 +628,39 @@ static u8 GetBattleEnvironmentByMapScene(u8 mapBattleScene)
 // Loads the initial battle terrain.
 static void LoadBattleEnvironmentGfx(u16 terrain)
 {
+    const u16 *paletteToLoad;
+    enum TimeOfDay timeOfDay;
+    
     if (terrain >= NELEMS(gBattleEnvironmentInfo))
         terrain = BATTLE_ENVIRONMENT_PLAIN;  // If higher than the number of entries in gBattleEnvironmentInfo, use the default.
+    
+    // Get current time of day
+    timeOfDay = GetTimeOfDay();
+    
+    // Select palette based on time of day
+    switch (timeOfDay)
+    {
+    case TIME_MORNING:
+    case TIME_EVENING:
+        paletteToLoad = gBattleEnvironmentInfo[terrain].background.paletteTransition;
+        if (paletteToLoad == NULL)
+            paletteToLoad = gBattleEnvironmentInfo[terrain].background.palette;
+        break;
+    case TIME_NIGHT:
+        paletteToLoad = gBattleEnvironmentInfo[terrain].background.paletteNight;
+        if (paletteToLoad == NULL)
+            paletteToLoad = gBattleEnvironmentInfo[terrain].background.palette;
+        break;
+    case TIME_DAY:
+    default:
+        paletteToLoad = gBattleEnvironmentInfo[terrain].background.palette;
+        break;
+    }
+    
     // Copy to bg3
     DecompressDataWithHeaderVram(gBattleEnvironmentInfo[terrain].background.tileset, (void *)(BG_CHAR_ADDR(2)));
     DecompressDataWithHeaderVram(gBattleEnvironmentInfo[terrain].background.tilemap, (void *)(BG_SCREEN_ADDR(26)));
-    LoadPalette(gBattleEnvironmentInfo[terrain].background.palette, BG_PLTT_ID(2), 3 * PLTT_SIZE_4BPP);
+    LoadPalette(paletteToLoad, BG_PLTT_ID(2), 3 * PLTT_SIZE_4BPP);
 }
 
 // Loads the entry associated with the battle terrain.
@@ -1108,7 +1136,33 @@ bool8 LoadChosenBattleElement(u8 caseId)
         DecompressDataWithHeaderVram(gBattleEnvironmentInfo[GetBattleEnvironmentOverride()].background.tilemap, (void *)(BG_SCREEN_ADDR(26)));
         break;
     case 5:
-        LoadPalette(gBattleEnvironmentInfo[GetBattleEnvironmentOverride()].background.palette, BG_PLTT_ID(2), 3 * PLTT_SIZE_4BPP);
+        {
+            const u16 *paletteToLoad;
+            u8 terrain = GetBattleEnvironmentOverride();
+            enum TimeOfDay timeOfDay = GetTimeOfDay();
+            
+            // Select palette based on time of day
+            switch (timeOfDay)
+            {
+            case TIME_MORNING:
+            case TIME_EVENING:
+                paletteToLoad = gBattleEnvironmentInfo[terrain].background.paletteTransition;
+                if (paletteToLoad == NULL)
+                    paletteToLoad = gBattleEnvironmentInfo[terrain].background.palette;
+                break;
+            case TIME_NIGHT:
+                paletteToLoad = gBattleEnvironmentInfo[terrain].background.paletteNight;
+                if (paletteToLoad == NULL)
+                    paletteToLoad = gBattleEnvironmentInfo[terrain].background.palette;
+                break;
+            case TIME_DAY:
+            default:
+                paletteToLoad = gBattleEnvironmentInfo[terrain].background.palette;
+                break;
+            }
+            
+            LoadPalette(paletteToLoad, BG_PLTT_ID(2), 3 * PLTT_SIZE_4BPP);
+        }
         break;
     case 6:
         LoadBattleMenuWindowGfx();

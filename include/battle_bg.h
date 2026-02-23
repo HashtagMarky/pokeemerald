@@ -8,6 +8,8 @@ struct BattleBackground
     const void *entryTileset;
     const void *entryTilemap;
     const void *palette;
+    const void *paletteTransition;
+    const void *paletteNight;
 };
 
 void BattleInitBgsAndWindows(void);

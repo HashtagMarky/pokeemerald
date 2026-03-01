@@ -44,3 +44,13 @@ script Route1LittleBoyNPC{
 msgbox("I gotta catch more Pokémon!\nPokémon with cool knees are so neat.", MSGBOX_NPC)
 end    
 }
+
+script testscript{
+    msgbox("okay this is a test.
+    It seems this is a suitable line length
+    for scripting. This is working well.
+    
+    Do I need to do anything to compile
+    this?", MSGBOX_NPC)
+    end
+}

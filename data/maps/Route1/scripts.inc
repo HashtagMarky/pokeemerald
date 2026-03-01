@@ -73,6 +73,12 @@ Route1LittleBoyNPC::
 	end
 
 
+testscript::
+# 49 "data/maps/Route1/scripts.pory"
+	msgbox testscript_Text_0, MSGBOX_NPC
+	end
+
+
 MomSaysHi_Text_0:
 # 6 "data/maps/Route1/scripts.pory"
 	.string "Mom$"
@@ -94,3 +100,11 @@ Mailbox_Text_0:
 Route1LittleBoyNPC_Text_0:
 # 44 "data/maps/Route1/scripts.pory"
 	.string "I gotta catch more Pokémon!\nPokémon with cool knees are so neat.$"
+
+testscript_Text_0:
+# 49 "data/maps/Route1/scripts.pory"
+	.string "okay this is a test.\n"
+	.string "It seems this is a suitable line length\l"
+	.string "for scripting. This is working well.\p"
+	.string "Do I need to do anything to compile\n"
+	.string "this?$"

@@ -3569,10 +3569,14 @@ static void FlyOutFieldEffect_BirdSwoopDown(struct Task *task)
 
 static void FlyOutFieldEffect_JumpOnBird(struct Task *task)
 {
-    if ((++task->tTimer) >= 8)
+    if ((++task->tTimer) >= 20)
     {
         struct ObjectEvent *objectEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
+        objectEvent->fixedPriority = 1;
         ObjectEventSetGraphicsId(objectEvent, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_SURFING));
+        gSprites[objectEvent->spriteId].oam.priority = 1;
+        gSprites[objectEvent->spriteId].subpriority = 0;
+        gSprites[objectEvent->spriteId].subspriteMode = SUBSPRITES_IGNORE_PRIORITY;
         StartSpriteAnim(&gSprites[objectEvent->spriteId], ANIM_GET_ON_OFF_POKEMON_WEST);
         objectEvent->inanimate = TRUE;
         ObjectEventSetHeldMovement(objectEvent, MOVEMENT_ACTION_JUMP_IN_PLACE_LEFT);
@@ -3639,6 +3643,7 @@ static u8 CreateFlyBirdSprite(void)
     spriteId = CreateSprite(gFieldEffectObjectTemplatePointers[objectId], 0xff, 0xb4, 0x1);
     sprite = &gSprites[spriteId];
     sprite->oam.priority = 1;
+    sprite->subpriority = 2;
     sprite->callback = SpriteCB_FlyBirdLeaveBall;
     return spriteId;
 }
@@ -3659,6 +3664,7 @@ static void StartFlyBirdSwoopDown(u8 spriteId)
     sprite->y2 = 0;
     memset(&sprite->data[0], 0, 8 * sizeof(u16) /* zero all data cells */);
     sprite->sPlayerSpriteId = MAX_SPRITES;
+    sprite->data[3] = 2; // Swoop speed (2 = slow for pickup)
 }
 
 static void SetFlyBirdPlayerSpriteId(u8 birdSpriteId, u8 playerSpriteId)
@@ -3720,7 +3726,7 @@ static void SpriteCB_FlyBirdSwoopDown(struct Sprite *sprite)
 {
     sprite->x2 = Cos(sprite->data[2], 0x8c);
     sprite->y2 = Sin(sprite->data[2], 0x48);
-    sprite->data[2] = (sprite->data[2] + 4) & 0xff;
+    sprite->data[2] = (sprite->data[2] + sprite->data[3]) & 0xff;
     if (sprite->sPlayerSpriteId != MAX_SPRITES)
     {
         struct Sprite *sprite1 = &gSprites[sprite->sPlayerSpriteId];
@@ -3729,6 +3735,9 @@ static void SpriteCB_FlyBirdSwoopDown(struct Sprite *sprite)
         sprite1->y = sprite->y + sprite->y2 - 8;
         sprite1->x2 = 0;
         sprite1->y2 = 0;
+        sprite1->oam.priority = 1;
+        sprite1->subpriority = 0;
+        sprite1->subspriteMode = SUBSPRITES_IGNORE_PRIORITY;
     }
     if (sprite->data[2] >= 0x80)
     {
@@ -3827,10 +3836,15 @@ static void FlyInFieldEffect_BirdSwoopDown(struct Task *task)
         CameraObjectFreeze();
         ObjectEventTurn(objectEvent, DIR_WEST);
         StartSpriteAnim(&gSprites[objectEvent->spriteId], ANIM_GET_ON_OFF_POKEMON_WEST);
+        objectEvent->fixedPriority = 1;
+        gSprites[objectEvent->spriteId].oam.priority = 1;
+        gSprites[objectEvent->spriteId].subpriority = 0;
+        gSprites[objectEvent->spriteId].subspriteMode = SUBSPRITES_IGNORE_PRIORITY;
         objectEvent->invisible = FALSE;
         objectEvent->noShadow = TRUE;
         task->tBirdSpriteId = CreateFlyBirdSprite();
         StartFlyBirdSwoopDown(task->tBirdSpriteId);
+        gSprites[task->tBirdSpriteId].data[3] = 4; // Fast landing swoop
         SetFlyBirdPlayerSpriteId(task->tBirdSpriteId, objectEvent->spriteId);
     }
 }
@@ -3848,6 +3862,9 @@ static void FlyInFieldEffect_FlyInWithBird(struct Task *task)
         sprite->y += sprite->y2;
         sprite->x2 = 0;
         sprite->y2 = 0;
+        objectEvent->fixedPriority = 1;
+        sprite->oam.priority = 1;
+        sprite->subpriority = 0;
         task->tState++;
         task->tTimer = 0;
     }
@@ -3877,6 +3894,8 @@ static void FlyInFieldEffect_JumpOffBird(struct Task *task)
     };
     struct Sprite *sprite = &gSprites[gPlayerAvatar.spriteId];
     sprite->y2 = sYPositions[task->tTimer];
+    sprite->oam.priority = 1;
+    sprite->subpriority = 0;
 
     if ((++task->tTimer) >= (int)ARRAY_COUNT(sYPositions))
         task->tState++;
@@ -3891,10 +3910,13 @@ static void FlyInFieldEffect_FieldMovePose(struct Task *task)
         objectEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
         sprite = &gSprites[objectEvent->spriteId];
         objectEvent->inanimate = FALSE;
+        objectEvent->noShadow = FALSE;
         MoveObjectEventToMapCoords(objectEvent, objectEvent->currentCoords.x, objectEvent->currentCoords.y);
         sprite->x2 = 0;
         sprite->y2 = 0;
         sprite->coordOffsetEnabled = TRUE;
+        objectEvent->fixedPriority = 0;
+        sprite->subspriteMode = SUBSPRITES_ON;
         SetPlayerAvatarFieldMove();
         ObjectEventSetHeldMovement(objectEvent, MOVEMENT_ACTION_START_ANIM_IN_DIRECTION);
         task->tState++;
@@ -3935,6 +3957,7 @@ static void FlyInFieldEffect_End(struct Task *task)
         }
         ObjectEventSetGraphicsId(objectEvent, GetPlayerAvatarGraphicsIdByStateId(state));
         ObjectEventTurn(objectEvent, DIR_SOUTH);
+        objectEvent->triggerGroundEffectsOnMove = TRUE;
         gPlayerAvatar.flags = task->tAvatarFlags;
         gPlayerAvatar.preventStep = FALSE;
         FieldEffectActiveListRemove(FLDEFF_FLY_IN);

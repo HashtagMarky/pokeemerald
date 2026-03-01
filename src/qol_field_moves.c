@@ -156,7 +156,7 @@ static void Task_TransformThenFlyUp(u8 taskId);
 
 void ReturnToFieldFromFlyToolMapSelect(void)
 {
-    // Return to field and start fly-up animation
+    // Return to field and start fly-up animation (ridemon/transform version)
     SetMainCallback2(CB2_ReturnToField);
     gFieldCallback = FieldCallback_FlyUpAnimation;
 }

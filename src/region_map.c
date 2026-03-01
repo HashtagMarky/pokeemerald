@@ -27,6 +27,9 @@
 #include "constants/heal_locations.h"
 #include "constants/rgb.h"
 #include "constants/weather.h"
+#include "constants/vars.h"
+#include "constants/item.h"
+#include "item_menu.h"
 #include "qol_field_moves.h" // qol_field_moves
 
 // Set to TRUE to use standard fly method (party menu -> fly animation)
@@ -2008,30 +2011,21 @@ static void CB_ExitFlyMap(void)
                 struct RegionMap* tempRegionMap = &sFlyMap->regionMap;
 
                 SetFlyDestination(tempRegionMap);
-            // Start qol_field_moves
-            #if USE_STANDARD_FLY
-                // Use standard fly method (party menu -> fly animation)
-                ReturnToFieldFromFlyMapSelect();
-            #else
-                // Use pokeride fly method (fly tool -> transform -> fly)
-                if (IsFlyToolUsed())
-                    ReturnToFieldFromFlyToolMapSelect();
-                else
-                    ReturnToFieldFromFlyMapSelect();
-            #endif
+                // Use standard fly callback that was already working
+                SetMainCallback2(CB2_ReturnToField);
+                gFieldCallback = FieldCallback_UseFly;
             }
             else
             {
-            #if USE_STANDARD_FLY
-                // Use standard fly method
-                SetMainCallback2(CB2_ReturnToPartyMenuFromFlyMap);
-            #else
-                // Use pokeride fly method
-                if (IsFlyToolUsed())
-                    ReturnToFieldOrBagFromFlyTool();
+                // Cancel - return to bag or field based on source
+                if (VarGet(VAR_FLY_TOOL_SOURCE) == FLY_SOURCE_BAG)
+                {
+                    GoToBagMenu(ITEMMENULOCATION_LAST, POCKET_POKERIDE, CB2_ReturnToFieldWithOpenMenu);
+                }
                 else
-                    SetMainCallback2(CB2_ReturnToPartyMenuFromFlyMap);
-            #endif
+                {
+                    SetMainCallback2(CB2_ReturnToField);
+                }
             }
             ResetFlyTool(); // qol_field_moves
             TRY_FREE_AND_SET_NULL(sFlyMap);
